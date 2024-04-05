@@ -21,12 +21,24 @@
     <ClCompile Include="gdexample.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cinecam2d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bind_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="register_types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gdexample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cinecam2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bind_utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

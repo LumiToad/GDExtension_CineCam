@@ -155,10 +155,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bind_utils.cpp" />
+    <ClCompile Include="cinecam2d.cpp" />
     <ClCompile Include="gdexample.cpp" />
     <ClCompile Include="register_types.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bind_utils.h" />
+    <ClInclude Include="cinecam2d.h" />
     <ClInclude Include="gdexample.h" />
     <ClInclude Include="register_types.h" />
   </ItemGroup>

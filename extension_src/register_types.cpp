@@ -1,6 +1,8 @@
 #include "register_types.h"
 
+//include custom type headers
 #include "gdexample.h"
+#include "cinecam2d.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -13,6 +15,7 @@ void initialize_example_module(ModuleInitializationLevel p_level)
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) return;
 
 	ClassDB::register_class<GDExample>();
+	ClassDB::register_class<CineCam2D>();
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level)
