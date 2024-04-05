@@ -72,19 +72,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\gen;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\gdextension;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\src;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\bin;$(LibraryPath)</LibraryPath>
+    <LibraryPath>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\gen;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\gdextension;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\src;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\bin;$(LibraryPath)</LibraryPath>
+    <LibraryPath>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\gdextension;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\gen\include;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\include;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\src;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\bin;$(LibraryPath)</LibraryPath>
+    <LibraryPath>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\gdextension;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\gen\include;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\include;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\src;E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\bin;$(LibraryPath)</LibraryPath>
+    <LibraryPath>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,8 +97,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\bin\libgodot-cpp.windows.template_debug.x86_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\lib\libgodot-cpp.windows.template_debug.x86_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -116,8 +116,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\bin\libgodot-cpp.windows.template_release.x86_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\lib\libgodot-cpp.windows.template_release.x86_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -131,8 +131,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\bin\libgodot-cpp.windows.template_debug.x86_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\lib\libgodot-cpp.windows.template_debug.x86_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -150,8 +150,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\godot-cpp\bin\libgodot-cpp.windows.template_release.x86_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>E:\Projekte\0_Programmieren\CPlusPlus\gdextension_cinecam\lib\libgodot-cpp.windows.template_release.x86_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
