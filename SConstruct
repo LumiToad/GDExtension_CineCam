@@ -18,14 +18,14 @@ sources = Glob("extension_src/*.cpp")
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(
-        "export/bin/libgdexample.{}.{}.framework/libgdexample.{}.{}".format(
+        "export/bin/libcinecam.{}.{}.framework/libcinecam.{}.{}".format(
             env["platform"], env["target"], env["platform"], env["target"]
         ),
         source=sources,
     )
 else:
     library = env.SharedLibrary(
-        "export/bin/libgdexample{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+        "export/bin/libcinecam{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,
     )
 
