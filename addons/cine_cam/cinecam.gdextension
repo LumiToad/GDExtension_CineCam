@@ -10,6 +10,11 @@ windows.debug.x86_64 = "res://addons/cine_cam/windows/libcinecam.windows.templat
 windows.release.x86_32 = "res://addons/cine_cam/windows/libcinecam.windows.template_release.x86_32.dll"
 windows.release.x86_64 = "res://addons/cine_cam/windows/libcinecam.windows.template_release.x86_64.dll"
 
+linux.debug.x86_32 = "res://addons/cine_cam/linux/libgdexample.linux.template_debug.x86_32.so"
+linux.debug.x86_64 = "res://addons/cine_cam/linux/libgdexample.linux.template_debug.x86_64.so"
+linux.release.x86_32 = "res://addons/cine_cam/linux/libgdexample.linux.template_release.x86_32.so"
+linux.release.x86_64 = "res://addons/cine_cam/linux/libgdexample.linux.template_release.x86_64.so"
+
 [icons]
 
 GDExample = "res://addons/cine_cam/icons/gd_example.svg"
