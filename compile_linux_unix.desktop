@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=compile_linux_unix
+Comment=
+Exec=sudo bash compile_linux_unix.sh
+Icon=
+Path=
+Terminal=true
+StartupNotify=false
