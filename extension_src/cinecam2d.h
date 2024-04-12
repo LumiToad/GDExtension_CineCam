@@ -33,11 +33,11 @@ namespace godot
 		CineCam2D();
 		~CineCam2D();
 
-		/*double get_shake_strength() const;
+		double get_shake_strength() const;
 		void set_shake_strength(const double p_shake_strength);
 
 		double get_shake_duration() const;
-		void set_shake_duration(const double p_shake_duration);*/
+		void set_shake_duration(const double p_shake_duration);
 	};
 }
 
