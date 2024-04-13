@@ -15,6 +15,8 @@ CineCam2D::CineCam2D()
 {
 	shake_strength = 0.0;
 	shake_duration = 0.0;
+	additional_description = "";
+	initialize();
 }
 
 CineCam2D::~CineCam2D()
@@ -29,6 +31,12 @@ void CineCam2D::_bind_methods()
 	ADD_METHOD_ARGS_BINDING(shake_cam, CineCam2D, VA_LIST("shake_strength", "shake_duration"));
 
 	ADD_SIGNAL(MethodInfo("shake_ended"));
+}
+
+void godot::CineCam2D::initialize()
+{
+	GDCLASS_Metadata meta(get_parent_class_static(), "CineCam2D additional Text.", *_get_extension_class_name());
+	set_editor_description(meta.get_metadata_string());
 }
 
 void CineCam2D::shake_cam(double p_shake_strength, double p_shake_duration)

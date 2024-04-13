@@ -27,6 +27,9 @@
     <ClCompile Include="bind_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gdclass_metadata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="register_types.h">
@@ -41,8 +44,11 @@
     <ClInclude Include="bind_utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gdclass_metadata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="comment_header.txt" />
+    <Text Include="coding_guidelines.txt" />
   </ItemGroup>
 </Project>

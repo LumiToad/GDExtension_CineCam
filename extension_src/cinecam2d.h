@@ -8,6 +8,8 @@
 
 #include "godot_cpp/classes/camera2d.hpp"
 
+#include "gdclass_metadata.h"
+
 namespace godot
 {
 	class CineCam2D : public Camera2D
@@ -17,6 +19,8 @@ namespace godot
 	private:
 		double shake_strength;
 		double shake_duration;
+		godot::String additional_description;
+		GDCLASS_Metadata meta;
 
 	//INTERNAL Methods
 	private: 
@@ -24,6 +28,7 @@ namespace godot
 
 	protected:
 		static void _bind_methods();
+		void initialize();
 
 	//GODOT Methods
 	public:
@@ -43,4 +48,4 @@ namespace godot
 	};
 }
 
-#endif //CINECAM_H
+#endif // CINECAM_H

@@ -157,17 +157,19 @@
   <ItemGroup>
     <ClCompile Include="bind_utils.cpp" />
     <ClCompile Include="cinecam2d.cpp" />
+    <ClCompile Include="gdclass_metadata.cpp" />
     <ClCompile Include="gdexample.cpp" />
     <ClCompile Include="register_types.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bind_utils.h" />
     <ClInclude Include="cinecam2d.h" />
+    <ClInclude Include="gdclass_metadata.h" />
     <ClInclude Include="gdexample.h" />
     <ClInclude Include="register_types.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="comment_header.txt" />
+    <Text Include="coding_guidelines.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
