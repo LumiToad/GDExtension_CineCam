@@ -14,7 +14,9 @@ void GDExample::_bind_methods()
 	//speed
 	ClassDB::bind_method(D_METHOD("get_speed"), &GDExample::get_speed);
 	ClassDB::bind_method(D_METHOD("set_speed", "p_speed"), &GDExample::set_speed);
-	ClassDB::add_property("GDExample", PropertyInfo(Variant::FLOAT, "speed", PROPERTY_HINT_RANGE, "0,20,0.01"), "set_speed", "get_speed");
+	//ClassDB::add_property("GDExample", PropertyInfo(Variant::FLOAT, "speed", PROPERTY_HINT_RANGE, "0,20,0.01"), "set_speed", "get_speed");
+
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "speed", PROPERTY_HINT_RANGE, "0,20,0.01"), "set_speed", "get_speed");
 
 	//---Signals---
 	//time_emit

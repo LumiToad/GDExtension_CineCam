@@ -166,6 +166,9 @@
     <ClInclude Include="gdexample.h" />
     <ClInclude Include="register_types.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="comment_header.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

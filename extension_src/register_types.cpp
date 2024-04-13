@@ -1,24 +1,28 @@
+// Copyright(c) 2014 - present Godot Engine contributors(see AUTHORS.md), Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.
+// CineCam GDExtension made by Lukas Schmidt (https://github.com/lumitoad/)
+   
+// register_types.cpp
+
 #include "register_types.h"
 
-//include custom type headers
+#include "gdextension_interface.h"
+#include "godot_cpp/core/defs.hpp"
+#include "godot_cpp/godot.hpp"
+		 
 #include "gdexample.h"
 #include "cinecam2d.h"
 
-#include <gdextension_interface.h>
-#include <godot_cpp/core/defs.hpp>
-#include <godot_cpp/godot.hpp>
-
 using namespace godot;
 
-void initialize_example_module(ModuleInitializationLevel p_level)
+void initialize_cinecam_module(ModuleInitializationLevel p_level)
 {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) return;
 
-	ClassDB::register_class<GDExample>();
-	ClassDB::register_class<CineCam2D>();
+	GDREGISTER_CLASS(CineCam2D)
+	GDREGISTER_CLASS(GDExample)
 }
 
-void uninitialize_example_module(ModuleInitializationLevel p_level)
+void uninitialize_cinecam_module(ModuleInitializationLevel p_level)
 {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) return;
 }
@@ -30,8 +34,8 @@ extern "C"
 	{
 		godot::GDExtensionBinding::InitObject init_obj(p_get_proc_address, p_library, r_initialization);
 
-		init_obj.register_initializer(initialize_example_module);
-		init_obj.register_terminator(uninitialize_example_module);
+		init_obj.register_initializer(initialize_cinecam_module);
+		init_obj.register_terminator(uninitialize_cinecam_module);
 		init_obj.set_minimum_library_initialization_level(MODULE_INITIALIZATION_LEVEL_SCENE);
 
 		return init_obj.init();
