@@ -72,3 +72,16 @@ Example:
 // Compute the first 10,000 decimals of Pi.
 // FIXME: Don't crash when computing the 1,337th decimal due to `increment`
 //        being negative.
+
+
+
+
+
+
+
+
+NOTES:
+TweenProcessMode 	process_mode = TweenProcessMode::TWEEN_PROCESS_IDLE;
+TweenPauseMode 		pause_mode = TweenPauseMode::TWEEN_PAUSE_BOUND;
+TransitionType 		default_transition = TransitionType::TRANS_LINEAR;
+EaseType 			default_ease = EaseType::EASE_IN_OUT;

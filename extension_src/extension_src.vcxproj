@@ -160,6 +160,7 @@
     <ClCompile Include="gdclass_metadata.cpp" />
     <ClCompile Include="gdexample.cpp" />
     <ClCompile Include="register_types.cpp" />
+    <ClCompile Include="template_class.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bind_utils.h" />
@@ -167,6 +168,7 @@
     <ClInclude Include="gdclass_metadata.h" />
     <ClInclude Include="gdexample.h" />
     <ClInclude Include="register_types.h" />
+    <ClInclude Include="template_class.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="coding_guidelines.txt" />

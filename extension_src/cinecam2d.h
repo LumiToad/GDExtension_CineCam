@@ -7,8 +7,14 @@
 #define CINECAM2D_H
 
 #include "godot_cpp/classes/camera2d.hpp"
+#include "godot_cpp/classes/method_tweener.hpp"
 
 #include "gdclass_metadata.h"
+
+#define DEFAULT_EASE Tween::EASE_OUT
+#define DEFAULT_TRANS Tween::TRANS_CUBIC
+#define SIGNAL_SHAKE_OFFSET_ENDED "shake_offset_ended"
+#define SIGNAL_SHAKE_ZOOM_ENDED "shake_zoom_ended"
 
 namespace godot
 {
@@ -16,35 +22,76 @@ namespace godot
 	{
 		GDCLASS(CineCam2D, Camera2D)
 
+	// Internal
 	private:
-		double shake_strength;
-		double shake_duration;
 		godot::String additional_description;
 		GDCLASS_Metadata meta;
 
-	//INTERNAL Methods
-	private: 
-		void shake_cam_internal(double);
+		Ref<Tween> shake_offset_intensity_tween;
+		Ref<Tween> shake_offset_duration_tween;
+		Vector2 original_offset;
+		bool is_shake_offset_active;
 
-	protected:
-		static void _bind_methods();
+
+		Ref<Tween> shake_zoom_intensity_tween;
+		Ref<Tween> shake_zoom_duration_tween;
+		Vector2 original_zoom;
+		bool is_shake_zoom_active;
+
 		void initialize_internal();
+		void init_tweens();
+		void shake_offset_internal(double);
+		void shake_zoom_internal(double);
 
-	//GODOT Methods
-	public:
-		void _process(double delta) override;
-		void shake_cam(double, double);
 
-	//GET SET
 	public:
 		CineCam2D();
 		~CineCam2D();
 
-		double get_shake_strength() const;
-		void set_shake_strength(const double p_shake_strength);
 
-		double get_shake_duration() const;
-		void set_shake_duration(const double p_shake_duration);
+	protected:
+		static void _bind_methods();
+
+
+	// GODOT Overrides
+	public:
+		void _process(double delta) override;
+		void _ready() override;
+
+
+	// GODOT public
+	private:
+		double shake_offset_intensity;
+		double shake_offset_duration;
+		double shake_zoom_intensity;
+		double shake_zoom_duration;
+
+	public:
+		void shake_offset(const double &p_intensity,
+			const double &p_duration,
+			Tween::EaseType p_ease = DEFAULT_EASE,
+			Tween::TransitionType p_trans = DEFAULT_TRANS);
+
+
+		void shake_zoom(const double& p_intensity,
+			const double& p_duration,
+			Tween::EaseType p_ease = DEFAULT_EASE,
+			Tween::TransitionType p_trans = DEFAULT_TRANS);
+
+
+		double get_shake_offset_intensity() const;
+		void set_shake_offset_intensity(const double &p_intensity);
+
+		double get_shake_offset_duration() const;
+		void set_shake_offset_duration(const double &p_duration);
+
+		double get_shake_zoom_intensity() const;
+		void set_shake_zoom_intensity(const double &p_intensity);
+
+		double get_shake_zoom_duration() const;
+		void set_shake_zoom_duration(const double &p_duration);
+
+	protected:
 	};
 }
 

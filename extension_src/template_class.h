@@ -6,11 +6,13 @@
 #ifndef TEMPLATE_CLASS_H
 #define TEMPLATE_CLASS_H
 
+#include "godot_cpp/classes/node.hpp"
+
 #include "gdclass_metadata.h"
 
 namespace godot
 {
-	class Template_Class : Node
+	class Template_Class : public Node
 	{
 		GDCLASS(Template_Class, Node)
 
@@ -19,6 +21,8 @@ namespace godot
 		godot::String additional_description;
 		GDCLASS_Metadata meta;
 	
+		void initialize_internal();
+
 
 	public:
 		Template_Class();
@@ -27,27 +31,22 @@ namespace godot
 
 	protected:
 		static void _bind_methods();
-		void initialize_internal();
+
 
 
 	// GODOT Overrides
-	private:
+	public:
 		void _process(double delta) override;
 
-	protected:
-
-
-	public:
-	
 
 	// GODOT public
 	private:
 		
 
-	protected:
-
-
 	public:
+
+
+	protected:
 	};
 }
 

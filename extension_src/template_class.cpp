@@ -11,6 +11,7 @@ using namespace godot;
 
 Template_Class::Template_Class()
 {
+	additional_description = "";
 	initialize_internal();
 }
 
@@ -27,7 +28,7 @@ void Template_Class::_bind_methods()
 
 void godot::Template_Class::initialize_internal()
 {
-	GDCLASS_Metadata meta(get_parent_class_static(), "Some additional Text.", *_get_extension_class_name());
+	GDCLASS_Metadata meta(get_parent_class_static(), additional_description, *_get_extension_class_name());
 	set_editor_description(meta.get_metadata_string());
 }
 
