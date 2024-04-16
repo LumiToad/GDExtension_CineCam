@@ -16,7 +16,7 @@ CineCam2D::CineCam2D()
 	shake_strength = 0.0;
 	shake_duration = 0.0;
 	additional_description = "";
-	initialize();
+	initialize_internal();
 }
 
 CineCam2D::~CineCam2D()
@@ -33,7 +33,7 @@ void CineCam2D::_bind_methods()
 	ADD_SIGNAL(MethodInfo("shake_ended"));
 }
 
-void godot::CineCam2D::initialize()
+void godot::CineCam2D::initialize_internal()
 {
 	GDCLASS_Metadata meta(get_parent_class_static(), "CineCam2D additional Text.", *_get_extension_class_name());
 	set_editor_description(meta.get_metadata_string());

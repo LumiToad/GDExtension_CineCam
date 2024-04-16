@@ -28,7 +28,7 @@ namespace godot
 
 	protected:
 		static void _bind_methods();
-		void initialize();
+		void initialize_internal();
 
 	//GODOT Methods
 	public:
