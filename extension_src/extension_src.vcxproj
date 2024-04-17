@@ -161,6 +161,7 @@
     <ClCompile Include="gdexample.cpp" />
     <ClCompile Include="register_types.cpp" />
     <ClCompile Include="template_class.cpp" />
+    <ClCompile Include="virtual_cam2d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bind_utils.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="gdexample.h" />
     <ClInclude Include="register_types.h" />
     <ClInclude Include="template_class.h" />
+    <ClInclude Include="virtual_cam2d.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="coding_guidelines.txt" />

@@ -27,6 +27,7 @@ CineCam2D::CineCam2D()
 
 CineCam2D::~CineCam2D()
 {
+
 }
 
 

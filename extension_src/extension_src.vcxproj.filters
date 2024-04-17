@@ -33,6 +33,9 @@
     <ClCompile Include="template_class.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="virtual_cam2d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="register_types.h">
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="template_class.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="virtual_cam2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
