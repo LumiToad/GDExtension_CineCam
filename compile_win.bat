@@ -9,16 +9,16 @@ echo WINDOWS > build_logs/windows/build_log_%fullstamp%.txt
 echo ---- >> build_logs/windows/build_log_%fullstamp%.txt
 echo. >> build_logs/windows/build_log_%fullstamp%.txt
 echo BUILD debug_win32 >> build_logs/windows/build_log_%fullstamp%.txt
-scons platform=windows target=template_debug arch=x86_32 --no-cache >> build_logs/windows/build_log_%fullstamp%.txt
+scons platform=windows target=template_debug arch=x86_32 build_library=no use_mingw=yes --no-cache -j12 >> build_logs/windows/build_log_%fullstamp%.txt
 echo. >> build_logs/windows/build_log_%fullstamp%.txt
 echo BUILD release_win32 >> build_logs/windows/build_log_%fullstamp%.txt
-scons platform=windows target=template_release arch=x86_32 --no-cache >> build_logs/windows/build_log_%fullstamp%.txt
+scons platform=windows target=template_release arch=x86_32 build_library=no use_mingw=yes --no-cache -j12 >> build_logs/windows/build_log_%fullstamp%.txt
 echo. >> build_logs/windows/build_log_%fullstamp%.txt
 echo BUILD debug_win64 >> build_logs/windows/build_log_%fullstamp%.txt
-scons platform=windows target=template_debug arch=x64 --no-cache >> build_logs/windows/build_log_%fullstamp%.txt
+scons platform=windows target=template_debug arch=x64 build_library=no use_mingw=yes --no-cache -j12 >> build_logs/windows/build_log_%fullstamp%.txt
 echo. >> build_logs/windows/build_log_%fullstamp%.txt
 echo BUILD release_win64 >> build_logs/windows/build_log_%fullstamp%.txt
-scons platform=windows target=template_release arch=x64 --no-cache >> build_logs/windows/build_log_%fullstamp%.txt
+scons platform=windows target=template_release arch=x64 build_library=no use_mingw=yes --no-cache -j12 >> build_logs/windows/build_log_%fullstamp%.txt
 echo. >> build_logs/windows/build_log_%fullstamp%.txt
 
 echo COMPLETE >> build_logs/windows/build_log_%fullstamp%.txt

@@ -12,7 +12,8 @@
 #include "gdexample.h"
 #include "cinecam2d.h"
 #include "virtual_cam2d.h"
-#include "template_class.h"
+#include "template_node.h"
+#include "template_object.h"
 
 using namespace godot;
 
@@ -23,6 +24,7 @@ void initialize_cinecam_module(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(CineCam2D)
 	GDREGISTER_CLASS(GDExample)
 	GDREGISTER_CLASS(VirtualCam2D)
+	GDREGISTER_CLASS(TemplateObject)
 }
 
 

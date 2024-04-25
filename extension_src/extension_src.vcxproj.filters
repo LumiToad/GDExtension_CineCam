@@ -30,10 +30,13 @@
     <ClCompile Include="gdclass_metadata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="template_class.cpp">
+    <ClCompile Include="template_node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="virtual_cam2d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="template_object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,10 +56,13 @@
     <ClInclude Include="gdclass_metadata.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="template_class.h">
+    <ClInclude Include="template_node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="virtual_cam2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="template_object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
