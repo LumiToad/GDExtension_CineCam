@@ -42,7 +42,32 @@ namespace godot
 
 	// GODOT public
 	private:
-		
+		Vector2 offset;
+		Camera2D::AnchorMode anchor_mode = Camera2D::AnchorMode::ANCHOR_MODE_DRAG_CENTER;
+		bool ingore_rotation = false;
+		bool enabled = true;
+		Vector2 zoom;
+		Camera2D::Camera2DProcessCallback process_callback;
+
+		int limit[4];
+		bool limit_smoothing_enabled = false;
+
+		real_t position_smoothing_speed = 5.0;
+		bool position_smoothing_enabled = false;
+
+		real_t rotation_smoothing_speed = 5.0;
+		bool rotation_smoothing_enabled = false;
+
+		real_t drag_margin[4];
+		bool drag_horizontal_enabled = false;
+		bool drag_vertical_enabled = false;
+		real_t drag_horizontal_offset = 0.0;
+		real_t drag_vertical_offset = 0.0;
+
+		bool screen_drawing_enabled = true;
+		bool limit_drawing_enabled = false;
+		bool margin_drawing_enabled = false;
+
 
 	public:
 		void set_offset(const Vector2& p_offset);
@@ -106,31 +131,6 @@ namespace godot
 		bool is_margin_drawing_enabled() const;
 
 	protected:
-		Vector2 offset;
-		Camera2D::AnchorMode anchor_mode = Camera2D::AnchorMode::ANCHOR_MODE_DRAG_CENTER;
-		bool ingore_rotation = false;
-		bool enabled = true;
-		Vector2 zoom;
-		Camera2D::Camera2DProcessCallback process_callback;
-
-		int limit[4];
-		bool limit_smoothing_enabled = false;
-
-		real_t position_smoothing_speed = 5.0;
-		bool position_smoothing_enabled = false;
-
-		real_t rotation_smoothing_speed = 5.0;
-		bool rotation_smoothing_enabled = false;
-
-		real_t drag_margin[4];
-		bool drag_horizontal_enabled = false;
-		bool drag_vertical_enabled = false;
-		real_t drag_horizontal_offset = 0.0;
-		real_t drag_vertical_offset = 0.0;
-
-		bool screen_drawing_enabled = true;
-		bool limit_drawing_enabled = false;
-		bool margin_drawing_enabled = false;
 	};
 }
 

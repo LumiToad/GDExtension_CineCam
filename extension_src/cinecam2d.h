@@ -10,6 +10,8 @@
 #include "godot_cpp/classes/method_tweener.hpp"
 
 #include "gdclass_metadata.h"
+#include "virtual_cam2d.h"
+#include "blend_data2d.h"
 
 #define DEFAULT_EASE Tween::EASE_OUT
 #define DEFAULT_TRANS Tween::TRANS_CUBIC
@@ -32,11 +34,12 @@ namespace godot
 		Vector2 original_offset;
 		bool is_shake_offset_active;
 
-
 		Ref<Tween> shake_zoom_intensity_tween;
 		Ref<Tween> shake_zoom_duration_tween;
 		Vector2 original_zoom;
 		bool is_shake_zoom_active;
+
+		Ref<Tween> blend_position_tween;
 
 		void initialize_internal();
 		void init_tweens();
@@ -65,8 +68,11 @@ namespace godot
 		double shake_offset_duration;
 		double shake_zoom_intensity;
 		double shake_zoom_duration;
+		Ref<BlendData2D> default_blend;
 
 	public:
+		void blend_to(Node2D* vcam2D, Ref<BlendData2D>);
+
 		void shake_offset(const double &p_intensity,
 			const double &p_duration,
 			Tween::EaseType p_ease = DEFAULT_EASE,
@@ -90,6 +96,9 @@ namespace godot
 
 		double get_shake_zoom_duration() const;
 		void set_shake_zoom_duration(const double &p_duration);
+
+		Ref<BlendData2D> get_default_blend_data() const;
+		void set_default_blend_data(Ref<BlendData2D> blend_data);
 
 	protected:
 	};

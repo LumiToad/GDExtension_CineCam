@@ -7,8 +7,14 @@
 #define BLEND_DATA2D_H
 
 #include "godot_cpp/classes/resource.hpp"
+#include "godot_cpp/classes/method_tweener.hpp"
 
 #include "gdclass_metadata.h"
+
+#define BLEND_TYPE_HINTS "SPEED, DURATION"
+#define BLEND_BY_HINTS "POSITION, OFFSET"
+#define EASE_HINTS "EASE_IN, EASE_OUT, EASE_IN_OUT, EASE_OUT_IN"
+#define TRANS_HINTS "TRANS_LINEAR, TRANS_SINE, TRANS_QUINT, TRANS_QUART, TRANS_QUAD, TRANS_EXPO, TRANS_ELASTIC, TRANS_CUBIC, TRANS_CIRC, TRANS_BOUNCE, TRANS_BACK, TRANS_SPRING"
 
 namespace godot
 {
@@ -16,7 +22,21 @@ namespace godot
 	{
 		GDCLASS(BlendData2D, Resource)
 
-			// Internal
+	public:
+		enum BlendType
+		{
+			SPEED,
+			DURATION,
+		};
+
+		enum BlendBy
+		{
+			POSITION,
+			OFFSET
+		};
+
+
+		// Internal
 	private:
 		godot::String additional_description;
 		GDCLASS_Metadata meta;
@@ -32,21 +52,47 @@ namespace godot
 	protected:
 		static void _bind_methods();
 
-
-
 		// GODOT Overrides
-	public:
-
 
 		// GODOT public
 	private:
+		godot::String blend_name;
+		BlendData2D::BlendBy blend_by;
+		BlendData2D::BlendType blend_type;
+		double duration;
+		double speed;
+		Tween::EaseType ease;
+		Tween::TransitionType trans;
+		Callable callable;
 
 
 	public:
+		void set_blend_name(godot::String name);
+		String get_blend_name() const;
 
+		void set_blend_by(BlendData2D::BlendBy by);
+		BlendData2D::BlendBy get_blend_by() const;
 
-	protected:
+		void set_blend_type(BlendData2D::BlendType type);
+		BlendData2D::BlendType get_blend_type() const;
+
+		void set_duration(double duration);
+		double get_duration() const;
+
+		void set_speed(double speed);
+		double get_speed() const;
+
+		void set_ease(Tween::EaseType ease);
+		Tween::EaseType get_ease() const;
+
+		void set_trans(Tween::TransitionType trans);
+		Tween::TransitionType get_trans() const;
+
+		void set_callable(Callable callable);
+		Callable get_callable() const;
 	};
 }
+	VARIANT_ENUM_CAST(BlendData2D::BlendType);
+	VARIANT_ENUM_CAST(BlendData2D::BlendBy);
 
 #endif // BLEND_DATA2D_H

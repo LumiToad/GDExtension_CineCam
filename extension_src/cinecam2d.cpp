@@ -39,8 +39,12 @@ void CineCam2D::_bind_methods()
 	ADD_GETSET_HINT_BINDING(get_shake_zoom_intensity, set_shake_zoom_intensity, shake_zoom_intensity, intensity, CineCam2D, FLOAT, godot::PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
 	ADD_GETSET_HINT_BINDING(get_shake_zoom_duration, set_shake_zoom_duration, shake_zoom_duration, duration, CineCam2D, FLOAT, godot::PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
 
+	ADD_GETSET_BINDING(get_default_blend_data, set_default_blend_data, default_blend, p_default_blend, CineCam2D, OBJECT);
+
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_offset, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_zoom, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
+
+	ADD_METHOD_ARGS_BINDING(blend_to, CineCam2D, VA_LIST("vcam2d", "blend_data"));
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_ENDED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_ZOOM_ENDED));
@@ -65,6 +69,24 @@ void CineCam2D::init_tweens()
 	
 	shake_zoom_duration_tween = get_tree()->create_tween();
 	shake_zoom_duration_tween->set_trans(DEFAULT_TRANS);
+
+	blend_position_tween = get_tree()->create_tween();
+}
+
+
+void godot::CineCam2D::blend_to(Node2D* vcam2d, Ref<BlendData2D> blend_data)
+{
+	VirtualCam2D* vcam_internal = Object::cast_to<VirtualCam2D>(vcam2d);
+
+	blend_position_tween->set_trans(blend_data->get_trans());
+	blend_position_tween->set_ease(blend_data->get_ease());
+
+	blend_position_tween->
+		tween_method(
+			Callable(this, "set_global_position"),
+			get_global_position(),
+			vcam2d->get_global_position(),
+			blend_data->get_duration());
 }
 
 
@@ -222,4 +244,14 @@ double CineCam2D::get_shake_zoom_duration() const
 void CineCam2D::set_shake_zoom_duration(const double &duration)
 {
 	shake_zoom_duration = duration;
+}
+
+Ref<BlendData2D> CineCam2D::get_default_blend_data() const
+{
+	return default_blend;
+}
+
+void CineCam2D::set_default_blend_data(Ref<BlendData2D> blend_data)
+{
+	default_blend = blend_data;
 }
