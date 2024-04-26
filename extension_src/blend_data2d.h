@@ -1,20 +1,20 @@
 // Copyright(c) 2014 - present Godot Engine contributors(see AUTHORS.md), Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.
 // CineCam GDExtension made by Lukas Schmidt (https://github.com/lumitoad/)
 
-// template_object.h
+// blend_data2d.h
 
-#ifndef TEMPLATE_OBJECT_H
-#define TEMPLATE_OBJECT_H
+#ifndef BLEND_DATA2D_H
+#define BLEND_DATA2D_H
 
-#include "godot_cpp/core/object.hpp"
+#include "godot_cpp/classes/resource.hpp"
 
 #include "gdclass_metadata.h"
 
 namespace godot
 {
-	class TemplateObject : public Object
+	class BlendData2D : public Resource
 	{
-		GDCLASS(TemplateObject, Object)
+		GDCLASS(BlendData2D, Resource)
 
 			// Internal
 	private:
@@ -25,8 +25,8 @@ namespace godot
 
 
 	public:
-		TemplateObject();
-		~TemplateObject();
+		BlendData2D();
+		~BlendData2D();
 
 
 	protected:
@@ -49,4 +49,4 @@ namespace godot
 	};
 }
 
-#endif // TEMPLATE_OBJECT_H
+#endif // BLEND_DATA2D_H

@@ -13,7 +13,8 @@
 #include "cinecam2d.h"
 #include "virtual_cam2d.h"
 #include "template_node.h"
-#include "template_object.h"
+#include "template_resource.h"
+#include "blend_data2d.h"
 
 using namespace godot;
 
@@ -24,7 +25,9 @@ void initialize_cinecam_module(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(CineCam2D)
 	GDREGISTER_CLASS(GDExample)
 	GDREGISTER_CLASS(VirtualCam2D)
-	GDREGISTER_CLASS(TemplateObject)
+	GDREGISTER_CLASS(TemplateNode)
+	GDREGISTER_CLASS(TemplateResource)
+	GDREGISTER_CLASS(BlendData2D)
 }
 
 

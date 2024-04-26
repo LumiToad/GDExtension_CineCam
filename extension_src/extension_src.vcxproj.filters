@@ -36,7 +36,10 @@
     <ClCompile Include="virtual_cam2d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="template_object.cpp">
+    <ClCompile Include="template_resource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="blend_data2d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,7 +65,10 @@
     <ClInclude Include="virtual_cam2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="template_object.h">
+    <ClInclude Include="template_resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="blend_data2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

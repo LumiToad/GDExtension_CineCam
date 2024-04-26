@@ -156,22 +156,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bind_utils.cpp" />
+    <ClCompile Include="blend_data2d.cpp" />
     <ClCompile Include="cinecam2d.cpp" />
     <ClCompile Include="gdclass_metadata.cpp" />
     <ClCompile Include="gdexample.cpp" />
     <ClCompile Include="register_types.cpp" />
     <ClCompile Include="template_node.cpp" />
-    <ClCompile Include="template_object.cpp" />
+    <ClCompile Include="template_resource.cpp" />
     <ClCompile Include="virtual_cam2d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bind_utils.h" />
+    <ClInclude Include="blend_data2d.h" />
     <ClInclude Include="cinecam2d.h" />
     <ClInclude Include="gdclass_metadata.h" />
     <ClInclude Include="gdexample.h" />
     <ClInclude Include="register_types.h" />
     <ClInclude Include="template_node.h" />
-    <ClInclude Include="template_object.h" />
+    <ClInclude Include="template_resource.h" />
     <ClInclude Include="virtual_cam2d.h" />
   </ItemGroup>
   <ItemGroup>
