@@ -10,6 +10,7 @@
 #include "godot_cpp/classes/camera2d.hpp"
 
 #include "gdclass_metadata.h"
+#include "blend_data2d.h"
 
 namespace godot
 {
@@ -23,6 +24,8 @@ namespace godot
 		GDCLASS_Metadata meta;
 
 		void initialize_internal();
+		void init_default_blend_data();
+		//void register_to_cinecam2d();
 
 
 	public:
@@ -38,16 +41,21 @@ namespace godot
 	// GODOT Overrides
 	public:
 		void _process(double delta) override;
+		//void _ready() override;
 
 
 	// GODOT public
 	private:
+		//String vcam_id;
+		//int priority;
+
 		Vector2 offset;
 		Camera2D::AnchorMode anchor_mode = Camera2D::AnchorMode::ANCHOR_MODE_DRAG_CENTER;
 		bool ingore_rotation = false;
 		bool enabled = true;
 		Vector2 zoom;
 		Camera2D::Camera2DProcessCallback process_callback;
+		Ref<BlendData2D> default_blend;
 
 		int limit[4];
 		bool limit_smoothing_enabled = false;
@@ -70,6 +78,13 @@ namespace godot
 
 
 	public:
+		//void set_vcam_id(String id);
+		//String get_vcam_id() const;
+
+
+		//void set_priority(int prio);
+		//int get_priority() const;
+
 		void set_offset(const Vector2& p_offset);
 		Vector2 get_offset() const;
 
@@ -84,6 +99,18 @@ namespace godot
 
 		void set_zoom(const Vector2& p_zoom);
 		Vector2 get_zoom() const;
+
+		void set_limit_left(int p_limit);
+		int get_limit_left() const;
+
+		void set_limit_top(int p_limit);
+		int get_limit_top() const;
+
+		void set_limit_right(int p_limit);
+		int get_limit_right() const;
+
+		void set_limit_bottom(int p_limit);
+		int get_limit_bottom() const;
 
 		void set_limit(Side p_side, int p_limit);
 		int get_limit(Side p_side) const;
@@ -112,6 +139,18 @@ namespace godot
 		void set_drag_vertical_enabled(bool p_enabled);
 		bool is_drag_vertical_enabled() const;
 
+		void set_drag_margin_left(real_t p_drag_margin);
+		real_t get_drag_margin_left() const;
+
+		void set_drag_margin_top(real_t p_drag_margin);
+		real_t get_drag_margin_top() const;
+
+		void set_drag_margin_right(real_t p_drag_margin);
+		real_t get_drag_margin_right() const;
+
+		void set_drag_margin_bottom(real_t p_drag_margin);
+		real_t get_drag_margin_bottom() const;
+
 		void set_drag_margin(Side p_side, real_t p_drag_margin);
 		real_t get_drag_margin(Side p_side) const;
 
@@ -129,6 +168,9 @@ namespace godot
 
 		void set_margin_drawing_enabled(bool enable);
 		bool is_margin_drawing_enabled() const;
+
+		Ref<BlendData2D> get_default_blend_data() const;
+		void set_default_blend_data(Ref<BlendData2D> blend_data);
 
 	protected:
 	};

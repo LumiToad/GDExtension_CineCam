@@ -12,8 +12,8 @@ using namespace godot;
 BlendData2D::BlendData2D()
 {
 	blend_name = "";
-	blend_by = BlendBy::POSITION;
-	blend_type = BlendType::DURATION;
+	blend_by = BlendBy::DURATION;
+
 	duration = 0.0;
 	speed = 0.0;
 	ease = Tween::EaseType::EASE_IN;
@@ -37,13 +37,6 @@ void BlendData2D::_bind_methods()
 
 	BIND_ENUM_CONSTANT(SPEED)
 	BIND_ENUM_CONSTANT(DURATION)
-
-	ClassDB::bind_method(D_METHOD("get_blend_type"), &BlendData2D::get_blend_type);
-	ClassDB::bind_method(D_METHOD("set_blend_type", "p_type"), &BlendData2D::set_blend_type);
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "blend_type", PROPERTY_HINT_ENUM, BLEND_TYPE_HINTS), "set_blend_type", "get_blend_type");
-
-	BIND_ENUM_CONSTANT(POSITION)
-	BIND_ENUM_CONSTANT(OFFSET)
 
 	ClassDB::bind_method(D_METHOD("get_blend_by"), &BlendData2D::get_blend_by);
 	ClassDB::bind_method(D_METHOD("set_blend_by", "p_by"), &BlendData2D::set_blend_by);
@@ -79,27 +72,15 @@ godot::String BlendData2D::get_blend_name() const
 }
 
 
-void BlendData2D::set_blend_by(BlendData2D::BlendBy p_by)
+void BlendData2D::set_blend_by(BlendData2D::BlendBy by)
 {
-	blend_by = p_by;
+	blend_by = by;
 }
 
 
 BlendData2D::BlendBy BlendData2D::get_blend_by() const
 {
 	return blend_by;
-}
-
-
-void BlendData2D::set_blend_type(BlendData2D::BlendType p_type)
-{
-	blend_type = p_type;
-}
-
-
-BlendData2D::BlendType BlendData2D::get_blend_type() const
-{
-	return blend_type;
 }
 
 

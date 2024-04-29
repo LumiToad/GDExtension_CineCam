@@ -12,11 +12,18 @@
 #include "gdclass_metadata.h"
 #include "virtual_cam2d.h"
 #include "blend_data2d.h"
+#include "cam_sequence2d.h"
 
 #define DEFAULT_EASE Tween::EASE_OUT
 #define DEFAULT_TRANS Tween::TRANS_CUBIC
+#define SIGNAL_SHAKE_OFFSET_STARTED "shake_offset_started"
 #define SIGNAL_SHAKE_OFFSET_ENDED "shake_offset_ended"
+#define SIGNAL_SHAKE_ZOOM_STARTED "shake_zoom_started"
 #define SIGNAL_SHAKE_ZOOM_ENDED "shake_zoom_ended"
+#define SIGNAL_BLEND_STARTED "blend_started"
+#define SIGNAL_BLEND_COMPLETED "blend_completed"
+#define SIGNAL_SEQUENCE_STARTED "sequence_started"
+#define SIGNAL_SEQUENCE_COMPLETED "sequence_completed"
 
 namespace godot
 {
@@ -39,10 +46,14 @@ namespace godot
 		Vector2 original_zoom;
 		bool is_shake_zoom_active;
 
-		Ref<Tween> blend_position_tween;
+		Ref<Tween> blend_tween;
+		//VirtualCam2D* highest_prio_vcam;
+		//TypedArray<VirtualCam2D> vcams;
 
 		void initialize_internal();
 		void init_tweens();
+		void init_default_blend_data();
+		void _on_blend_completed_internal();
 		void shake_offset_internal(double);
 		void shake_zoom_internal(double);
 
@@ -64,14 +75,19 @@ namespace godot
 
 	// GODOT public
 	private:
+		Ref<BlendData2D> default_blend;
+		CamSequence2D* current_sequence;
+		//bool priority_mode = false;
 		double shake_offset_intensity;
 		double shake_offset_duration;
 		double shake_zoom_intensity;
 		double shake_zoom_duration;
-		Ref<BlendData2D> default_blend;
 
 	public:
-		void blend_to(Node2D* vcam2D, Ref<BlendData2D>);
+		void blend_to(VirtualCam2D* vcam2D, Ref<BlendData2D> blend_data);
+		void seq_blend_next();
+		void seq_blend_prev();
+		void seq_blend_to(int idx);
 
 		void shake_offset(const double &p_intensity,
 			const double &p_duration,
@@ -84,6 +100,11 @@ namespace godot
 			Tween::EaseType p_ease = DEFAULT_EASE,
 			Tween::TransitionType p_trans = DEFAULT_TRANS);
 
+		void start_sequence(CamSequence2D* p_sequence);
+		//void _register_vcam_internal(VirtualCam2D* p_vcam);
+
+		//bool get_priority_mode() const;
+		//void set_priority_mode(const bool mode);
 
 		double get_shake_offset_intensity() const;
 		void set_shake_offset_intensity(const double &p_intensity);
@@ -99,6 +120,9 @@ namespace godot
 
 		Ref<BlendData2D> get_default_blend_data() const;
 		void set_default_blend_data(Ref<BlendData2D> blend_data);
+
+		CamSequence2D* get_current_sequence() const;
+		void set_current_sequence(CamSequence2D* p_sequence);
 
 	protected:
 	};

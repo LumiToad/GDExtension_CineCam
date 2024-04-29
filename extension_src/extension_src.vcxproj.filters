@@ -42,6 +42,9 @@
     <ClCompile Include="blend_data2d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cam_sequence2d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="register_types.h">
@@ -69,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="blend_data2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cam_sequence2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

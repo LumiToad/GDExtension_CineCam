@@ -11,8 +11,7 @@
 
 #include "gdclass_metadata.h"
 
-#define BLEND_TYPE_HINTS "SPEED, DURATION"
-#define BLEND_BY_HINTS "POSITION, OFFSET"
+#define BLEND_BY_HINTS "DURATION ,SPEED"
 #define EASE_HINTS "EASE_IN, EASE_OUT, EASE_IN_OUT, EASE_OUT_IN"
 #define TRANS_HINTS "TRANS_LINEAR, TRANS_SINE, TRANS_QUINT, TRANS_QUART, TRANS_QUAD, TRANS_EXPO, TRANS_ELASTIC, TRANS_CUBIC, TRANS_CIRC, TRANS_BOUNCE, TRANS_BACK, TRANS_SPRING"
 
@@ -23,18 +22,11 @@ namespace godot
 		GDCLASS(BlendData2D, Resource)
 
 	public:
-		enum BlendType
-		{
-			SPEED,
-			DURATION,
-		};
-
 		enum BlendBy
 		{
-			POSITION,
-			OFFSET
+			DURATION,
+			SPEED
 		};
-
 
 		// Internal
 	private:
@@ -58,7 +50,6 @@ namespace godot
 	private:
 		godot::String blend_name;
 		BlendData2D::BlendBy blend_by;
-		BlendData2D::BlendType blend_type;
 		double duration;
 		double speed;
 		Tween::EaseType ease;
@@ -72,9 +63,6 @@ namespace godot
 
 		void set_blend_by(BlendData2D::BlendBy by);
 		BlendData2D::BlendBy get_blend_by() const;
-
-		void set_blend_type(BlendData2D::BlendType type);
-		BlendData2D::BlendType get_blend_type() const;
 
 		void set_duration(double duration);
 		double get_duration() const;
@@ -92,7 +80,6 @@ namespace godot
 		Callable get_callable() const;
 	};
 }
-	VARIANT_ENUM_CAST(BlendData2D::BlendType);
 	VARIANT_ENUM_CAST(BlendData2D::BlendBy);
 
 #endif // BLEND_DATA2D_H
