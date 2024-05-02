@@ -48,11 +48,11 @@ namespace godot
 
 		Ref<Tween> blend_tween;
 		//VirtualCam2D* highest_prio_vcam;
-		//TypedArray<VirtualCam2D> vcams;
+		TypedArray<VirtualCam2D> vcams;
 
 		void initialize_internal();
 		void init_tweens();
-		void init_default_blend_data();
+		//void init_default_blend_data();
 		void _on_blend_completed_internal();
 		void shake_offset_internal(double);
 		void shake_zoom_internal(double);
@@ -77,7 +77,7 @@ namespace godot
 	private:
 		Ref<BlendData2D> default_blend;
 		CamSequence2D* current_sequence;
-		//bool priority_mode = false;
+		bool priority_mode = false;
 		double shake_offset_intensity;
 		double shake_offset_duration;
 		double shake_zoom_intensity;
@@ -101,10 +101,10 @@ namespace godot
 			Tween::TransitionType p_trans = DEFAULT_TRANS);
 
 		void start_sequence(CamSequence2D* p_sequence);
-		//void _register_vcam_internal(VirtualCam2D* p_vcam);
+		//void _register_vcam_internal(VirtualCam2D p_vcam);
 
-		//bool get_priority_mode() const;
-		//void set_priority_mode(const bool mode);
+		bool get_priority_mode() const;
+		void set_priority_mode(const bool mode);
 
 		double get_shake_offset_intensity() const;
 		void set_shake_offset_intensity(const double &p_intensity);
@@ -118,8 +118,10 @@ namespace godot
 		double get_shake_zoom_duration() const;
 		void set_shake_zoom_duration(const double &p_duration);
 
+		/*
 		Ref<BlendData2D> get_default_blend_data() const;
 		void set_default_blend_data(Ref<BlendData2D> blend_data);
+		*/
 
 		CamSequence2D* get_current_sequence() const;
 		void set_current_sequence(CamSequence2D* p_sequence);

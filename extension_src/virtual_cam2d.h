@@ -25,7 +25,7 @@ namespace godot
 
 		void initialize_internal();
 		void init_default_blend_data();
-		//void register_to_cinecam2d();
+		void register_to_cinecam2d();
 
 
 	public:
@@ -41,13 +41,13 @@ namespace godot
 	// GODOT Overrides
 	public:
 		void _process(double delta) override;
-		//void _ready() override;
+		void _ready() override;
 
 
 	// GODOT public
 	private:
-		//String vcam_id;
-		//int priority;
+		godot::String vcam_id;
+		int priority;
 
 		Vector2 offset;
 		Camera2D::AnchorMode anchor_mode = Camera2D::AnchorMode::ANCHOR_MODE_DRAG_CENTER;
@@ -78,12 +78,12 @@ namespace godot
 
 
 	public:
-		//void set_vcam_id(String id);
-		//String get_vcam_id() const;
+		void set_vcam_id(String id);
+		String get_vcam_id() const;
 
 
-		//void set_priority(int prio);
-		//int get_priority() const;
+		void set_priority(int prio);
+		int get_priority() const;
 
 		void set_offset(const Vector2& p_offset);
 		Vector2 get_offset() const;

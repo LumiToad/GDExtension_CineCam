@@ -12,7 +12,7 @@ using namespace godot;
 BlendData2D::BlendData2D()
 {
 	blend_name = "";
-	blend_by = BlendBy::DURATION;
+	blend_by = BlendByType::DURATION;
 
 	duration = 0.0;
 	speed = 0.0;
@@ -72,13 +72,13 @@ godot::String BlendData2D::get_blend_name() const
 }
 
 
-void BlendData2D::set_blend_by(BlendData2D::BlendBy by)
+void BlendData2D::set_blend_by(BlendData2D::BlendByType by)
 {
 	blend_by = by;
 }
 
 
-BlendData2D::BlendBy BlendData2D::get_blend_by() const
+BlendData2D::BlendByType BlendData2D::get_blend_by() const
 {
 	return blend_by;
 }

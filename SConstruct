@@ -24,6 +24,8 @@ if env["platform"] == "macos":
         source=sources,
     )
 else:
+    # env['MSVC_VERSION'] = "14.33"
+    # env['MSSDK_VERSION'] = "10.0.18362.0"
     library = env.SharedLibrary(
         "export/bin/libcinecam{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,

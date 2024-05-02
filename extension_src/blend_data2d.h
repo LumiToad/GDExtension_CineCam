@@ -22,7 +22,7 @@ namespace godot
 		GDCLASS(BlendData2D, Resource)
 
 	public:
-		enum BlendBy
+		enum BlendByType
 		{
 			DURATION,
 			SPEED
@@ -49,7 +49,7 @@ namespace godot
 		// GODOT public
 	private:
 		godot::String blend_name;
-		BlendData2D::BlendBy blend_by;
+		BlendData2D::BlendByType blend_by;
 		double duration;
 		double speed;
 		Tween::EaseType ease;
@@ -58,11 +58,11 @@ namespace godot
 
 
 	public:
-		void set_blend_name(godot::String name);
-		String get_blend_name() const;
+		void set_blend_name(godot::String p_name);
+		godot::String get_blend_name() const;
 
-		void set_blend_by(BlendData2D::BlendBy by);
-		BlendData2D::BlendBy get_blend_by() const;
+		void set_blend_by(BlendData2D::BlendByType by);
+		BlendData2D::BlendByType get_blend_by() const;
 
 		void set_duration(double duration);
 		double get_duration() const;
@@ -80,6 +80,6 @@ namespace godot
 		Callable get_callable() const;
 	};
 }
-	VARIANT_ENUM_CAST(BlendData2D::BlendBy);
+	VARIANT_ENUM_CAST(BlendData2D::BlendByType);
 
 #endif // BLEND_DATA2D_H

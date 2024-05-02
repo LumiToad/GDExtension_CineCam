@@ -25,8 +25,8 @@ VirtualCam2D::VirtualCam2D()
 	drag_margin[SIDE_RIGHT] = 0.2;
 	drag_margin[SIDE_BOTTOM] = 0.2;
 
-	//priority = 0;
-	//vcam_id = "";
+	priority = 0;
+	vcam_id = "";
 
 	additional_description = "This virtual camera contains target information for CineCam2D.\n";
 	initialize_internal();
@@ -41,9 +41,11 @@ VirtualCam2D::~VirtualCam2D()
 
 void VirtualCam2D::_bind_methods()
 {
-	//ADD_GETSET_BINDING(get_vcam_id, set_vcam_id, vcam_id, id, VirtualCam2D, Variant::STRING);
-	//ADD_GETSET_BINDING(get_priority, set_priority, priority, priority, VirtualCam2D, Variant::INT);
+	ADD_GETSET_BINDING(get_vcam_id, set_vcam_id, vcam_id, id, VirtualCam2D, Variant::STRING);
+	ADD_GETSET_BINDING(get_priority, set_priority, priority, priority, VirtualCam2D, Variant::INT);
 	ADD_GETSET_HINT_BINDING(get_default_blend_data, set_default_blend_data, default_blend, p_default_blend, VirtualCam2D, OBJECT, godot::PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D");
+
+	ADD_METHOD_BINDING(register_to_cinecam2d, VirtualCam2D);
 
 	ClassDB::bind_method(D_METHOD("set_offset", "offset"), &VirtualCam2D::set_offset);
 	ClassDB::bind_method(D_METHOD("get_offset"), &VirtualCam2D::get_offset);
@@ -196,16 +198,26 @@ void VirtualCam2D::initialize_internal()
 
 void VirtualCam2D::init_default_blend_data()
 {
-	if (default_blend.ptr() != nullptr) return;
+	//if (default_blend.ptr() != nullptr) return;
 
 	default_blend.instantiate();
 
 	default_blend.ptr()->set_blend_name("VirtualCam2D blend data");
 	default_blend.ptr()->set_duration(2.0f);
 	default_blend.ptr()->set_speed(2.0f);
-	default_blend.ptr()->set_blend_by(BlendData2D::BlendBy::DURATION);
+	default_blend.ptr()->set_blend_by(BlendData2D::BlendByType::DURATION);
 	default_blend.ptr()->set_ease(Tween::EASE_IN_OUT);
 	default_blend.ptr()->set_trans(Tween::TRANS_CUBIC);
+}
+
+
+void VirtualCam2D::register_to_cinecam2d()
+{
+	/*Camera2D* camera2d = get_viewport()->get_camera_2d();
+	if (camera2d != nullptr && camera2d->has_method("_register_vcam_internal"))
+	{
+		((CineCam2D*)camera2d)->_register_vcam_internal(this);
+	}*/
 }
 
 
@@ -215,19 +227,12 @@ void VirtualCam2D::_process(double delta)
 }
 
 
-/*
 void VirtualCam2D::_ready()
 {
-	//register_to_cinecam2d
-	CineCam2D* cinecam2d = cast_to<CineCam2D>(get_viewport()->get_camera_2d());
-	if (cinecam2d != nullptr)
-	{
-		cinecam2d->_register_vcam_internal(this);
-	}
+	register_to_cinecam2d();
 }
-*/
 
-/*
+
 void VirtualCam2D::set_vcam_id(String id)
 {
 	vcam_id = id;
@@ -238,19 +243,19 @@ String VirtualCam2D::get_vcam_id() const
 {
 	return vcam_id;
 }
-*/
 
-//
-//void VirtualCam2D::set_priority(int prio)
-//{
-//	priority = prio;
-//}
-//
-//
-//int VirtualCam2D::get_priority() const
-//{
-//	return priority;
-//}
+
+
+void VirtualCam2D::set_priority(int prio)
+{
+	priority = prio;
+}
+
+
+int VirtualCam2D::get_priority() const
+{
+	return priority;
+}
 
 
 void VirtualCam2D::set_offset(const Vector2& p_offset)
