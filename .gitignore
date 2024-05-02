@@ -396,9 +396,5 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-lib/libgodot-cpp.windows.template_debug.x86_32.lib
-lib/libgodot-cpp.windows.template_debug.x86_64.lib
-lib/libgodot-cpp.windows.template_release.x86_32.lib
-lib/libgodot-cpp.windows.template_release.x86_64.lib
 /build_logs
 .sconsign.dblite

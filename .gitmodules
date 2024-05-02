@@ -1,4 +1,0 @@
-[submodule "godot-cpp"]
-	path = godot-cpp
-	url = ./godot-cpp/
-	branch = 4.1
