@@ -5,9 +5,6 @@
 
 #include "virtual_cam2d.h"
 
-#include "godot_cpp/classes/camera2d.hpp"
-#include "godot_cpp/classes/viewport.hpp"
-
 #include "bind_utils.h"
 // #include "cinecam2d.h"
 
