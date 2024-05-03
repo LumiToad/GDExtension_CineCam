@@ -122,7 +122,7 @@ namespace godot
 		void set_default_blend_data(Ref<BlendData2D> blend_data);
 		
 		CamSequence2D* get_current_sequence() const;
-		void set_current_sequence(NodePath p_sequence);
+		void set_current_sequence(CamSequence2D* p_sequence);
 
 	protected:
 	};

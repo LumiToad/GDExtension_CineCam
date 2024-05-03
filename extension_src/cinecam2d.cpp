@@ -38,10 +38,11 @@ void CineCam2D::_bind_methods()
 	ADD_METHOD_BINDING(seq_blend_next, CineCam2D);
 	ADD_METHOD_BINDING(seq_blend_prev, CineCam2D);
 	ADD_METHOD_ARGS_BINDING(seq_blend_to, CineCam2D, VA_LIST("idx"));
+
 	//ADD_METHOD_ARGS_BINDING(_register_vcam_internal, CineCam2D, VA_LIST("vcam"));
 
 	ADD_GETSET_HINT_BINDING(get_default_blend_data, set_default_blend_data, default_blend, p_default_blend, CineCam2D, OBJECT, PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D");
-	ADD_GETSET_HINT_BINDING(get_current_sequence, set_current_sequence, current_sequence, p_sequence, CineCam2D, NODE_PATH, PROPERTY_HINT_NODE_TYPE, "CamSequence2D");
+	ADD_GETSET_HINT_BINDING(get_current_sequence, set_current_sequence, current_sequence, p_sequence, CineCam2D, OBJECT, PROPERTY_HINT_NODE_TYPE, "CamSequence2D");
 	ADD_GETSET_BINDING(get_priority_mode, set_priority_mode, priority_mode, mode, CineCam2D, Variant::BOOL);
 
 	ADD_GETSET_HINT_BINDING(get_shake_offset_intensity, set_shake_offset_intensity, shake_offset_intensity, intensity, CineCam2D, FLOAT, godot::PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
@@ -54,7 +55,8 @@ void CineCam2D::_bind_methods()
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_zoom, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 
 	ADD_METHOD_ARGS_BINDING(blend_to, CineCam2D, VA_LIST("vcam2d", "blend_data"));
-	ADD_METHOD_ARGS_BINDING(start_sequence, CineCam2D, VA_LIST("sequence"));
+
+	ADD_METHOD_ARGS_BINDING(start_sequence, CineCam2D, VA_LIST("p_sequence"));
 
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_STARTED));
@@ -258,9 +260,12 @@ void godot::CineCam2D::shake_zoom(const double& p_intensity, const double& p_dur
 }
 
 
-void godot::CineCam2D::start_sequence(CamSequence2D* p_sequence)
+void CineCam2D::start_sequence(CamSequence2D* p_sequence)
 {
-	current_sequence = p_sequence;
+	if (p_sequence != nullptr)
+	{
+		current_sequence = p_sequence;
+	}
 	
 	seq_blend_to(0);
 	emit_signal(SIGNAL_SEQUENCE_STARTED);
@@ -447,12 +452,7 @@ CamSequence2D* CineCam2D::get_current_sequence() const
 }
 
 
-void CineCam2D::set_current_sequence(NodePath p_sequence)
+void CineCam2D::set_current_sequence(CamSequence2D* p_sequence)
 {
-	Node* node = get_node_internal(p_sequence);
-	CamSequence2D* pointer = cast_to<CamSequence2D>(node);
-	if (pointer != nullptr)
-	{
-		current_sequence = pointer;
-	}
+	current_sequence = p_sequence;
 }
