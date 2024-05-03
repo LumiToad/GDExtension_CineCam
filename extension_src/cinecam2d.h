@@ -52,7 +52,7 @@ namespace godot
 
 		void initialize_internal();
 		void init_tweens();
-		//void init_default_blend_data();
+		void init_default_blend_data();
 		void _on_blend_completed_internal();
 		void shake_offset_internal(double);
 		void shake_zoom_internal(double);
@@ -118,13 +118,11 @@ namespace godot
 		double get_shake_zoom_duration() const;
 		void set_shake_zoom_duration(const double &p_duration);
 
-		/*
 		Ref<BlendData2D> get_default_blend_data() const;
 		void set_default_blend_data(Ref<BlendData2D> blend_data);
-		*/
-
+		
 		CamSequence2D* get_current_sequence() const;
-		void set_current_sequence(CamSequence2D* p_sequence);
+		void set_current_sequence(NodePath p_sequence);
 
 	protected:
 	};

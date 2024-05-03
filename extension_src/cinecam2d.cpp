@@ -33,16 +33,15 @@ CineCam2D::~CineCam2D()
 
 void CineCam2D::_bind_methods()
 {
-	//ADD_METHOD_BINDING(init_default_blend_data, CineCam2D);
+	ADD_METHOD_BINDING(init_default_blend_data, CineCam2D);
 
 	ADD_METHOD_BINDING(seq_blend_next, CineCam2D);
 	ADD_METHOD_BINDING(seq_blend_prev, CineCam2D);
 	ADD_METHOD_ARGS_BINDING(seq_blend_to, CineCam2D, VA_LIST("idx"));
 	//ADD_METHOD_ARGS_BINDING(_register_vcam_internal, CineCam2D, VA_LIST("vcam"));
 
-	//ADD_GETSET_HINT_BINDING(get_default_blend_data, set_default_blend_data, default_blend, p_default_blend, CineCam2D, OBJECT, godot::PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D");
-	ADD_GETSET_BINDING(get_current_sequence, set_current_sequence, current_sequence, p_sequence, CineCam2D, Variant::NODE_PATH);
-
+	ADD_GETSET_HINT_BINDING(get_default_blend_data, set_default_blend_data, default_blend, p_default_blend, CineCam2D, OBJECT, PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D");
+	ADD_GETSET_HINT_BINDING(get_current_sequence, set_current_sequence, current_sequence, p_sequence, CineCam2D, NODE_PATH, PROPERTY_HINT_NODE_TYPE, "CamSequence2D");
 	ADD_GETSET_BINDING(get_priority_mode, set_priority_mode, priority_mode, mode, CineCam2D, Variant::BOOL);
 
 	ADD_GETSET_HINT_BINDING(get_shake_offset_intensity, set_shake_offset_intensity, shake_offset_intensity, intensity, CineCam2D, FLOAT, godot::PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
@@ -76,7 +75,7 @@ void CineCam2D::initialize_internal()
 	GDCLASS_Metadata meta(get_parent_class_static(), additional_description, *_get_extension_class_name());
 	set_editor_description(meta.get_metadata_string());
 
-	//init_default_blend_data();
+	init_default_blend_data();
 }
 
 
@@ -101,7 +100,7 @@ void CineCam2D::init_tweens()
 	blend_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
 }
 
-/*
+
 void CineCam2D::init_default_blend_data()
 {
 	if (default_blend.ptr() != nullptr) return;
@@ -115,7 +114,7 @@ void CineCam2D::init_default_blend_data()
 	default_blend.ptr()->set_ease(Tween::EASE_IN_OUT);
 	default_blend.ptr()->set_trans(Tween::TRANS_CUBIC);
 }
-*/
+
 
 void CineCam2D::_on_blend_completed_internal()
 {
@@ -429,7 +428,7 @@ void CineCam2D::set_shake_zoom_duration(const double &duration)
 	shake_zoom_duration = duration;
 }
 
-/*
+
 Ref<BlendData2D> CineCam2D::get_default_blend_data() const
 {
 	return default_blend;
@@ -440,7 +439,7 @@ void CineCam2D::set_default_blend_data(Ref<BlendData2D> blend_data)
 {
 	default_blend = blend_data;
 }
-*/
+
 
 CamSequence2D* CineCam2D::get_current_sequence() const
 {
@@ -448,7 +447,12 @@ CamSequence2D* CineCam2D::get_current_sequence() const
 }
 
 
-void CineCam2D::set_current_sequence(CamSequence2D* p_sequence)
+void CineCam2D::set_current_sequence(NodePath p_sequence)
 {
-	current_sequence = p_sequence;
+	Node* node = get_node_internal(p_sequence);
+	CamSequence2D* pointer = cast_to<CamSequence2D>(node);
+	if (pointer != nullptr)
+	{
+		current_sequence = pointer;
+	}
 }
