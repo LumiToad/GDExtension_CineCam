@@ -36,3 +36,16 @@ void godot::TemplateNode::initialize_internal()
 void TemplateNode::_process(double delta)
 {
 }
+
+
+void TemplateNode::_notification(int p_what)
+{
+	switch (p_what)
+	{
+	default:
+		break;
+	case NOTIFICATION_READY:
+		// _ready()
+		break;
+	}
+}

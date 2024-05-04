@@ -32,15 +32,6 @@ void CamSequence2D::_bind_methods()
 }
 
 
-void godot::CamSequence2D::_notification(int p_what)
-{
-	if (p_what == NOTIFICATION_CHILD_ORDER_CHANGED)
-	{
-		vcams = get_vcams_in_children_internal();
-	}
-}
-
-
 void godot::CamSequence2D::initialize_internal()
 {
 	GDCLASS_Metadata meta(get_parent_class_static(), additional_description, *_get_extension_class_name());
@@ -71,9 +62,19 @@ void CamSequence2D::_process(double delta)
 }
 
 
-void CamSequence2D::_ready()
+void CamSequence2D::_notification(int p_what)
 {
-	vcams = get_vcams_in_children_internal();
+	switch (p_what)
+	{
+		default:
+			break;
+		case NOTIFICATION_READY:
+			vcams = get_vcams_in_children_internal();
+			break;
+		case NOTIFICATION_CHILD_ORDER_CHANGED:
+			vcams = get_vcams_in_children_internal();
+			break;
+	}
 }
 
 

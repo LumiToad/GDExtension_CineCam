@@ -12,6 +12,8 @@
 #include "gdclass_metadata.h"
 #include "blend_data2d.h"
 
+#define SIGNAL_PRIORITY_CHANGED "priority_changed"
+
 namespace godot
 {
 	class VirtualCam2D : public Node2D
@@ -25,7 +27,7 @@ namespace godot
 
 		void initialize_internal();
 		void init_default_blend_data();
-		void register_to_cinecam2d();
+		void _register_to_cinecam2d();
 
 
 	public:
@@ -41,7 +43,7 @@ namespace godot
 	// GODOT Overrides
 	public:
 		void _process(double delta) override;
-		void _ready() override;
+		void _notification(int p_what);
 
 
 	// GODOT public

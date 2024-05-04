@@ -34,13 +34,12 @@ namespace godot
 
 	protected:
 		static void _bind_methods();
-		void _notification(int p_what);
 
 
 		// GODOT Overrides
 	public:
 		void _process(double delta) override;
-		void _ready() override;
+		void _notification(int p_what);
 
 
 		// GODOT public

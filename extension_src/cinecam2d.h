@@ -24,13 +24,23 @@
 #define SIGNAL_BLEND_COMPLETED "blend_completed"
 #define SIGNAL_SEQUENCE_STARTED "sequence_started"
 #define SIGNAL_SEQUENCE_COMPLETED "sequence_completed"
+#define PRIORITY_MODE_HINTS "OFF,INSTANT,INSTANT_FOLLOW,BLEND,BLEND_FOLLOW"
 
 namespace godot
 {
 	class CineCam2D : public Camera2D
 	{
 		GDCLASS(CineCam2D, Camera2D)
-
+		
+	public:
+		enum PriorityMode
+		{
+			OFF,
+			INSTANT,
+			INSTANT_FOLLOW,
+			BLEND,
+			BLEND_FOLLOW
+		};
 	// Internal
 	private:
 		godot::String additional_description;
@@ -47,7 +57,7 @@ namespace godot
 		bool is_shake_zoom_active;
 
 		Ref<Tween> blend_tween;
-		//VirtualCam2D* highest_prio_vcam;
+		VirtualCam2D* highest_prio_vcam;
 		TypedArray<VirtualCam2D> vcams;
 
 		void initialize_internal();
@@ -70,24 +80,26 @@ namespace godot
 	// GODOT Overrides
 	public:
 		void _process(double delta) override;
-		void _ready() override;
+		void _notification(int p_what);
 
 
 	// GODOT public
 	private:
 		Ref<BlendData2D> default_blend;
 		CamSequence2D* current_sequence;
-		bool priority_mode = false;
+		CineCam2D::PriorityMode priority_mode;
 		double shake_offset_intensity;
 		double shake_offset_duration;
 		double shake_zoom_intensity;
 		double shake_zoom_duration;
 
 	public:
-		void blend_to(VirtualCam2D* vcam2D, Ref<BlendData2D> blend_data);
+		void blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data);
 		void seq_blend_next();
 		void seq_blend_prev();
 		void seq_blend_to(int idx);
+
+		void reposition_to(VirtualCam2D* p_vcam);
 
 		void shake_offset(const double &p_intensity,
 			const double &p_duration,
@@ -100,11 +112,15 @@ namespace godot
 			Tween::EaseType p_ease = DEFAULT_EASE,
 			Tween::TransitionType p_trans = DEFAULT_TRANS);
 
-		void start_sequence(CamSequence2D* p_sequence);
-		//void _register_vcam_internal(VirtualCam2D p_vcam);
+		void start_sequence();
+		void _register_vcam_internal(VirtualCam2D* p_vcam);
+		void _remove_vcam_internal(VirtualCam2D* p_vcam);
+		void _set_highest_vcam_internal(VirtualCam2D* p_vcam, int vcam_prio);
+		void _on_vcam_priority_changed(VirtualCam2D* p_vcam, int prio);
+		void _reposition_by_priority_mode();
 
-		bool get_priority_mode() const;
-		void set_priority_mode(const bool mode);
+		CineCam2D::PriorityMode get_priority_mode() const;
+		void set_priority_mode(const CineCam2D::PriorityMode mode);
 
 		double get_shake_offset_intensity() const;
 		void set_shake_offset_intensity(const double &p_intensity);
@@ -124,8 +140,14 @@ namespace godot
 		CamSequence2D* get_current_sequence() const;
 		void set_current_sequence(CamSequence2D* p_sequence);
 
+		VirtualCam2D* prioritized_vcam() const;
+		VirtualCam2D* find_vcam_by_id(String id) const;
+
+
 	protected:
 	};
 }
+
+	VARIANT_ENUM_CAST(CineCam2D::PriorityMode)
 
 #endif // CINECAM_H

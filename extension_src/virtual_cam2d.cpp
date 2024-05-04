@@ -3,7 +3,10 @@
 
 // virtual_cam2d.cpp
 
+#include "godot_cpp/classes/viewport.hpp"
+
 #include "virtual_cam2d.h"
+#include "cinecam2d.h"
 
 #include "bind_utils.h"
 // #include "cinecam2d.h"
@@ -42,7 +45,7 @@ void VirtualCam2D::_bind_methods()
 	ADD_GETSET_BINDING(get_priority, set_priority, priority, priority, VirtualCam2D, Variant::INT);
 	ADD_GETSET_HINT_BINDING(get_default_blend_data, set_default_blend_data, default_blend, p_default_blend, VirtualCam2D, OBJECT, godot::PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D");
 
-	// ADD_METHOD_BINDING(register_to_cinecam2d, VirtualCam2D);
+	ADD_METHOD_BINDING(_register_to_cinecam2d, VirtualCam2D);
 
 	ClassDB::bind_method(D_METHOD("set_offset", "offset"), &VirtualCam2D::set_offset);
 	ClassDB::bind_method(D_METHOD("get_offset"), &VirtualCam2D::get_offset);
@@ -167,6 +170,8 @@ void VirtualCam2D::_bind_methods()
 	BIND_ENUM_CONSTANT(Camera2D::AnchorMode::ANCHOR_MODE_DRAG_CENTER);
 	BIND_ENUM_CONSTANT(Camera2D::Camera2DProcessCallback::CAMERA2D_PROCESS_PHYSICS);
 	BIND_ENUM_CONSTANT(Camera2D::Camera2DProcessCallback::CAMERA2D_PROCESS_IDLE);
+
+	ADD_SIGNAL(MethodInfo(SIGNAL_PRIORITY_CHANGED, PropertyInfo(Variant::OBJECT, "node"), PropertyInfo(Variant::INT, "priority")));
 }
 
 
@@ -208,13 +213,13 @@ void VirtualCam2D::init_default_blend_data()
 }
 
 
-void VirtualCam2D::register_to_cinecam2d()
+void VirtualCam2D::_register_to_cinecam2d()
 {
-	/*Camera2D* camera2d = get_viewport()->get_camera_2d();
+	Camera2D* camera2d = get_viewport()->get_camera_2d();
 	if (camera2d != nullptr && camera2d->has_method("_register_vcam_internal"))
 	{
 		((CineCam2D*)camera2d)->_register_vcam_internal(this);
-	}*/
+	}
 }
 
 
@@ -224,9 +229,16 @@ void VirtualCam2D::_process(double delta)
 }
 
 
-void VirtualCam2D::_ready()
+void VirtualCam2D::_notification(int p_what)
 {
-	// register_to_cinecam2d();
+	switch (p_what)
+	{
+	default:
+		break;
+	case NOTIFICATION_READY:
+		_register_to_cinecam2d();
+		break;
+	}
 }
 
 
@@ -246,6 +258,7 @@ String VirtualCam2D::get_vcam_id() const
 void VirtualCam2D::set_priority(int prio)
 {
 	priority = prio;
+	emit_signal(SIGNAL_PRIORITY_CHANGED, this, priority);
 }
 
 
