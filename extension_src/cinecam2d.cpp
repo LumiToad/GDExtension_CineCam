@@ -167,12 +167,9 @@ void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data)
 		return;
 	}
 
-	if (blend_tween->is_running())
-	{
-		blend_tween = get_tree()->create_tween();
-		blend_tween->stop();
-	}
-
+	blend_tween = get_tree()->create_tween();
+	blend_tween->stop();
+	
 	blend_tween->set_trans(blend_data->get_trans());
 	blend_tween->set_ease(blend_data->get_ease());
 
@@ -185,9 +182,6 @@ void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data)
 
 		double distance = sqrt(pow((target.x - current.x), 2.0) + pow((target.y - current.y), 2.0));
 		calc_duration = distance / blend_data->get_speed();
-
-		UtilityFunctions::print("SPEED FOUND!");
-		UtilityFunctions::print(blend_data->get_speed());
 	}
 
 	blend_tween->
@@ -365,7 +359,6 @@ void godot::CineCam2D::shake_zoom_internal(double delta)
 }
 
 
-
 void CineCam2D::_register_vcam_internal(VirtualCam2D* p_vcam)
 {
 	if (!vcams.has(p_vcam))
@@ -375,8 +368,10 @@ void CineCam2D::_register_vcam_internal(VirtualCam2D* p_vcam)
 		vcams.push_back(cast_to<VirtualCam2D>(p_vcam));
 	}
 
-	_try_set_highest_vcam_internal(p_vcam, p_vcam->get_priority());
-	_move_by_priority_mode();
+	if (_try_set_highest_vcam_internal(p_vcam, p_vcam->get_priority()))
+	{
+		_move_by_priority_mode();
+	}
 }
 
 
@@ -392,6 +387,7 @@ void godot::CineCam2D::_remove_vcam_internal(VirtualCam2D* p_vcam)
 bool CineCam2D::_try_set_highest_vcam_internal(VirtualCam2D* p_vcam, int vcam_prio)
 {
 	bool priority_changed = false;
+	int prio = -1;
 
 	if (highest_prio_vcam != nullptr)
 	{
@@ -402,9 +398,10 @@ bool CineCam2D::_try_set_highest_vcam_internal(VirtualCam2D* p_vcam, int vcam_pr
 			emit_signal(SIGNAL_PRIORITIZED_VCAM2D_CHANGED, p_vcam, vcam_prio);
 			return priority_changed;
 		}
-	}
 
-	int prio = -1;
+		prio = highest_prio_vcam->get_priority();
+	}
+	
 
 	for (int i = 0; i < vcams.size(); i++)
 	{
@@ -449,7 +446,7 @@ void CineCam2D::_move_by_priority_mode()
 	Ref<BlendData2D> blend = default_blend;
 	if (highest_prio_vcam->get_default_blend_data().is_valid())
 	{
-		blend = default_blend;
+		blend = highest_prio_vcam->get_default_blend_data();
 	}
 
 	switch (priority_mode)
