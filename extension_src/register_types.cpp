@@ -17,6 +17,7 @@
 #include "virtual_cam2d.h"
 #include "cam_sequence2d.h"
 #include "cinecam2d.h"
+#include "cam_target2d.h"
 
 
 using namespace godot;
@@ -26,8 +27,7 @@ void initialize_cinecam_module(ModuleInitializationLevel p_level)
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) return;
 	
 	GDREGISTER_CLASS(GDExample)
-	GDREGISTER_CLASS(TemplateNode)
-	GDREGISTER_CLASS(TemplateResource)
+	GDREGISTER_CLASS(CamTarget2D)
 	GDREGISTER_CLASS(BlendData2D)
 	GDREGISTER_CLASS(VirtualCam2D)
 	GDREGISTER_CLASS(CamSequence2D)

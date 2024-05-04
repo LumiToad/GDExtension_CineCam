@@ -11,7 +11,7 @@
 
 #include "gdclass_metadata.h"
 #include "virtual_cam2d.h"
-#include "blend_data2d.h"
+#include "cam_target2d.h"
 #include "cam_sequence2d.h"
 
 #define DEFAULT_EASE Tween::EASE_OUT
@@ -25,6 +25,7 @@
 #define SIGNAL_SEQUENCE_STARTED "sequence_started"
 #define SIGNAL_SEQUENCE_COMPLETED "sequence_completed"
 #define PRIORITY_MODE_HINTS "OFF,INSTANT,INSTANT_FOLLOW,BLEND,BLEND_FOLLOW"
+#define FOLLOW_MODE_HINTS "FOLLOW_OFF,FOLLOW,FOLLOW_BLEND"
 #define SIGNAL_PRIORITIZED_VCAM2D_CHANGED "prioritized_vcam2d_changed"
 
 namespace godot
@@ -42,6 +43,15 @@ namespace godot
 			BLEND,
 			BLEND_FOLLOW
 		};
+
+		enum FollowMode
+		{
+			FOLLOW_OFF,
+			FOLLOW,
+			FOLLOW_BLEND
+		};
+
+
 	// Internal
 	private:
 		godot::String additional_description;
@@ -58,6 +68,7 @@ namespace godot
 		bool is_shake_zoom_active;
 
 		Ref<Tween> blend_tween;
+		Ref<Tween> follow_tween;
 		bool tweens_ready;
 		VirtualCam2D* highest_prio_vcam;
 		TypedArray<VirtualCam2D> vcams;
@@ -68,6 +79,8 @@ namespace godot
 		void _on_blend_completed_internal();
 		void shake_offset_internal(double);
 		void shake_zoom_internal(double);
+		double _calc_blend_duration_by_speed(Vector2 current_pos, Vector2 target_pos, double speed);
+		void follow_blend_internal(Node2D* p_node2d, Ref<BlendData2D> blend, Vector2 offset);
 
 
 	public:
@@ -90,6 +103,8 @@ namespace godot
 		Ref<BlendData2D> default_blend;
 		CamSequence2D* current_sequence;
 		CineCam2D::PriorityMode priority_mode;
+		CineCam2D::FollowMode follow_mode;
+		CamTarget2D* target;
 		double shake_offset_intensity;
 		double shake_offset_duration;
 		double shake_zoom_intensity;
@@ -101,13 +116,12 @@ namespace godot
 		void seq_blend_prev();
 		void seq_blend_to(int idx);
 
-		void reposition_to(VirtualCam2D* p_vcam);
+		void reposition_to_vcam(VirtualCam2D* p_vcam);
 
 		void shake_offset(const double &p_intensity,
 			const double &p_duration,
 			Tween::EaseType p_ease = DEFAULT_EASE,
 			Tween::TransitionType p_trans = DEFAULT_TRANS);
-
 
 		void shake_zoom(const double& p_intensity,
 			const double& p_duration,
@@ -123,6 +137,12 @@ namespace godot
 
 		CineCam2D::PriorityMode get_priority_mode() const;
 		void set_priority_mode(const CineCam2D::PriorityMode mode);
+
+		CineCam2D::FollowMode get_follow_mode() const;
+		void set_follow_mode(const CineCam2D::FollowMode mode);
+
+		CamTarget2D* get_target() const;
+		void set_target(CamTarget2D* p_target);
 
 		double get_shake_offset_intensity() const;
 		void set_shake_offset_intensity(const double &p_intensity);
@@ -151,5 +171,6 @@ namespace godot
 }
 
 	VARIANT_ENUM_CAST(CineCam2D::PriorityMode)
+	VARIANT_ENUM_CAST(CineCam2D::FollowMode)
 
 #endif // CINECAM_H

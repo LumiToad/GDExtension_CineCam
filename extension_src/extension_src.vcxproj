@@ -158,6 +158,7 @@
     <ClCompile Include="bind_utils.cpp" />
     <ClCompile Include="blend_data2d.cpp" />
     <ClCompile Include="cam_sequence2d.cpp" />
+    <ClCompile Include="cam_target2d.cpp" />
     <ClCompile Include="cinecam2d.cpp" />
     <ClCompile Include="gdclass_metadata.cpp" />
     <ClCompile Include="gdexample.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="bind_utils.h" />
     <ClInclude Include="blend_data2d.h" />
     <ClInclude Include="cam_sequence2d.h" />
+    <ClInclude Include="cam_target2d.h" />
     <ClInclude Include="cinecam2d.h" />
     <ClInclude Include="gdclass_metadata.h" />
     <ClInclude Include="gdexample.h" />
