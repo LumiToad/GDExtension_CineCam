@@ -4,7 +4,7 @@
 // virtual_cam2d.cpp
 
 #include "godot_cpp/classes/viewport.hpp"
-
+#include "godot_cpp/classes/engine.hpp"
 #include "virtual_cam2d.h"
 #include "cinecam2d.h"
 
@@ -171,7 +171,7 @@ void VirtualCam2D::_bind_methods()
 	BIND_ENUM_CONSTANT(Camera2D::Camera2DProcessCallback::CAMERA2D_PROCESS_PHYSICS);
 	BIND_ENUM_CONSTANT(Camera2D::Camera2DProcessCallback::CAMERA2D_PROCESS_IDLE);
 
-	ADD_SIGNAL(MethodInfo(SIGNAL_PRIORITY_CHANGED, PropertyInfo(Variant::OBJECT, "node"), PropertyInfo(Variant::INT, "priority")));
+	ADD_SIGNAL(MethodInfo(SIGNAL_PRIORITY_CHANGED, PropertyInfo(Variant::OBJECT, "vcam2d"), PropertyInfo(Variant::INT, "priority")));
 }
 
 
@@ -231,12 +231,17 @@ void VirtualCam2D::_process(double delta)
 
 void VirtualCam2D::_notification(int p_what)
 {
+	bool is_in_editor = Engine::get_singleton()->is_editor_hint();
+
 	switch (p_what)
 	{
 	default:
 		break;
 	case NOTIFICATION_READY:
-		_register_to_cinecam2d();
+		if (!is_in_editor)
+		{
+			_register_to_cinecam2d();
+		}
 		break;
 	}
 }

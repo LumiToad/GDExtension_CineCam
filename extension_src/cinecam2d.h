@@ -25,6 +25,7 @@
 #define SIGNAL_SEQUENCE_STARTED "sequence_started"
 #define SIGNAL_SEQUENCE_COMPLETED "sequence_completed"
 #define PRIORITY_MODE_HINTS "OFF,INSTANT,INSTANT_FOLLOW,BLEND,BLEND_FOLLOW"
+#define SIGNAL_PRIORITIZED_VCAM2D_CHANGED "prioritized_vcam2d_changed"
 
 namespace godot
 {
@@ -57,6 +58,7 @@ namespace godot
 		bool is_shake_zoom_active;
 
 		Ref<Tween> blend_tween;
+		bool tweens_ready;
 		VirtualCam2D* highest_prio_vcam;
 		TypedArray<VirtualCam2D> vcams;
 
@@ -115,9 +117,9 @@ namespace godot
 		void start_sequence();
 		void _register_vcam_internal(VirtualCam2D* p_vcam);
 		void _remove_vcam_internal(VirtualCam2D* p_vcam);
-		void _set_highest_vcam_internal(VirtualCam2D* p_vcam, int vcam_prio);
+		bool _try_set_highest_vcam_internal(VirtualCam2D* p_vcam, int vcam_prio);
 		void _on_vcam_priority_changed(VirtualCam2D* p_vcam, int prio);
-		void _reposition_by_priority_mode();
+		void _move_by_priority_mode();
 
 		CineCam2D::PriorityMode get_priority_mode() const;
 		void set_priority_mode(const CineCam2D::PriorityMode mode);

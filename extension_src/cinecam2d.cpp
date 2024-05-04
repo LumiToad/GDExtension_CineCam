@@ -8,6 +8,7 @@
 #include "godot_cpp/classes/random_number_generator.hpp"
 #include "godot_cpp/classes/scene_tree.hpp"
 #include "godot_cpp/variant/utility_functions.hpp"
+#include "godot_cpp/classes/engine.hpp"
 
 #include "bind_utils.h"
 
@@ -21,6 +22,7 @@ CineCam2D::CineCam2D()
 	shake_offset_duration = 0.0;
 	shake_zoom_intensity = 0.0;
 	shake_zoom_duration = 0.0;
+	tweens_ready = false;
 	additional_description = "";
 	current_sequence = nullptr;
 	highest_prio_vcam = nullptr;
@@ -46,6 +48,7 @@ void CineCam2D::_bind_methods()
 
 	ADD_METHOD_BINDING(prioritized_vcam, CineCam2D);
 	ADD_METHOD_BINDING(_on_vcam_priority_changed, CineCam2D);
+	ADD_METHOD_BINDING(_move_by_priority_mode, CineCam2D);
 	ADD_METHOD_ARGS_BINDING(find_vcam_by_id, CineCam2D, "id");
 
 	ADD_METHOD_ARGS_BINDING(_register_vcam_internal, CineCam2D, VA_LIST("p_vcam"));
@@ -73,6 +76,7 @@ void CineCam2D::_bind_methods()
 	ADD_SIGNAL(MethodInfo(SIGNAL_BLEND_COMPLETED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SEQUENCE_STARTED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SEQUENCE_COMPLETED));
+	ADD_SIGNAL(MethodInfo(SIGNAL_PRIORITIZED_VCAM2D_CHANGED, PropertyInfo(Variant::OBJECT, "vcam2d"), PropertyInfo(Variant::INT, "priority")));
 
 	BIND_ENUM_CONSTANT(PriorityMode::OFF);
 	BIND_ENUM_CONSTANT(PriorityMode::INSTANT);
@@ -112,6 +116,8 @@ void CineCam2D::init_tweens()
 	blend_tween = get_tree()->create_tween();
 	blend_tween->stop();
 	blend_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
+
+	tweens_ready = true;
 }
 
 
@@ -155,6 +161,18 @@ void CineCam2D::_on_blend_completed_internal()
 
 void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data)
 {
+	if (!tweens_ready)
+	{
+		UtilityFunctions::push_warning("WARNING! Tried blending before tweens initialized!\n This is probably a bug in this GDExtension!");
+		return;
+	}
+
+	if (blend_tween->is_running())
+	{
+		blend_tween = get_tree()->create_tween();
+		blend_tween->stop();
+	}
+
 	blend_tween->set_trans(blend_data->get_trans());
 	blend_tween->set_ease(blend_data->get_ease());
 
@@ -167,9 +185,10 @@ void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data)
 
 		double distance = sqrt(pow((target.x - current.x), 2.0) + pow((target.y - current.y), 2.0));
 		calc_duration = distance / blend_data->get_speed();
-	}
 
-	blend_tween->stop();
+		UtilityFunctions::print("SPEED FOUND!");
+		UtilityFunctions::print(blend_data->get_speed());
+	}
 
 	blend_tween->
 		tween_method(
@@ -349,8 +368,6 @@ void godot::CineCam2D::shake_zoom_internal(double delta)
 
 void CineCam2D::_register_vcam_internal(VirtualCam2D* p_vcam)
 {
-	UtilityFunctions::print("VirtualCam: " + p_vcam->get_name());
-	
 	if (!vcams.has(p_vcam))
 	{
 		p_vcam->connect(SIGNAL_PRIORITY_CHANGED, Callable(this, "_on_vcam_priority_changed"));
@@ -358,8 +375,8 @@ void CineCam2D::_register_vcam_internal(VirtualCam2D* p_vcam)
 		vcams.push_back(cast_to<VirtualCam2D>(p_vcam));
 	}
 
-	_set_highest_vcam_internal(p_vcam, p_vcam->get_priority());
-	_reposition_by_priority_mode();
+	_try_set_highest_vcam_internal(p_vcam, p_vcam->get_priority());
+	_move_by_priority_mode();
 }
 
 
@@ -372,14 +389,18 @@ void godot::CineCam2D::_remove_vcam_internal(VirtualCam2D* p_vcam)
 }
 
 
-void CineCam2D::_set_highest_vcam_internal(VirtualCam2D* p_vcam, int vcam_prio)
+bool CineCam2D::_try_set_highest_vcam_internal(VirtualCam2D* p_vcam, int vcam_prio)
 {
+	bool priority_changed = false;
+
 	if (highest_prio_vcam != nullptr)
 	{
 		if (vcam_prio > highest_prio_vcam->get_priority())
 		{
 			highest_prio_vcam = p_vcam;
-			return;
+			priority_changed = true;
+			emit_signal(SIGNAL_PRIORITIZED_VCAM2D_CHANGED, p_vcam, vcam_prio);
+			return priority_changed;
 		}
 	}
 
@@ -393,23 +414,42 @@ void CineCam2D::_set_highest_vcam_internal(VirtualCam2D* p_vcam, int vcam_prio)
 		{
 			prio = cursor->get_priority();
 			highest_prio_vcam = cursor;
+			priority_changed = true;
 		}
 	}
+
+	if (priority_changed)
+	{
+		emit_signal(SIGNAL_PRIORITIZED_VCAM2D_CHANGED, p_vcam, vcam_prio);
+	}
+
+	return priority_changed;
 }
 
 
 void CineCam2D::_on_vcam_priority_changed(VirtualCam2D* p_vcam, int vcam_prio)
 {
-	_set_highest_vcam_internal(p_vcam, vcam_prio);
-	_reposition_by_priority_mode();
+	if (_try_set_highest_vcam_internal(p_vcam, vcam_prio))
+	{
+		_move_by_priority_mode();
+	}
 }
 
 
-void CineCam2D::_reposition_by_priority_mode()
+void CineCam2D::_move_by_priority_mode()
 {
-	if (highest_prio_vcam == nullptr)
+	if (!tweens_ready) return;
+
+	if (priority_mode != PriorityMode::OFF && highest_prio_vcam == nullptr)
 	{
-		UtilityFunctions::push_error("ERROR! highest_prio_vcam not set!\n This is probably a bug in the GDExtension.");
+		UtilityFunctions::push_warning
+		("WARNING! Could not detect highest priority of any VirtualCam2D!\nNumber of found cams: " + vcams.size());
+	}
+
+	Ref<BlendData2D> blend = default_blend;
+	if (highest_prio_vcam->get_default_blend_data().is_valid())
+	{
+		blend = default_blend;
 	}
 
 	switch (priority_mode)
@@ -424,15 +464,10 @@ void CineCam2D::_reposition_by_priority_mode()
 			//set follow
 			break;
 		case PriorityMode::BLEND:
-			Ref<BlendData2D> blend = default_blend;
-			if (highest_prio_vcam->get_default_blend_data().is_valid())
-			{
-				blend = default_blend;
-			}
-			blend_to(highest_prio_vcam, highest_prio_vcam->get_default_blend_data());
+			blend_to(highest_prio_vcam, blend);
 			break;
 		case PriorityMode::BLEND_FOLLOW:
-			blend_to(highest_prio_vcam, highest_prio_vcam->get_default_blend_data());
+			blend_to(highest_prio_vcam, blend);
 			// set follow
 			break;
 	}
@@ -448,12 +483,18 @@ void CineCam2D::_process(double delta)
 
 void CineCam2D::_notification(int p_what)
 {
+	bool is_in_editor = Engine::get_singleton()->is_editor_hint();
+
 	switch (p_what)
 	{
 		default:
 			break;
 		case NOTIFICATION_READY:
-			init_tweens();
+			if (!is_in_editor)
+			{
+				init_tweens();
+				_move_by_priority_mode();
+			}
 			break;
 	}
 }
