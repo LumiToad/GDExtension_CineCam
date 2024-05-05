@@ -83,7 +83,7 @@ namespace godot
 		void shake_offset_internal(double);
 		void shake_zoom_internal(double);
 		double _calc_blend_duration_by_speed(Vector2 current_pos, Vector2 target_pos, double speed);
-		void follow_blend_internal(CamTarget2D* p_target);
+		void follow_blend_internal();
 
 
 	public:

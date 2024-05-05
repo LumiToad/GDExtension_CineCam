@@ -32,7 +32,7 @@ namespace godot
 		CamTarget2D();
 		~CamTarget2D();
 
-		double get_scaled_speed() const;
+		double scaled_speed() const;
 		
 
 	protected:
@@ -42,25 +42,18 @@ namespace godot
 
 		// GODOT Overrides
 	public:
-		void _process(double delta) override;
-		void _notification(int p_what);
 
 
 		// GODOT public
 	private:
 		Vector2 target_offset;
-		godot::String target_name;
 		double speed;
 		Tween::EaseType ease;
 		Tween::TransitionType trans;
-		Callable callable;
 
 	public:
 		Vector2 get_target_offset() const;
 		void set_target_offset(Vector2 offset);
-
-		void set_target_name(godot::String p_name);
-		godot::String get_target_name() const;
 
 		void set_speed(double speed);
 		double get_speed() const;
@@ -70,9 +63,6 @@ namespace godot
 
 		void set_trans(Tween::TransitionType trans);
 		Tween::TransitionType get_trans() const;
-
-		void set_callable(Callable callable);
-		Callable get_callable() const;
 	protected:
 	};
 }

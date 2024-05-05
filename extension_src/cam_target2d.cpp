@@ -5,7 +5,6 @@
 
 #include "cam_target2d.h"
 
-#include "godot_cpp/classes/engine.hpp"
 #include "godot_cpp/variant/utility_functions.hpp"
 
 #include "bind_utils.h"
@@ -14,8 +13,13 @@ using namespace godot;
 
 CamTarget2D::CamTarget2D()
 {
-	additional_description = "";
+	additional_description = "Camera target for CineCam2D follow mode.";
 	initialize_internal();
+
+	target_offset = Vector2();
+	speed = 0.0;
+	ease = Tween::EaseType::EASE_IN_OUT;
+	trans = Tween::TransitionType::TRANS_CUBIC;
 }
 
 
@@ -28,11 +32,11 @@ CamTarget2D::~CamTarget2D()
 void CamTarget2D::_bind_methods()
 {
 	ADD_GETSET_BINDING(get_target_offset, set_target_offset, offset, offset, CamTarget2D, Variant::VECTOR2);
-	ADD_GETSET_BINDING(get_target_name, set_target_name, target_name, target_name, CamTarget2D, Variant::STRING);
 	ADD_GETSET_HINT_BINDING(get_speed, set_speed, speed, speed, CamTarget2D, Variant::FLOAT, PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%");
 	ADD_GETSET_HINT_BINDING(get_ease, set_ease, ease, ease, CamTarget2D, Variant::INT, PROPERTY_HINT_ENUM, EASE_HINTS);
 	ADD_GETSET_HINT_BINDING(get_trans, set_trans, trans, trans, CamTarget2D, Variant::INT, PROPERTY_HINT_ENUM, TRANS_HINTS);
-	ADD_GETSET_BINDING(get_callable, set_callable, callable, callable, CamTarget2D, Variant::CALLABLE);
+
+	ADD_METHOD_BINDING(scaled_speed, CamTarget2D);
 }
 
 
@@ -43,30 +47,7 @@ void CamTarget2D::initialize_internal()
 }
 
 
-void CamTarget2D::_process(double delta)
-{
-}
-
-
-void CamTarget2D::_notification(int p_what)
-{
-	bool is_in_editor = Engine::get_singleton()->is_editor_hint();
-
-	switch (p_what)
-	{
-	default:
-		break;
-	case NOTIFICATION_READY:
-		if (!is_in_editor)
-		{
-			// _ready()
-		}
-		break;
-	}
-}
-
-
-double CamTarget2D::get_scaled_speed() const
+double CamTarget2D::scaled_speed() const
 {
 	double ret_val = 0.0;
 	if (speed > 0.0)
@@ -88,18 +69,6 @@ Vector2 CamTarget2D::get_target_offset() const
 void CamTarget2D::set_target_offset(Vector2 offset)
 {
 	target_offset = offset;
-}
-
-
-void CamTarget2D::set_target_name(godot::String p_name)
-{
-	target_name = p_name;
-}
-
-
-godot::String CamTarget2D::get_target_name() const
-{
-	return target_name;
 }
 
 
@@ -141,16 +110,4 @@ void CamTarget2D::set_trans(Tween::TransitionType p_trans)
 Tween::TransitionType CamTarget2D::get_trans() const
 {
 	return trans;
-}
-
-
-void CamTarget2D::set_callable(Callable p_callable)
-{
-	callable = p_callable;
-}
-
-
-Callable CamTarget2D::get_callable() const
-{
-	return callable;
 }
