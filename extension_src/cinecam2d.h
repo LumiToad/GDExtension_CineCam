@@ -24,8 +24,7 @@
 #define SIGNAL_BLEND_COMPLETED "blend_completed"
 #define SIGNAL_SEQUENCE_STARTED "sequence_started"
 #define SIGNAL_SEQUENCE_COMPLETED "sequence_completed"
-#define PRIORITY_MODE_HINTS "OFF,INSTANT,INSTANT_FOLLOW,BLEND,BLEND_FOLLOW"
-#define FOLLOW_MODE_HINTS "FOLLOW_OFF,FOLLOW,FOLLOW_BLEND"
+#define TARGET_MODE_HINTS "OFF,PRIO,PRIO_ONESHOT,PRIO_BLEND,TARGET,TARGET_BLEND"
 #define SIGNAL_PRIORITIZED_VCAM2D_CHANGED "prioritized_vcam2d_changed"
 
 namespace godot
@@ -35,23 +34,15 @@ namespace godot
 		GDCLASS(CineCam2D, Camera2D)
 		
 	public:
-		enum PriorityMode
-		{
-			OFF,
-			INSTANT,
-			INSTANT_FOLLOW,
-			BLEND,
-			BLEND_FOLLOW
-		};
-
 		enum FollowMode
 		{
-			FOLLOW_OFF,
-			FOLLOW,
-			FOLLOW_BLEND
+			OFF,
+			PRIO,
+			PRIO_ONESHOT,
+			PRIO_BLEND,
+			TARGET,
+			TARGET_BLEND
 		};
-
-
 	// Internal
 	private:
 		godot::String additional_description;
@@ -76,14 +67,16 @@ namespace godot
 		VirtualCam2D* highest_prio_vcam;
 		TypedArray<VirtualCam2D> vcams;
 
+		bool sequence_backwards;
+
 		void initialize_internal();
 		void init_tweens();
 		void init_default_blend_data();
-		void _on_blend_completed_internal();
 		void shake_offset_internal(double);
 		void shake_zoom_internal(double);
 		double _calc_blend_duration_by_speed(Vector2 current_pos, Vector2 target_pos, double speed);
-		void follow_blend_internal();
+		void _move_by_follow_mode();
+		void init_active_blend();
 
 
 	public:
@@ -103,21 +96,26 @@ namespace godot
 
 	// GODOT public
 	private:
-		Ref<BlendData2D> default_blend;
+		Ref<BlendData2D> blend_data;
+		Ref<BlendData2D> active_blend;
 		CamSequence2D* current_sequence;
-		CineCam2D::PriorityMode priority_mode;
 		CineCam2D::FollowMode follow_mode;
 		CamTarget2D* follow_target;
 		double shake_offset_intensity;
 		double shake_offset_duration;
 		double shake_zoom_intensity;
 		double shake_zoom_duration;
+		bool is_sequence_playing;
+
 
 	public:
 		void blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data);
 		void seq_blend_next();
 		void seq_blend_prev();
 		void seq_blend_to(int idx);
+		void seq_resume();
+		void seq_pause();
+		void seq_stop();
 
 		void reposition_to_vcam(VirtualCam2D* p_vcam);
 
@@ -131,15 +129,14 @@ namespace godot
 			Tween::EaseType p_ease = DEFAULT_EASE,
 			Tween::TransitionType p_trans = DEFAULT_TRANS);
 
-		void start_sequence();
+		void start_sequence(const bool& backwards);
 		void _register_vcam_internal(VirtualCam2D* p_vcam);
 		void _remove_vcam_internal(VirtualCam2D* p_vcam);
 		bool _try_set_highest_vcam_internal(VirtualCam2D* p_vcam, int vcam_prio);
 		void _on_vcam_priority_changed(VirtualCam2D* p_vcam, int prio);
 		void _move_by_priority_mode();
-
-		CineCam2D::PriorityMode get_priority_mode() const;
-		void set_priority_mode(const CineCam2D::PriorityMode mode);
+		void _on_blend_started_internal();
+		void _on_blend_completed_internal();
 
 		CineCam2D::FollowMode get_follow_mode() const;
 		void set_follow_mode(const CineCam2D::FollowMode mode);
@@ -159,8 +156,8 @@ namespace godot
 		double get_shake_zoom_duration() const;
 		void set_shake_zoom_duration(const double &p_duration);
 
-		Ref<BlendData2D> get_default_blend_data() const;
-		void set_default_blend_data(Ref<BlendData2D> blend_data);
+		Ref<BlendData2D> _get_blend_data() const;
+		void _set_blend_data(Ref<BlendData2D> blend);
 		
 		CamSequence2D* get_current_sequence() const;
 		void set_current_sequence(CamSequence2D* p_sequence);
@@ -172,8 +169,6 @@ namespace godot
 	protected:
 	};
 }
-
-	VARIANT_ENUM_CAST(CineCam2D::PriorityMode)
 	VARIANT_ENUM_CAST(CineCam2D::FollowMode)
 
 #endif // CINECAM_H

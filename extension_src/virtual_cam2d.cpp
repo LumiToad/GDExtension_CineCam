@@ -43,7 +43,7 @@ void VirtualCam2D::_bind_methods()
 {
 	ADD_GETSET_BINDING(get_vcam_id, set_vcam_id, vcam_id, id, VirtualCam2D, Variant::STRING);
 	ADD_GETSET_BINDING(get_priority, set_priority, priority, priority, VirtualCam2D, Variant::INT);
-	ADD_GETSET_HINT_BINDING(get_default_blend_data, set_default_blend_data, default_blend, p_default_blend, VirtualCam2D, OBJECT, godot::PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D");
+	ADD_GETSET_HINT_BINDING(_get_blend_data, _set_blend_data, blend_data, p_default_blend, VirtualCam2D, OBJECT, PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D");
 
 	ADD_METHOD_BINDING(_register_to_cinecam2d, VirtualCam2D);
 
@@ -200,16 +200,17 @@ void VirtualCam2D::initialize_internal()
 
 void VirtualCam2D::init_default_blend_data()
 {
-	//if (default_blend.ptr() != nullptr) return;
+	if (!Engine::get_singleton()->is_editor_hint()) return;
+	if (blend_data.ptr() != nullptr) return;
 
-	default_blend.instantiate();
+	blend_data.instantiate();
 
-	default_blend.ptr()->set_blend_name("VirtualCam2D blend data");
-	default_blend.ptr()->set_duration(2.0f);
-	default_blend.ptr()->set_speed(2.0f);
-	default_blend.ptr()->set_blend_by(BlendData2D::BlendByType::DURATION);
-	default_blend.ptr()->set_ease(Tween::EASE_IN_OUT);
-	default_blend.ptr()->set_trans(Tween::TRANS_CUBIC);
+	blend_data.ptr()->set_blend_name("VirtualCam2D blend data");
+	blend_data.ptr()->set_duration(2.0f);
+	blend_data.ptr()->set_speed(2.0f);
+	blend_data.ptr()->set_blend_by(BlendData2D::BlendByType::DURATION);
+	blend_data.ptr()->set_ease(Tween::EASE_IN_OUT);
+	blend_data.ptr()->set_trans(Tween::TRANS_CUBIC);
 }
 
 
@@ -618,12 +619,12 @@ bool VirtualCam2D::is_margin_drawing_enabled() const
 	return margin_drawing_enabled;
 }
 
-Ref<BlendData2D> VirtualCam2D::get_default_blend_data() const
+Ref<BlendData2D> VirtualCam2D::_get_blend_data() const
 {
-	return default_blend;
+	return blend_data;
 }
 
-void VirtualCam2D::set_default_blend_data(Ref<BlendData2D> blend_data)
+void VirtualCam2D::_set_blend_data(Ref<BlendData2D> blend)
 {
-	default_blend = blend_data;
+	blend_data = blend;
 }

@@ -55,6 +55,8 @@ namespace godot
 		Tween::EaseType ease;
 		Tween::TransitionType trans;
 		Callable callable;
+		bool callable_on_start;
+		bool callable_on_complete;
 
 
 	public:
@@ -78,6 +80,12 @@ namespace godot
 
 		void set_callable(Callable callable);
 		Callable get_callable() const;
+
+		void _set_callable_on_start(bool enable);
+		bool _get_callable_on_start() const;
+
+		void _set_callable_on_complete(bool enable);
+		bool _get_callable_on_complete() const;
 	};
 }
 	VARIANT_ENUM_CAST(BlendData2D::BlendByType);

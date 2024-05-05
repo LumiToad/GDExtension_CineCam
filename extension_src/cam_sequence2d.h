@@ -56,6 +56,12 @@ namespace godot
 		void set_current_idx(int idx);
 		int get_current_idx() const;
 
+		VirtualCam2D* vcam_at(int idx) const;
+		VirtualCam2D* vcam_next() const;
+		VirtualCam2D* vcam_prev() const;
+		VirtualCam2D* vcam_first() const;
+		VirtualCam2D* vcam_last() const;
+
 	protected:
 	};
 }

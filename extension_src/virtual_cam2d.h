@@ -57,7 +57,7 @@ namespace godot
 		bool enabled = true;
 		Vector2 zoom;
 		Camera2D::Camera2DProcessCallback process_callback;
-		Ref<BlendData2D> default_blend;
+		Ref<BlendData2D> blend_data;
 
 		int limit[4];
 		bool limit_smoothing_enabled = false;
@@ -171,8 +171,8 @@ namespace godot
 		void set_margin_drawing_enabled(bool enable);
 		bool is_margin_drawing_enabled() const;
 
-		Ref<BlendData2D> get_default_blend_data() const;
-		void set_default_blend_data(Ref<BlendData2D> blend_data);
+		Ref<BlendData2D> _get_blend_data() const;
+		void _set_blend_data(Ref<BlendData2D> blend);
 
 	protected:
 	};

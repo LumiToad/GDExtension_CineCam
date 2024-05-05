@@ -13,7 +13,6 @@ BlendData2D::BlendData2D()
 {
 	blend_name = "";
 	blend_by = BlendByType::DURATION;
-
 	duration = 0.0;
 	speed = 0.0;
 	ease = Tween::EaseType::EASE_IN;
@@ -51,6 +50,8 @@ void BlendData2D::_bind_methods()
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "trans", PROPERTY_HINT_ENUM, TRANS_HINTS), "set_trans", "get_trans");
 
 	ADD_GETSET_BINDING(get_callable, set_callable, callable, p_callable, BlendData2D, CALLABLE);
+	ADD_GETSET_BINDING(_get_callable_on_start, _set_callable_on_start, _on_start, enable, BlendData2D, BOOL);
+	ADD_GETSET_BINDING(_get_callable_on_complete, _set_callable_on_complete, _on_complete, enable, BlendData2D, BOOL);
 }
 
 
@@ -60,13 +61,13 @@ void BlendData2D::initialize_internal()
 }
 
 
-void BlendData2D::set_blend_name(godot::String p_name)
+void BlendData2D::set_blend_name(String p_name)
 {
 	blend_name = p_name;
 }
 
 
-godot::String BlendData2D::get_blend_name() const
+String BlendData2D::get_blend_name() const
 {
 	return blend_name;
 }
@@ -141,4 +142,28 @@ void BlendData2D::set_callable(Callable p_callable)
 Callable BlendData2D::get_callable() const
 {
 	return callable;
+}
+
+
+void BlendData2D::_set_callable_on_start(bool enable)
+{
+	callable_on_start = enable;
+}
+
+
+bool BlendData2D::_get_callable_on_start() const
+{
+	return callable_on_start;
+}
+
+
+void BlendData2D::_set_callable_on_complete(bool enable)
+{
+	callable_on_complete = enable;
+}
+
+
+bool BlendData2D::_get_callable_on_complete() const
+{
+	return callable_on_complete;
 }

@@ -4,6 +4,7 @@
 // cam_squence2d.cpp
 
 #include "cam_sequence2d.h"
+#include "godot_cpp/variant/utility_functions.hpp"
 
 #include "bind_utils.h"
 
@@ -27,19 +28,20 @@ void CamSequence2D::_bind_methods()
 {
 	ADD_METHOD_BINDING(get_vcam2d_array, CamSequence2D);
 	ADD_METHOD_BINDING(current_vcam, CamSequence2D);
+	ADD_METHOD_ARGS_BINDING(vcam_at, CamSequence2D, "index");
 
 	ADD_GETSET_BINDING(get_current_idx, set_current_idx, current_idx, idx, CamSequence2D, Variant::INT);
 }
 
 
-void godot::CamSequence2D::initialize_internal()
+void CamSequence2D::initialize_internal()
 {
 	GDCLASS_Metadata meta(get_parent_class_static(), additional_description, *_get_extension_class_name());
 	set_editor_description(meta.get_metadata_string());
 }
 
 
-TypedArray<VirtualCam2D> godot::CamSequence2D::get_vcams_in_children_internal() const
+TypedArray<VirtualCam2D> CamSequence2D::get_vcams_in_children_internal() const
 {
 	TypedArray<VirtualCam2D> ret_val;
 
@@ -78,7 +80,7 @@ void CamSequence2D::_notification(int p_what)
 }
 
 
-TypedArray<VirtualCam2D> godot::CamSequence2D::get_vcam2d_array() const
+TypedArray<VirtualCam2D> CamSequence2D::get_vcam2d_array() const
 {
 	return vcams;
 }
@@ -90,7 +92,7 @@ VirtualCam2D* CamSequence2D::current_vcam() const
 }
 
 
-void godot::CamSequence2D::set_current_idx(int idx)
+void CamSequence2D::set_current_idx(int idx)
 {
 	current_vcam_idx = idx;
 }
@@ -101,4 +103,42 @@ int CamSequence2D::get_current_idx() const
 	return current_vcam_idx;
 }
 
+
+VirtualCam2D* CamSequence2D::vcam_at(int idx) const
+{
+	if (idx > 0 && idx <= vcams.size())
+	{
+		return cast_to<VirtualCam2D>(vcams[idx]);
+	}
+
+	UtilityFunctions::push_warning(
+		"WARNING! Index [", idx, "] was outside the bounds of the array. (min 0, current size ", vcams.size(), ")"
+	);
+
+	return nullptr;
+}
+
+
+VirtualCam2D* CamSequence2D::vcam_next() const
+{
+	return vcam_at(current_vcam_idx + 1);
+}
+
+
+VirtualCam2D* CamSequence2D::vcam_prev() const
+{
+	return vcam_at(current_vcam_idx - 1);
+}
+
+
+VirtualCam2D* CamSequence2D::vcam_first() const
+{
+	return vcam_at(0);
+}
+
+
+VirtualCam2D* CamSequence2D::vcam_last() const
+{
+	return vcam_at(vcams.size());
+}
 
