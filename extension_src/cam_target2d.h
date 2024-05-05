@@ -7,9 +7,12 @@
 #define CAM_TARGET2D_H
 
 #include "godot_cpp/classes/node2d.hpp"
+#include "godot_cpp/classes/tween.hpp"
 
 #include "gdclass_metadata.h"
-#include "blend_data2d.h"
+
+#define EASE_HINTS "EASE_IN, EASE_OUT, EASE_IN_OUT, EASE_OUT_IN"
+#define TRANS_HINTS "TRANS_LINEAR, TRANS_SINE, TRANS_QUINT, TRANS_QUART, TRANS_QUAD, TRANS_EXPO, TRANS_ELASTIC, TRANS_CUBIC, TRANS_CIRC, TRANS_BOUNCE, TRANS_BACK, TRANS_SPRING"
 
 namespace godot
 {
@@ -28,6 +31,8 @@ namespace godot
 	public:
 		CamTarget2D();
 		~CamTarget2D();
+
+		double get_scaled_speed() const;
 		
 
 	protected:
@@ -43,16 +48,31 @@ namespace godot
 
 		// GODOT public
 	private:
-		Ref<BlendData2D> blend_data;
 		Vector2 target_offset;
+		godot::String target_name;
+		double speed;
+		Tween::EaseType ease;
+		Tween::TransitionType trans;
+		Callable callable;
 
 	public:
-		Ref<BlendData2D> get_blend_data() const;
-		void set_blend_data(Ref<BlendData2D> blend_data);
-
 		Vector2 get_target_offset() const;
 		void set_target_offset(Vector2 offset);
 
+		void set_target_name(godot::String p_name);
+		godot::String get_target_name() const;
+
+		void set_speed(double speed);
+		double get_speed() const;
+
+		void set_ease(Tween::EaseType ease);
+		Tween::EaseType get_ease() const;
+
+		void set_trans(Tween::TransitionType trans);
+		Tween::TransitionType get_trans() const;
+
+		void set_callable(Callable callable);
+		Callable get_callable() const;
 	protected:
 	};
 }

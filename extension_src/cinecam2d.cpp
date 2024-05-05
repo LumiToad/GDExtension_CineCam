@@ -29,7 +29,7 @@ CineCam2D::CineCam2D()
 	additional_description = "";
 	current_sequence = nullptr;
 	highest_prio_vcam = nullptr;
-	target = nullptr;
+	follow_target = nullptr;
 	initialize_internal();
 }
 
@@ -63,7 +63,7 @@ void CineCam2D::_bind_methods()
 
 	ADD_GETSET_HINT_BINDING(get_default_blend_data, set_default_blend_data, default_blend, p_default_blend, CineCam2D, OBJECT, PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D");
 	ADD_GETSET_HINT_BINDING(get_current_sequence, set_current_sequence, current_sequence, p_sequence, CineCam2D, OBJECT, PROPERTY_HINT_NODE_TYPE, "CamSequence2D");
-	ADD_GETSET_HINT_BINDING(get_target, set_target, target, p_target, CineCam2D, Variant::OBJECT, PROPERTY_HINT_NODE_TYPE, "CamTarget2D");
+	ADD_GETSET_HINT_BINDING(get_target, set_target, follow_target, p_target, CineCam2D, Variant::OBJECT, PROPERTY_HINT_NODE_TYPE, "CamTarget2D");
 
 	ADD_GETSET_HINT_BINDING(get_shake_offset_intensity, set_shake_offset_intensity, shake_offset_intensity, intensity, CineCam2D, FLOAT, godot::PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
 	ADD_GETSET_HINT_BINDING(get_shake_offset_duration, set_shake_offset_duration, shake_offset_duration, duration, CineCam2D, FLOAT, godot::PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
@@ -402,34 +402,13 @@ double CineCam2D::_calc_blend_duration_by_speed(Vector2 current_pos, Vector2 tar
 }
 
 
-void CineCam2D::follow_blend_internal(Node2D* p_node2d, Ref<BlendData2D> blend, Vector2 offset)
+void CineCam2D::follow_blend_internal(CamTarget2D* p_target)
 {
-	BlendData2D* p_blend = blend.ptr();
-
-	double calc_duration = p_blend->get_speed();
-	
-	if (p_blend->get_blend_by() == BlendData2D::BlendByType::SPEED)
-	{
-		calc_duration = _calc_blend_duration_by_speed(
-			get_global_position(),
-			p_node2d->get_global_position(),
-			p_blend->get_speed()
-		);
-	}
-
 	follow_tween = get_tree()->create_tween();
 	follow_tween->stop();
 
-	follow_tween->set_trans(p_blend->get_trans());
-	follow_tween->set_ease(p_blend->get_ease());
-
-	follow_tween->
-		tween_method(
-			Callable(this, "set_global_position"),
-			get_global_position(),
-			p_node2d->get_global_position() + offset,
-			calc_duration
-		);	
+	follow_tween->set_trans(p_target->get_trans());
+	follow_tween->set_ease(p_target->get_ease());
 
 	follow_tween->play();
 }
@@ -535,14 +514,13 @@ void CineCam2D::_move_by_priority_mode()
 			break;
 		case PriorityMode::INSTANT_FOLLOW:
 			reposition_to_vcam(highest_prio_vcam);
-			
 			break;
 		case PriorityMode::BLEND:
 			blend_to(highest_prio_vcam, blend);
 			break;
 		case PriorityMode::BLEND_FOLLOW:
 			blend_to(highest_prio_vcam, blend);
-			follow_blend_internal(highest_prio_vcam, highest_prio_vcam->get_default_blend_data(), Vector2(0.0, 0.0));
+			follow_blend_internal(follow_target);
 			break;
 	}
 }
@@ -572,16 +550,28 @@ void CineCam2D::_process(double delta)
 		case FOLLOW_OFF:
 			break;
 		case FOLLOW:
-			if (target == nullptr)
+			if (follow_target == nullptr)
 			{
 				UtilityFunctions::push_warning("WARNING! No target set! Can't follow! ::573");
 				follow_mode = FollowMode::FOLLOW_OFF;
 			}
-			set_global_position(target->get_global_position() + target->get_target_offset());
+			set_global_position(follow_target->get_global_position() + follow_target->get_target_offset());
 			break;
 		case FOLLOW_BLEND:
-			//Vector2 pos = get_global_position();
-			//follow_tween->interpolate_value(pos, 0.2, )
+			UtilityFunctions::print(follow_origin);
+			Vector2 delta_value = follow_target->get_global_position() - follow_origin;
+			Vector2 result = follow_tween->interpolate_value(
+				follow_origin,
+				delta_value * follow_target->get_scaled_speed(),
+				1.0,
+				1.0,
+				follow_target->get_trans(),
+				follow_target->get_ease()
+			);
+
+			Vector2 offset = follow_target->get_target_offset();
+			set_global_position(result + offset);
+			follow_origin = result + offset;
 			break;
 	}
 }
@@ -632,7 +622,7 @@ void CineCam2D::set_follow_mode(CineCam2D::FollowMode mode)
 
 	if (Engine::get_singleton()->is_editor_hint()) return;
 
-	if (target == nullptr)
+	if (follow_target == nullptr)
 	{
 		UtilityFunctions::push_warning("WARNING! No target set! Can't follow! ::632");
 		follow_mode = FollowMode::FOLLOW_OFF;
@@ -641,26 +631,27 @@ void CineCam2D::set_follow_mode(CineCam2D::FollowMode mode)
 
 	if (follow_mode == FollowMode::FOLLOW_BLEND)
 	{
-		follow_blend_internal(target, target->get_blend_data(), target->get_target_offset());
+		follow_blend_internal(follow_target);
 	}
 }
 
 
 CamTarget2D* CineCam2D::get_target() const
 {
-	return target;
+	return follow_target;
 }
 
 
 void CineCam2D::set_target(CamTarget2D* p_target)
 {
-	target = p_target;
+	follow_target = p_target;
+	follow_origin = follow_target->get_global_position();
 
 	if (Engine::get_singleton()->is_editor_hint()) return;
 
 	if (follow_mode == FollowMode::FOLLOW_BLEND)
 	{
-		follow_blend_internal(target, target->get_blend_data(), target->get_target_offset());
+		follow_blend_internal(follow_target);
 	}
 }
 

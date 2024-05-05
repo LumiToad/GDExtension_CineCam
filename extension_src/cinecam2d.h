@@ -68,7 +68,10 @@ namespace godot
 		bool is_shake_zoom_active;
 
 		Ref<Tween> blend_tween;
+		
 		Ref<Tween> follow_tween;
+		Vector2 follow_origin;
+
 		bool tweens_ready;
 		VirtualCam2D* highest_prio_vcam;
 		TypedArray<VirtualCam2D> vcams;
@@ -80,7 +83,7 @@ namespace godot
 		void shake_offset_internal(double);
 		void shake_zoom_internal(double);
 		double _calc_blend_duration_by_speed(Vector2 current_pos, Vector2 target_pos, double speed);
-		void follow_blend_internal(Node2D* p_node2d, Ref<BlendData2D> blend, Vector2 offset);
+		void follow_blend_internal(CamTarget2D* p_target);
 
 
 	public:
@@ -104,7 +107,7 @@ namespace godot
 		CamSequence2D* current_sequence;
 		CineCam2D::PriorityMode priority_mode;
 		CineCam2D::FollowMode follow_mode;
-		CamTarget2D* target;
+		CamTarget2D* follow_target;
 		double shake_offset_intensity;
 		double shake_offset_duration;
 		double shake_zoom_intensity;
