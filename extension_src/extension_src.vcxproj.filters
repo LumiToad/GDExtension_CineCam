@@ -51,6 +51,21 @@
     <ClCompile Include="print_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cinecam3d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="virtual_cam3d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="blend_data3d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cam_sequence3d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cam_target3d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="register_types.h">
@@ -87,6 +102,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="print_utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cinecam3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="virtual_cam3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="blend_data3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cam_sequence3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cam_target3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

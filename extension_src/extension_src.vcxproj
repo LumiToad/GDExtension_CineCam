@@ -157,9 +157,13 @@
   <ItemGroup>
     <ClCompile Include="bind_utils.cpp" />
     <ClCompile Include="blend_data2d.cpp" />
+    <ClCompile Include="blend_data3d.cpp" />
     <ClCompile Include="cam_sequence2d.cpp" />
+    <ClCompile Include="cam_sequence3d.cpp" />
     <ClCompile Include="cam_target2d.cpp" />
+    <ClCompile Include="cam_target3d.cpp" />
     <ClCompile Include="cinecam2d.cpp" />
+    <ClCompile Include="cinecam3d.cpp" />
     <ClCompile Include="print_utils.cpp" />
     <ClCompile Include="gdclass_metadata.cpp" />
     <ClCompile Include="gdexample.cpp" />
@@ -167,13 +171,18 @@
     <ClCompile Include="template_node.cpp" />
     <ClCompile Include="template_resource.cpp" />
     <ClCompile Include="virtual_cam2d.cpp" />
+    <ClCompile Include="virtual_cam3d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bind_utils.h" />
     <ClInclude Include="blend_data2d.h" />
+    <ClInclude Include="blend_data3d.h" />
     <ClInclude Include="cam_sequence2d.h" />
+    <ClInclude Include="cam_sequence3d.h" />
     <ClInclude Include="cam_target2d.h" />
+    <ClInclude Include="cam_target3d.h" />
     <ClInclude Include="cinecam2d.h" />
+    <ClInclude Include="cinecam3d.h" />
     <ClInclude Include="print_utils.h" />
     <ClInclude Include="gdclass_metadata.h" />
     <ClInclude Include="gdexample.h" />
@@ -181,6 +190,7 @@
     <ClInclude Include="template_node.h" />
     <ClInclude Include="template_resource.h" />
     <ClInclude Include="virtual_cam2d.h" />
+    <ClInclude Include="virtual_cam3d.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="coding_guidelines.txt" />
