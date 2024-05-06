@@ -26,7 +26,8 @@ namespace godot
 
 		void initialize_internal();
 
-		TypedArray<VirtualCam2D> get_vcams_in_children_internal() const;
+		void gather_vcams_in_children_internal();
+		void _debug_lines_drawing(bool editor);
 
 
 	public:
@@ -40,7 +41,7 @@ namespace godot
 
 		// GODOT Overrides
 	public:
-		void _process(double delta) override;
+		void _process_internal(bool editor);
 		void _notification(int p_what);
 
 
@@ -48,6 +49,11 @@ namespace godot
 	private:
 		TypedArray<VirtualCam2D> vcams;
 		int current_vcam_idx;
+		
+		bool draw_debug_lines;
+		Color debug_lines_color;
+		double debug_lines_width;
+
 
 	public:
 		TypedArray<VirtualCam2D> get_vcam2d_array() const;
@@ -63,6 +69,15 @@ namespace godot
 		VirtualCam2D* vcam2d_prev() const;
 		VirtualCam2D* vcam2d_first() const;
 		VirtualCam2D* vcam2d_last() const;
+
+		bool get_is_draw_debug_lines() const;
+		void set_is_draw_debug_lines(bool draw);
+
+		Color get_debug_lines_color() const;
+		void set_debug_lines_color(Color color);
+
+		double get_debug_lines_width() const;
+		void set_debug_lines_width(double width);
 
 	protected:
 	};

@@ -6,9 +6,9 @@
 #include "godot_cpp/variant/string.hpp"
 #include "godot_cpp/variant/utility_functions.hpp"
 
-#define PRINT(...) UtilityFunctions::print(...)
-#define WARN(...) UtilityFunctions::push_warning("CineCam WARN! Line: ", __LINE__, " in File: ", __FILE__, "\n", __VA_ARGS__, \n)
-#define ERROR(...) UtilityFunctions::push_error("CineCam ERROR! Line: ", __LINE__, " in File: ", __FILE__, "\n", __VA_ARGS__, \n)
+#define PRINT(...) UtilityFunctions::print(__VA_ARGS__)
+#define WARN(...) UtilityFunctions::push_warning("CineCam WARN! Line: ", __LINE__, " in File: ", __FILE__, "\n", __VA_ARGS__, "\n")
+#define ERROR(...) UtilityFunctions::push_error("CineCam ERROR! Line: ", __LINE__, " in File: ", __FILE__, "\n", __VA_ARGS__, "\n")
 
 namespace godot
 {

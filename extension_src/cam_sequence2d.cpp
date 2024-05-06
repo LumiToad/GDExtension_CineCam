@@ -5,6 +5,7 @@
 
 #include "cam_sequence2d.h"
 
+#include "godot_cpp/classes/engine.hpp"
 
 #include "bind_utils.h"
 #include "print_utils.h"
@@ -14,6 +15,8 @@ using namespace godot;
 CamSequence2D::CamSequence2D()
 {
 	current_vcam_idx = 0;
+	debug_lines_color = Color("478cbf"); // godot_blue
+	debug_lines_width = 1.0;
 
 	additional_description = "Sequence of VirtualCam2D.\nFor camera sequences. Put VirtualCam2D as children of this node.";
 	initialize_internal();
@@ -27,11 +30,19 @@ CamSequence2D::~CamSequence2D()
 
 void CamSequence2D::_bind_methods()
 {
+	ADD_METHOD_ARGS_BINDING(_process_internal, CamSequence2D, "editor");
+	ADD_METHOD_ARGS_BINDING(_debug_lines_drawing, CamSequence2D, "editor");
+
 	ADD_METHOD_BINDING(get_vcam2d_array, CamSequence2D);
 	ADD_METHOD_BINDING(current_vcam, CamSequence2D);
 	ADD_METHOD_ARGS_BINDING(vcam2d_at, CamSequence2D, "index");
 
 	ADD_GETSET_BINDING(get_current_idx, set_current_idx, current_idx, idx, CamSequence2D, Variant::INT);
+	ADD_GETSET_BINDING(get_is_draw_debug_lines, set_is_draw_debug_lines, _draw_debug_lines, draw, CamSequence2D, Variant::BOOL);
+	ADD_GETSET_BINDING(get_debug_lines_color, set_debug_lines_color, _debug_lines_color, color, CamSequence2D, Variant::COLOR);
+	ADD_GETSET_BINDING(get_debug_lines_width, set_debug_lines_width, _debug_lines_width, width, CamSequence2D, Variant::FLOAT);
+
+
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_VCAM_INDEX_CHANGED, PropertyInfo(Variant::OBJECT, "vcam2d"), PropertyInfo(Variant::INT, "index")));
 }
@@ -44,40 +55,76 @@ void CamSequence2D::initialize_internal()
 }
 
 
-TypedArray<VirtualCam2D> CamSequence2D::get_vcams_in_children_internal() const
+void CamSequence2D::gather_vcams_in_children_internal()
 {
-	TypedArray<VirtualCam2D> ret_val;
+	vcams.clear();
 
 	TypedArray<Node> children = get_children();
 	for (int i = 0; i < children.size(); i++)
 	{
-		VirtualCam2D* vcam = Object::cast_to<VirtualCam2D>(children[i]);
+		VirtualCam2D* vcam = cast_to<VirtualCam2D>(children[i]);
 		if (vcam != nullptr)
 		{
-			ret_val.append(vcam);
+			vcams.append(vcam);
 		}
 	}
-
-	return ret_val;
 }
 
 
-void CamSequence2D::_process(double delta)
+void CamSequence2D::_debug_lines_drawing(bool editor)
 {
+	if (!editor) return;
+	if (!is_inside_tree()) return;
+	if (!draw_debug_lines) return;
+	if (vcams.size() < 2) return;
+
+	for (int i = 0; i < vcams.size(); i++)
+	{
+		if (i + 1 >= vcams.size()) return;
+
+		VirtualCam2D* a = cast_to<VirtualCam2D>(vcams[i]);
+		VirtualCam2D* b = cast_to<VirtualCam2D>(vcams[i + 1]);
+
+		Vector2 va = a->get_global_position();
+		Vector2 vb = b->get_global_position();
+
+		draw_line(va, vb, debug_lines_color, debug_lines_width);
+	}
+}
+
+
+void CamSequence2D::_process_internal(bool editor)
+{
+	double delta = get_process_delta_time();
+
+	if (editor && draw_debug_lines)
+	{
+		queue_redraw();
+	}
 }
 
 
 void CamSequence2D::_notification(int p_what)
 {
+	bool is_in_editor = Engine::get_singleton()->is_editor_hint();
+
 	switch (p_what)
 	{
 		default:
 			break;
 		case NOTIFICATION_READY:
-			vcams = get_vcams_in_children_internal();
+			gather_vcams_in_children_internal();
+			set_process(true);
 			break;
 		case NOTIFICATION_CHILD_ORDER_CHANGED:
-			vcams = get_vcams_in_children_internal();
+			gather_vcams_in_children_internal();
+			queue_redraw();
+			break;
+		case NOTIFICATION_PROCESS:
+			_process_internal(is_in_editor);
+			break;
+		case NOTIFICATION_DRAW:
+			_debug_lines_drawing(is_in_editor);
 			break;
 	}
 }
@@ -142,5 +189,44 @@ VirtualCam2D* CamSequence2D::vcam2d_first() const
 VirtualCam2D* CamSequence2D::vcam2d_last() const
 {
 	return vcam2d_at(vcams.size());
+}
+
+bool CamSequence2D::get_is_draw_debug_lines() const
+{
+	return draw_debug_lines;
+}
+
+
+void CamSequence2D::set_is_draw_debug_lines(bool draw)
+{
+	draw_debug_lines = draw;
+	if (!draw_debug_lines)
+	{
+		queue_redraw();
+	}
+}
+
+
+Color CamSequence2D::get_debug_lines_color() const
+{
+	return debug_lines_color;
+}
+
+
+void CamSequence2D::set_debug_lines_color(Color color)
+{
+	debug_lines_color = color;
+}
+
+
+double CamSequence2D::get_debug_lines_width() const
+{
+	return debug_lines_width;
+}
+
+
+void CamSequence2D::set_debug_lines_width(double width)
+{
+	debug_lines_width = width;
 }
 

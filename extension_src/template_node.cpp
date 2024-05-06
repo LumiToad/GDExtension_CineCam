@@ -35,8 +35,9 @@ void godot::TemplateNode::initialize_internal()
 }
 
 
-void TemplateNode::_process(double delta)
+void TemplateNode::_process_internal(double delta, bool editor)
 {
+
 }
 
 
@@ -54,5 +55,8 @@ void TemplateNode::_notification(int p_what)
 			// _ready()
 		}
 		break;
+	case NOTIFICATION_PROCESS:
+		double delta = get_process_delta_time();
+		_process_internal(delta, is_in_editor);
 	}
 }

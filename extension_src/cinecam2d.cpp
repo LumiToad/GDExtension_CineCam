@@ -16,7 +16,6 @@ using namespace godot;
 
 CineCam2D::CineCam2D()
 {
-	set_process_mode(PROCESS_MODE_DISABLED);
 	follow_mode = FollowMode::OFF;
 	is_shake_offset_active = false;
 	is_shake_zoom_active = false;
@@ -31,7 +30,7 @@ CineCam2D::CineCam2D()
 	follow_target = nullptr;
 	initialize_internal();
 
-	//PrintUtils::test_warns();
+	PrintUtils::test_warns();
 }
 
 
@@ -648,8 +647,10 @@ void CineCam2D::_move_by_priority_mode()
 }
 
 
-void CineCam2D::_process(double delta)
+void CineCam2D::_process_internal(double delta, bool editor)
 {
+	if (editor) return;
+
 	shake_offset_internal(delta);
 	shake_zoom_internal(delta);
 
@@ -700,12 +701,14 @@ void CineCam2D::_notification(int p_what)
 		case NOTIFICATION_READY:
 			if (!is_in_editor)
 			{
-				set_process_mode(PROCESS_MODE_INHERIT);
 				init_tweens();
 				_move_by_priority_mode();
 				_move_by_follow_mode();
 			}
 			break;
+		case NOTIFICATION_PROCESS:
+			double delta = get_process_delta_time();
+			_process_internal(delta, is_in_editor);
 	}
 }
 
