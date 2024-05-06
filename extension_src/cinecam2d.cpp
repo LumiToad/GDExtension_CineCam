@@ -647,9 +647,11 @@ void CineCam2D::_move_by_priority_mode()
 }
 
 
-void CineCam2D::_process_internal(double delta, bool editor)
+void CineCam2D::_process_internal(bool editor)
 {
 	if (editor) return;
+
+	double delta = get_process_delta_time();
 
 	shake_offset_internal(delta);
 	shake_zoom_internal(delta);
@@ -707,8 +709,7 @@ void CineCam2D::_notification(int p_what)
 			}
 			break;
 		case NOTIFICATION_PROCESS:
-			double delta = get_process_delta_time();
-			_process_internal(delta, is_in_editor);
+			_process_internal(is_in_editor);
 	}
 }
 

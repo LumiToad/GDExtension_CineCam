@@ -35,12 +35,6 @@ void godot::TemplateNode::initialize_internal()
 }
 
 
-void TemplateNode::_process_internal(double delta, bool editor)
-{
-
-}
-
-
 void TemplateNode::_notification(int p_what)
 {
 	bool is_in_editor = Engine::get_singleton()->is_editor_hint();
@@ -50,13 +44,21 @@ void TemplateNode::_notification(int p_what)
 	default:
 		break;
 	case NOTIFICATION_READY:
-		if (!is_in_editor)
-		{
-			// _ready()
-		}
+		_ready_internal(is_in_editor);
 		break;
 	case NOTIFICATION_PROCESS:
-		double delta = get_process_delta_time();
-		_process_internal(delta, is_in_editor);
+		_process_internal(is_in_editor);
 	}
+}
+
+
+void TemplateNode::_ready_internal(bool editor)
+{
+
+}
+
+
+void TemplateNode::_process_internal(bool editor)
+{
+	double delta = get_process_delta_time();
 }
