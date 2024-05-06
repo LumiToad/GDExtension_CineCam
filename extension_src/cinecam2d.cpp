@@ -31,7 +31,7 @@ CineCam2D::CineCam2D()
 	follow_target = nullptr;
 	initialize_internal();
 
-	PrintUtils::test_warns();
+	//PrintUtils::test_warns();
 }
 
 

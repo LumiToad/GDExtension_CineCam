@@ -6,38 +6,15 @@
 #include "godot_cpp/variant/string.hpp"
 #include "godot_cpp/variant/utility_functions.hpp"
 
-#define PRINT(STRING) UtilityFunctions::print((STRING))
-#define WARN(STRING) UtilityFunctions::push_warning((STRING))
-#define ERROR(STRING) UtilityFunctions::push_error((STRING))
+#define PRINT(...) UtilityFunctions::print(...)
+#define WARN(...) UtilityFunctions::push_warning("CineCam WARN! Line: ", __LINE__, " in File: ", __FILE__, "\n", __VA_ARGS__, \n)
+#define ERROR(...) UtilityFunctions::push_error("CineCam ERROR! Line: ", __LINE__, " in File: ", __FILE__, "\n", __VA_ARGS__, \n)
 
 namespace godot
 {
 	static class PrintUtils
 	{
 	public:
-		static enum Prints
-		{
-
-		};
-
-		static enum Warnings
-		{
-			BLEND_BEFORE_INIT,
-			NO_CAM_SEQ_FOUND,
-			IDX_OUT_OF_BOUNDS,
-			SPEED_0_100,
-			NO_HIGHEST_PRIO_CAM2D
-		};
-
-		static enum Errors
-		{
-
-		};
-
-		static String get_print(Prints value);
-		static String get_warn(Warnings value);
-		static String get_err(Errors value);
-
 		static void blend_before_init();
 		static void no_cam_seq_found();
 		static void idx_out_of_bounds(int idx, int size);
