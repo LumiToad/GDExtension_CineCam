@@ -48,6 +48,9 @@
     <ClCompile Include="cam_target2d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="print_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="register_types.h">
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cam_target2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="print_utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

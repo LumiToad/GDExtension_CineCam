@@ -4,9 +4,10 @@
 // cam_squence2d.cpp
 
 #include "cam_sequence2d.h"
-#include "godot_cpp/variant/utility_functions.hpp"
+
 
 #include "bind_utils.h"
+#include "print_utils.h"
 
 using namespace godot;
 
@@ -114,9 +115,7 @@ VirtualCam2D* CamSequence2D::vcam2d_at(int idx) const
 		return cast_to<VirtualCam2D>(vcams[idx]);
 	}
 
-	UtilityFunctions::push_warning(
-		"WARNING! Index [", idx, "] was outside the bounds of the array. (min 0, current size ", vcams.size(), ")"
-	);
+	PrintUtils::idx_out_of_bounds(idx, vcams.size());
 
 	return nullptr;
 }

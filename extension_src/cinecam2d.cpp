@@ -7,10 +7,10 @@
 
 #include "godot_cpp/classes/random_number_generator.hpp"
 #include "godot_cpp/classes/scene_tree.hpp"
-#include "godot_cpp/variant/utility_functions.hpp"
 #include "godot_cpp/classes/engine.hpp"
 
 #include "bind_utils.h"
+#include "print_utils.h"
 
 using namespace godot;
 
@@ -30,6 +30,8 @@ CineCam2D::CineCam2D()
 	highest_prio_vcam = nullptr;
 	follow_target = nullptr;
 	initialize_internal();
+
+	PrintUtils::test_warns();
 }
 
 
@@ -196,7 +198,7 @@ void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data)
 {
 	if (!tweens_ready)
 	{
-		UtilityFunctions::push_warning("WARNING! Tried blending before tweens initialized!\n This is probably a bug in this GDExtension!");
+		PrintUtils::blend_before_init();
 		return;
 	}
 
@@ -262,8 +264,8 @@ void CineCam2D::start_sequence_at(const int &idx, const bool& backwards)
 {
 	if (current_sequence == nullptr)
 	{
-		UtilityFunctions::push_warning("WARNING! No CamSequence2D Node found!");
-		UtilityFunctions::push_warning("WARNING! Use set_current_sequence method or assign it using the Inspector!");
+		PrintUtils::no_cam_seq_found();
+
 		return;
 	}
 
@@ -619,10 +621,7 @@ void CineCam2D::_move_by_priority_mode()
 	{
 		if (highest_prio_vcam == nullptr)
 		{
-			UtilityFunctions::push_warning(
-				"WARNING! Could not detect highest priority of any VirtualCam2D!\nNumber of found cams: " + vcams.size()
-			);
-			return;
+			PrintUtils::no_highest_prio_cam2d(vcams.size());
 		}
 	}
 

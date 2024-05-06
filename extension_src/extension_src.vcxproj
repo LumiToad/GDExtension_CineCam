@@ -160,6 +160,7 @@
     <ClCompile Include="cam_sequence2d.cpp" />
     <ClCompile Include="cam_target2d.cpp" />
     <ClCompile Include="cinecam2d.cpp" />
+    <ClCompile Include="print_utils.cpp" />
     <ClCompile Include="gdclass_metadata.cpp" />
     <ClCompile Include="gdexample.cpp" />
     <ClCompile Include="register_types.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="cam_sequence2d.h" />
     <ClInclude Include="cam_target2d.h" />
     <ClInclude Include="cinecam2d.h" />
+    <ClInclude Include="print_utils.h" />
     <ClInclude Include="gdclass_metadata.h" />
     <ClInclude Include="gdexample.h" />
     <ClInclude Include="register_types.h" />
