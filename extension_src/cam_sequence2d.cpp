@@ -6,6 +6,9 @@
 #include "cam_sequence2d.h"
 
 #include "godot_cpp/classes/engine.hpp"
+#include "godot_cpp/variant/string.hpp"
+#include "godot_cpp/classes/font.hpp"
+#include "godot_cpp/classes/window.hpp"
 
 #include "bind_utils.h"
 #include "print_utils.h"
@@ -89,6 +92,16 @@ void CamSequence2D::_debug_lines_drawing(bool editor)
 		Vector2 vb = b->get_global_position();
 
 		draw_line(va, vb, debug_lines_color, debug_lines_width);
+		Ref<Font> font = get_window()->get_theme_default_font();
+		draw_string(
+			font,
+			va + Vector2(25, -25),
+			"#" + String::num(i),
+			HORIZONTAL_ALIGNMENT_LEFT,
+			-1.0,
+			25,
+			debug_lines_color
+		);
 	}
 }
 
