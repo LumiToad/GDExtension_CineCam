@@ -172,6 +172,7 @@
     <ClCompile Include="template_resource.cpp" />
     <ClCompile Include="virtual_cam2d.cpp" />
     <ClCompile Include="virtual_cam3d.cpp" />
+    <ClCompile Include="welcome.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bind_utils.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="template_resource.h" />
     <ClInclude Include="virtual_cam2d.h" />
     <ClInclude Include="virtual_cam3d.h" />
+    <ClInclude Include="welcome.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="coding_guidelines.txt" />

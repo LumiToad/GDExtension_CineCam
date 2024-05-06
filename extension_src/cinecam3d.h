@@ -60,12 +60,12 @@ namespace godot
 
 		Ref<Tween> shake_offset_intensity_tween;
 		Ref<Tween> shake_offset_duration_tween;
-		Vector3 original_offset;
+		Vector2 original_offset;
 		bool is_shake_offset_active;
 
 		Ref<Tween> shake_zoom_intensity_tween;
 		Ref<Tween> shake_zoom_duration_tween;
-		Vector3 original_zoom;
+		Vector2 original_zoom;
 		bool is_shake_zoom_active;
 
 		Ref<Tween> blend_tween;

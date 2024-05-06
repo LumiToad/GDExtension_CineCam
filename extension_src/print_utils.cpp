@@ -8,6 +8,15 @@
 using namespace godot;
 
 
+void PrintUtils::welcome_text()
+{
+	String CINECAM_VERSION = "v1.0";
+	String CINECAM_URL = "https://github.com/lumitoad/";
+#ifdef DEBUG_ENABLED
+	PRINT("CineCam ", CINECAM_VERSION, " initialized! GDExtension made by LumiToad! (", CINECAM_URL, ")\n");
+#endif
+}
+
 void PrintUtils::blend_before_init()
 {
 #ifdef DEBUG_ENABLED
@@ -44,6 +53,14 @@ void PrintUtils::no_highest_prio_cam2d(int amount)
 {
 #ifdef DEBUG_ENABLED
 	WARN("Could not detect highest priority of any VirtualCam2D!\nNumber of found cams: ", amount);
+#endif
+}
+
+
+void PrintUtils::no_highest_prio_cam3d(int amount)
+{
+#ifdef DEBUG_ENABLED
+	WARN("Could not detect highest priority of any VirtualCam3D!\nNumber of found cams: ", amount);
 #endif
 }
 

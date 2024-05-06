@@ -66,6 +66,9 @@
     <ClCompile Include="cam_target3d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="welcome.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="register_types.h">
@@ -117,6 +120,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cam_target3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="welcome.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -27,7 +27,7 @@ namespace godot
 		void initialize_internal();
 
 		void gather_vcams_in_children_internal();
-		void _debug_lines_drawing(bool editor);
+		void _debug_gizmos_drawing(bool editor);
 
 
 	public:
@@ -50,9 +50,9 @@ namespace godot
 		TypedArray<VirtualCam3D> vcams;
 		int current_vcam_idx;
 
-		bool draw_debug_lines;
-		Color debug_lines_color;
-		double debug_lines_width;
+		bool draw_debug_gizmos;
+		Color debug_gizmos_color;
+		double debug_gizmos_width;
 
 
 	public:
@@ -70,14 +70,14 @@ namespace godot
 		VirtualCam3D* vcam3d_first() const;
 		VirtualCam3D* vcam3d_last() const;
 
-		bool get_is_draw_debug_lines() const;
-		void set_is_draw_debug_lines(bool draw);
+		bool get_is_draw_debug_gizmos() const;
+		void set_is_draw_debug_gizmos(bool draw);
 
-		Color get_debug_lines_color() const;
-		void set_debug_lines_color(Color color);
+		Color get_debug_gizmos_color() const;
+		void set_debug_gizmos_color(Color color);
 
-		double get_debug_lines_width() const;
-		void set_debug_lines_width(double width);
+		double get_debug_gizmos_width() const;
+		void set_debug_gizmos_width(double width);
 
 	protected:
 	};

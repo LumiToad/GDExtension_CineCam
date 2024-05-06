@@ -29,8 +29,6 @@ CineCam2D::CineCam2D()
 	highest_prio_vcam = nullptr;
 	follow_target = nullptr;
 	initialize_internal();
-
-	PrintUtils::test_warns();
 }
 
 

@@ -29,8 +29,6 @@ CineCam3D::CineCam3D()
 	highest_prio_vcam = nullptr;
 	follow_target = nullptr;
 	initialize_internal();
-
-	PrintUtils::test_warns();
 }
 
 
@@ -323,6 +321,7 @@ void CineCam3D::reposition_to_vcam(VirtualCam3D* p_vcam)
 
 void CineCam3D::shake_offset(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
+	/*
 	set_offset(original_offset);
 
 	original_offset = get_offset();
@@ -358,11 +357,13 @@ void CineCam3D::shake_offset(const double& p_intensity, const double& p_duration
 
 	is_shake_offset_active = true;
 	emit_signal(SIGNAL_SHAKE_OFFSET_STARTED);
+	*/
 }
 
 
 void CineCam3D::shake_zoom(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
+	/*
 	set_zoom(original_zoom);
 
 	original_zoom = get_zoom();
@@ -398,6 +399,7 @@ void CineCam3D::shake_zoom(const double& p_intensity, const double& p_duration, 
 
 	is_shake_zoom_active = true;
 	emit_signal(SIGNAL_SHAKE_ZOOM_STARTED);
+	*/
 }
 
 
@@ -416,14 +418,16 @@ void CineCam3D::blend_pause()
 
 void CineCam3D::shake_offset_internal(double delta)
 {
+	/*
 	if (!is_shake_offset_active) return;
 
 	RandomNumberGenerator rng;
 	rng.randomize();
 	double rng_x = rng.randf_range(-shake_offset_intensity, shake_offset_duration);
 	double rng_y = rng.randf_range(-shake_offset_intensity, shake_offset_duration);
+	double rng_z = rng.randf_range(-shake_offset_intensity, shake_offset_duration);
 
-	Vector3 shake_vector = original_offset + Vector3(rng_x, rng_y);
+	Vector3 shake_vector = original_offset + Vector3(rng_x, rng_y, rng_z);
 
 	set_offset(shake_vector);
 
@@ -437,19 +441,22 @@ void CineCam3D::shake_offset_internal(double delta)
 
 		emit_signal(SIGNAL_SHAKE_OFFSET_ENDED);
 	}
+	*/
 }
 
 
 void CineCam3D::shake_zoom_internal(double delta)
 {
+	/*
 	if (!is_shake_zoom_active) return;
 
 	RandomNumberGenerator rng;
 	rng.randomize();
 	double rng_x = rng.randf_range(0.0, shake_zoom_intensity);
 	double rng_y = rng.randf_range(0.0, shake_zoom_intensity);
+	double rng_z = rng.randf_range(0.0, shake_zoom_intensity);
 
-	Vector3 shake_vector = original_zoom + Vector3(rng_x, rng_y);
+	Vector3 shake_vector = original_zoom + Vector3(rng_x, rng_y, rng_z);
 
 	set_zoom(shake_vector);
 
@@ -463,6 +470,7 @@ void CineCam3D::shake_zoom_internal(double delta)
 
 		emit_signal(SIGNAL_SHAKE_ZOOM_ENDED);
 	}
+	*/
 }
 
 

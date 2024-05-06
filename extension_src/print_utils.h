@@ -15,11 +15,13 @@ namespace godot
 	static class PrintUtils
 	{
 	public:
+		static void welcome_text();
 		static void blend_before_init();
 		static void no_cam_seq_found();
 		static void idx_out_of_bounds(int idx, int size);
 		static void speed_0_100(int percent);
 		static void no_highest_prio_cam2d(int amount);
+		static void no_highest_prio_cam3d(int amount);
 		static void test_warns();
 	};
 }

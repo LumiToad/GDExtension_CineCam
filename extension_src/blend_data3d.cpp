@@ -35,9 +35,9 @@ void BlendData3D::_bind_methods()
 	ADD_GETSET_BINDING(get_speed, set_speed, speed, p_speed, BlendData3D, FLOAT);
 
 	BIND_ENUM_CONSTANT(SPEED)
-		BIND_ENUM_CONSTANT(DURATION)
+	BIND_ENUM_CONSTANT(DURATION)
 
-		ClassDB::bind_method(D_METHOD("get_blend_by"), &BlendData3D::get_blend_by);
+	ClassDB::bind_method(D_METHOD("get_blend_by"), &BlendData3D::get_blend_by);
 	ClassDB::bind_method(D_METHOD("set_blend_by", "p_by"), &BlendData3D::set_blend_by);
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "blend_by", PROPERTY_HINT_ENUM, BLEND_BY_HINTS), "set_blend_by", "get_blend_by");
 

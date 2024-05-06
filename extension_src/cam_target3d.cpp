@@ -16,7 +16,7 @@ CamTarget3D::CamTarget3D()
 	additional_description = "Camera target for CineCam3D follow mode.";
 	initialize_internal();
 
-	target_offset = Vector2();
+	target_offset = Vector3();
 	speed = 0.0;
 	ease = Tween::EaseType::EASE_IN_OUT;
 	trans = Tween::TransitionType::TRANS_CUBIC;
@@ -60,13 +60,13 @@ double CamTarget3D::scaled_speed() const
 
 
 
-Vector2 CamTarget3D::get_target_offset() const
+Vector3 CamTarget3D::get_target_offset() const
 {
 	return target_offset;
 }
 
 
-void CamTarget3D::set_target_offset(Vector2 offset)
+void CamTarget3D::set_target_offset(Vector3 offset)
 {
 	target_offset = offset;
 }

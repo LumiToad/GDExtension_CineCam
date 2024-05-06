@@ -18,7 +18,7 @@ using namespace godot;
 CamSequence2D::CamSequence2D()
 {
 	current_vcam_idx = 0;
-	debug_lines_color = Color("478cbf"); // godot_blue
+	debug_lines_color = Color("8DA5F3"); // godot_3d_blue
 	debug_lines_width = 1.0;
 
 	additional_description = "Sequence of VirtualCam2D.\nFor camera sequences. Put VirtualCam2D as children of this node.";

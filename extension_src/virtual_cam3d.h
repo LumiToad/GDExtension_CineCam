@@ -51,12 +51,12 @@ namespace godot
 		godot::String vcam_id;
 		int priority;
 
-		Vector2 offset;
-		Camera3D::AnchorMode anchor_mode = Camera3D::AnchorMode::ANCHOR_MODE_DRAG_CENTER;
+		Vector3 offset;
+		//Camera3D::AnchorMode anchor_mode = Camera3D::AnchorMode::ANCHOR_MODE_DRAG_CENTER;
 		bool ingore_rotation = false;
 		bool enabled = true;
-		Vector2 zoom;
-		Camera3D::Camera3DProcessCallback process_callback;
+		Vector3 zoom;
+		//Camera3D::Camera3DProcessCallback process_callback;
 		Ref<BlendData3D> blend_data;
 
 		int limit[4];
@@ -87,11 +87,11 @@ namespace godot
 		void set_priority(int prio);
 		int get_priority() const;
 
-		void set_offset(const Vector2& p_offset);
-		Vector2 get_offset() const;
+		void set_offset(const Vector3& p_offset);
+		Vector3 get_offset() const;
 
-		void set_anchor_mode(Camera3D::AnchorMode p_anchor_mode);
-		Camera3D::AnchorMode get_anchor_mode() const;
+		//void set_anchor_mode(Camera3D::AnchorMode p_anchor_mode);
+		//Camera3D::AnchorMode get_anchor_mode() const;
 
 		void set_ignore_rotation(bool p_ignore);
 		bool is_ignoring_rotation() const;
@@ -99,8 +99,8 @@ namespace godot
 		void set_enabled(bool p_enabled);
 		bool is_enabled() const;
 
-		void set_zoom(const Vector2& p_zoom);
-		Vector2 get_zoom() const;
+		void set_zoom(const Vector3& p_zoom);
+		Vector3 get_zoom() const;
 
 		void set_limit_left(int p_limit);
 		int get_limit_left() const;
@@ -117,8 +117,8 @@ namespace godot
 		void set_limit(Side p_side, int p_limit);
 		int get_limit(Side p_side) const;
 
-		void set_process_callback(Camera3D::Camera3DProcessCallback p_mode);
-		Camera3D::Camera3DProcessCallback get_process_callback() const;
+		//void set_process_callback(Camera3D::Camera3DProcessCallback p_mode);
+		//Camera3D::Camera3DProcessCallback get_process_callback() const;
 
 		void set_limit_smoothing_enabled(bool enable);
 		bool is_limit_smoothing_enabled() const;

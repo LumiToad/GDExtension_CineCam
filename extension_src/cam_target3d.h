@@ -46,14 +46,14 @@ namespace godot
 
 		// GODOT public
 	private:
-		Vector2 target_offset;
+		Vector3 target_offset;
 		double speed;
 		Tween::EaseType ease;
 		Tween::TransitionType trans;
 
 	public:
-		Vector2 get_target_offset() const;
-		void set_target_offset(Vector2 offset);
+		Vector3 get_target_offset() const;
+		void set_target_offset(Vector3 offset);
 
 		void set_speed(double speed);
 		double get_speed() const;

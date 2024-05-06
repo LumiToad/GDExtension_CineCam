@@ -13,25 +13,51 @@
 #include "gdexample.h"
 #include "template_node.h"
 #include "template_resource.h"
+
 #include "blend_data2d.h"
 #include "virtual_cam2d.h"
 #include "cam_sequence2d.h"
 #include "cinecam2d.h"
 #include "cam_target2d.h"
 
+#include "blend_data3d.h"
+#include "virtual_cam3d.h"
+#include "cam_sequence3d.h"
+#include "cinecam3d.h"
+#include "cam_target3d.h"
+
+#include "welcome.h"
 
 using namespace godot;
 
+static Welcome* welcome;
+
 void initialize_cinecam_module(ModuleInitializationLevel p_level)
 {
-	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) return;
-	
-	GDREGISTER_CLASS(GDExample)
-	GDREGISTER_CLASS(CamTarget2D)
-	GDREGISTER_CLASS(BlendData2D)
-	GDREGISTER_CLASS(VirtualCam2D)
-	GDREGISTER_CLASS(CamSequence2D)
-	GDREGISTER_CLASS(CineCam2D)
+	if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE)
+	{	
+		GDREGISTER_CLASS(GDExample)
+
+		GDREGISTER_CLASS(CamTarget2D)
+		GDREGISTER_CLASS(BlendData2D)
+		GDREGISTER_CLASS(VirtualCam2D)
+		GDREGISTER_CLASS(CamSequence2D)
+		GDREGISTER_CLASS(CineCam2D)
+
+		GDREGISTER_CLASS(CamTarget3D)
+		GDREGISTER_CLASS(BlendData3D)
+		GDREGISTER_CLASS(VirtualCam3D)
+		GDREGISTER_CLASS(CamSequence3D)
+		GDREGISTER_CLASS(CineCam3D)
+	}
+
+	if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR)
+	{
+		GDREGISTER_CLASS(Welcome)
+		welcome = memnew(Welcome);
+		welcome->print_welcome();
+		memdelete(welcome);
+	}
 }
 
 

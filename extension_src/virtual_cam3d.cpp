@@ -49,14 +49,14 @@ void VirtualCam3D::_bind_methods()
 	ClassDB::bind_method(D_METHOD("set_offset", "offset"), &VirtualCam3D::set_offset);
 	ClassDB::bind_method(D_METHOD("get_offset"), &VirtualCam3D::get_offset);
 
-	ClassDB::bind_method(D_METHOD("set_anchor_mode", "anchor_mode"), &VirtualCam3D::set_anchor_mode);
-	ClassDB::bind_method(D_METHOD("get_anchor_mode"), &VirtualCam3D::get_anchor_mode);
+	//ClassDB::bind_method(D_METHOD("set_anchor_mode", "anchor_mode"), &VirtualCam3D::set_anchor_mode);
+	//ClassDB::bind_method(D_METHOD("get_anchor_mode"), &VirtualCam3D::get_anchor_mode);
 
 	ClassDB::bind_method(D_METHOD("set_ignore_rotation", "ignore"), &VirtualCam3D::set_ignore_rotation);
 	ClassDB::bind_method(D_METHOD("is_ignoring_rotation"), &VirtualCam3D::is_ignoring_rotation);
 
-	ClassDB::bind_method(D_METHOD("set_process_callback", "mode"), &VirtualCam3D::set_process_callback);
-	ClassDB::bind_method(D_METHOD("get_process_callback"), &VirtualCam3D::get_process_callback);
+	//ClassDB::bind_method(D_METHOD("set_process_callback", "mode"), &VirtualCam3D::set_process_callback);
+	//ClassDB::bind_method(D_METHOD("get_process_callback"), &VirtualCam3D::get_process_callback);
 
 	ClassDB::bind_method(D_METHOD("set_enabled", "enabled"), &VirtualCam3D::set_enabled);
 	ClassDB::bind_method(D_METHOD("is_enabled"), &VirtualCam3D::is_enabled);
@@ -126,12 +126,12 @@ void VirtualCam3D::_bind_methods()
 
 	ADD_GROUP("Camera3D", "cam3d_");
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "cam3d_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "cam3d_anchor_mode", PROPERTY_HINT_ENUM, "Fixed TopLeft,Drag Center"), "set_anchor_mode", "get_anchor_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "cam3d_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
+	//ADD_PROPERTY(PropertyInfo(Variant::INT, "cam3d_anchor_mode", PROPERTY_HINT_ENUM, "Fixed TopLeft,Drag Center"), "set_anchor_mode", "get_anchor_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam3d_ignore_rotation"), "set_ignore_rotation", "is_ignoring_rotation");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam3d_enabled"), "set_enabled", "is_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "cam3d_zoom", PROPERTY_HINT_LINK), "set_zoom", "get_zoom");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "cam3d_process_callback", PROPERTY_HINT_ENUM, "Physics,Idle"), "set_process_callback", "get_process_callback");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "cam3d_zoom", PROPERTY_HINT_LINK), "set_zoom", "get_zoom");
+	//ADD_PROPERTY(PropertyInfo(Variant::INT, "cam3d_process_callback", PROPERTY_HINT_ENUM, "Physics,Idle"), "set_process_callback", "get_process_callback");
 
 	ADD_SUBGROUP("Limit", "limit_");
 
@@ -165,10 +165,10 @@ void VirtualCam3D::_bind_methods()
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "editor_draw_limits"), "set_limit_drawing_enabled", "is_limit_drawing_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "editor_draw_drag_margin"), "set_margin_drawing_enabled", "is_margin_drawing_enabled");
 
-	BIND_ENUM_CONSTANT(Camera3D::AnchorMode::ANCHOR_MODE_FIXED_TOP_LEFT);
-	BIND_ENUM_CONSTANT(Camera3D::AnchorMode::ANCHOR_MODE_DRAG_CENTER);
-	BIND_ENUM_CONSTANT(Camera3D::Camera3DProcessCallback::CAMERA3D_PROCESS_PHYSICS);
-	BIND_ENUM_CONSTANT(Camera3D::Camera3DProcessCallback::CAMERA3D_PROCESS_IDLE);
+	//BIND_ENUM_CONSTANT(Camera3D::AnchorMode::ANCHOR_MODE_FIXED_TOP_LEFT);
+	//BIND_ENUM_CONSTANT(Camera3D::AnchorMode::ANCHOR_MODE_DRAG_CENTER);
+	//BIND_ENUM_CONSTANT(Camera3D::Camera3DProcessCallback::CAMERA3D_PROCESS_PHYSICS);
+	//BIND_ENUM_CONSTANT(Camera3D::Camera3DProcessCallback::CAMERA3D_PROCESS_IDLE);
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_PRIORITY_CHANGED, PropertyInfo(Variant::OBJECT, "vcam3d"), PropertyInfo(Variant::INT, "priority")));
 }
@@ -273,18 +273,18 @@ int VirtualCam3D::get_priority() const
 }
 
 
-void VirtualCam3D::set_offset(const Vector2& p_offset)
+void VirtualCam3D::set_offset(const Vector3& p_offset)
 {
 	offset = p_offset;
 }
 
 
-Vector2 VirtualCam3D::get_offset() const
+Vector3 VirtualCam3D::get_offset() const
 {
 	return offset;
 }
 
-
+/*
 void VirtualCam3D::set_anchor_mode(Camera3D::AnchorMode p_anchor_mode)
 {
 	anchor_mode = p_anchor_mode;
@@ -295,6 +295,7 @@ Camera3D::AnchorMode VirtualCam3D::get_anchor_mode() const
 {
 	return anchor_mode;
 }
+*/
 
 
 void VirtualCam3D::set_ignore_rotation(bool p_ignore)
@@ -321,13 +322,13 @@ bool VirtualCam3D::is_enabled() const
 }
 
 
-void VirtualCam3D::set_zoom(const Vector2& p_zoom)
+void VirtualCam3D::set_zoom(const Vector3& p_zoom)
 {
 	zoom = p_zoom;
 }
 
 
-Vector2 VirtualCam3D::get_zoom() const
+Vector3 VirtualCam3D::get_zoom() const
 {
 	return zoom;
 }
@@ -394,7 +395,7 @@ int VirtualCam3D::get_limit(Side p_side) const
 	return limit[p_side];
 }
 
-
+/*
 void VirtualCam3D::set_process_callback(Camera3D::Camera3DProcessCallback p_mode)
 {
 	process_callback = p_mode;
@@ -405,6 +406,7 @@ Camera3D::Camera3DProcessCallback VirtualCam3D::get_process_callback() const
 {
 	return process_callback;
 }
+*/
 
 
 void VirtualCam3D::set_limit_smoothing_enabled(bool enable)
@@ -549,7 +551,7 @@ void VirtualCam3D::set_drag_margin(Side p_side, real_t p_drag_margin)
 {
 	ERR_FAIL_INDEX((int)p_side, 4);
 	drag_margin[p_side] = p_drag_margin;
-	queue_redraw(); //remove???
+	//queue_redraw(); //remove???
 }
 
 
