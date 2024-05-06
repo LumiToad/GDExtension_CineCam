@@ -47,12 +47,20 @@ void CineCam2D::_bind_methods()
 	ADD_METHOD_BINDING(seq_blend_prev, CineCam2D);
 	ADD_METHOD_ARGS_BINDING(seq_blend_to, CineCam2D, VA_LIST("idx"));
 	ADD_METHOD_DEFAULTARGS_BINDING(start_sequence, CineCam2D, "backwards", DEFVAL(false));
+	ADD_METHOD_DEFAULTARGS_BINDING(start_sequence_at, CineCam2D, VA_LIST("backwards", "index"), VA_LIST(DEFVAL(0), DEFVAL(false)));
+	ADD_METHOD_BINDING(seq_resume, CineCam2D);
+	ADD_METHOD_BINDING(seq_pause, CineCam2D);
+	ADD_METHOD_BINDING(seq_stop, CineCam2D);
+
+
 	ADD_METHOD_ARGS_BINDING(reposition_to_vcam, CineCam2D, "vcam");
 
 	ADD_METHOD_BINDING(prioritized_vcam, CineCam2D);
 	ADD_METHOD_BINDING(_on_vcam_priority_changed, CineCam2D);
 	ADD_METHOD_BINDING(_move_by_priority_mode, CineCam2D);
 	ADD_METHOD_BINDING(_move_by_follow_mode, CineCam2D);
+	ADD_METHOD_BINDING(blend_resume, CineCam2D);
+	ADD_METHOD_BINDING(blend_pause, CineCam2D);
 	ADD_METHOD_ARGS_BINDING(_calc_blend_duration_by_speed, CineCam2D, VA_LIST("current_pos", "target_pos", "speed"));
 	ADD_METHOD_ARGS_BINDING(find_vcam_by_id, CineCam2D, "id");
 
@@ -70,6 +78,9 @@ void CineCam2D::_bind_methods()
 	ADD_GETSET_HINT_BINDING(get_shake_zoom_intensity, set_shake_zoom_intensity, shake_zoom_intensity, intensity, CineCam2D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
 	ADD_GETSET_HINT_BINDING(get_shake_zoom_duration, set_shake_zoom_duration, shake_zoom_duration, duration, CineCam2D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
 
+	ADD_GETSET_BINDING(_get_seq_is_paused, _set_seq_is_paused, sequence_paused, paused, CineCam2D, BOOL);
+	ADD_GETSET_BINDING(_get_blend_is_paused, _set_blend_is_paused, blend_paused, paused, CineCam2D, BOOL);
+
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_offset, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_zoom, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 
@@ -81,8 +92,13 @@ void CineCam2D::_bind_methods()
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_ZOOM_ENDED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_BLEND_STARTED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_BLEND_COMPLETED));
+	ADD_SIGNAL(MethodInfo(SIGNAL_BLEND_PAUSED));
+	ADD_SIGNAL(MethodInfo(SIGNAL_BLEND_RESUMED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SEQUENCE_STARTED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SEQUENCE_COMPLETED));
+	ADD_SIGNAL(MethodInfo(SIGNAL_SEQUENCE_PAUSED));
+	ADD_SIGNAL(MethodInfo(SIGNAL_SEQUENCE_RESUMED));
+	ADD_SIGNAL(MethodInfo(SIGNAL_SEQUENCE_STOPPED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_PRIORITIZED_VCAM2D_CHANGED, PropertyInfo(Variant::OBJECT, "vcam2d"), PropertyInfo(Variant::INT, "priority")));
 
 	BIND_ENUM_CONSTANT(OFF);
@@ -169,26 +185,10 @@ void CineCam2D::_on_blend_completed_internal()
 	
 	blend_tween = get_tree()->create_tween();
 	blend_tween->stop();
+	is_blend_not_stopped = false;
 	blend_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
 
-	if (current_sequence != nullptr)
-	{
-		int idx = current_sequence->get_current_idx() + 1;
-		if (idx >= current_sequence->get_vcam2d_array().size())
-		{
-			emit_signal(SIGNAL_SEQUENCE_COMPLETED);
-			return;
-		}
-
-		if (sequence_backwards)
-		{
-			seq_blend_prev();
-		}
-		else
-		{
-			seq_blend_next();
-		}
-	}
+	cycle_sequence_internal();
 }
 
 
@@ -204,6 +204,7 @@ void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data)
 	{
 		blend_tween = get_tree()->create_tween();
 		blend_tween->stop();
+		is_blend_not_stopped = false;
 	}
 	
 	blend_tween->set_trans(blend_data->get_trans());
@@ -228,6 +229,7 @@ void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data)
 		);
 
 	blend_tween->play();
+	is_blend_not_stopped = true;
 	_on_blend_started_internal();
 }
 
@@ -250,6 +252,29 @@ void CineCam2D::seq_blend_prev()
 }
 
 
+void CineCam2D::blend_resume()
+{
+	_set_blend_is_paused(false);
+}
+
+
+void CineCam2D::start_sequence_at(const int &idx, const bool& backwards)
+{
+	if (current_sequence == nullptr)
+	{
+		UtilityFunctions::push_warning("WARNING! No CamSequence2D Node found!");
+		UtilityFunctions::push_warning("WARNING! Use set_current_sequence method or assign it using the Inspector!");
+		return;
+	}
+
+	sequence_backwards = backwards;
+	sequence_playmode = true;
+
+	seq_blend_to(idx);
+	emit_signal(SIGNAL_SEQUENCE_STARTED);
+}
+
+
 void CineCam2D::seq_blend_to(int idx)
 {
 	current_sequence->set_current_idx(idx);
@@ -266,21 +291,26 @@ void CineCam2D::seq_blend_to(int idx)
 }
 
 
-void CineCam2D::seq_play()
+void CineCam2D::seq_resume()
 {
-
+	if (is_sequence_paused && !blend_tween->is_running())
+	{
+		is_sequence_paused = false;
+		cycle_sequence_internal();
+	}
 }
 
 
 void CineCam2D::seq_pause()
 {
-
+	is_sequence_paused = true;
 }
 
 
 void CineCam2D::seq_stop()
 {
-
+	sequence_playmode = false;
+	emit_signal(SIGNAL_SEQUENCE_STOPPED);
 }
 
 
@@ -372,18 +402,14 @@ void CineCam2D::shake_zoom(const double& p_intensity, const double& p_duration, 
 
 void CineCam2D::start_sequence(const bool& backwards)
 {
-	if (current_sequence == nullptr)
-	{
-		UtilityFunctions::push_warning("WARNING! No CamSequence2D Node found!");
-		UtilityFunctions::push_warning("WARNING! Use set_current_sequence method or assign it using the Inspector!");
-		return;
-	}
+	int idx = 0 + (backwards ? current_sequence->get_vcam2d_array().size() - 1 : 0);
+	start_sequence_at(backwards, idx);
+}
 
-	sequence_backwards = backwards;
-	int idx = 0 + (backwards ? current_sequence->get_vcam2d_array().size() : 0);
 
-	seq_blend_to(idx);
-	emit_signal(SIGNAL_SEQUENCE_STARTED);
+void CineCam2D::blend_pause()
+{
+	_set_blend_is_paused(true);
 }
 
 
@@ -471,6 +497,38 @@ void CineCam2D::init_active_blend()
 	else
 	{
 		active_blend.instantiate();
+	}
+}
+
+
+void CineCam2D::cycle_sequence_internal()
+{
+	if (
+		current_sequence != nullptr &&
+		!is_sequence_paused &&
+		sequence_playmode
+		)
+	{
+		if (!sequence_backwards)
+		{
+			int idx = current_sequence->get_current_idx() + 1;
+			if (idx >= current_sequence->get_vcam2d_array().size())
+			{
+				emit_signal(SIGNAL_SEQUENCE_COMPLETED);
+				return;
+			}
+			seq_blend_next();
+		}
+		else
+		{
+			int idx = current_sequence->get_current_idx() - 1;
+			if (idx < 0)
+			{
+				emit_signal(SIGNAL_SEQUENCE_COMPLETED);
+				return;
+			}
+			seq_blend_prev();
+		}
 	}
 }
 
@@ -772,4 +830,44 @@ VirtualCam2D* CineCam2D::find_vcam_by_id(String id) const
 		}
 	}
 	return nullptr;
+}
+
+
+void CineCam2D::_set_seq_is_paused(bool paused)
+{
+	is_sequence_paused = paused;
+	emit_signal(paused ? SIGNAL_SEQUENCE_PAUSED : SIGNAL_SEQUENCE_RESUMED);
+}
+
+
+bool CineCam2D::_get_seq_is_paused() const
+{
+	return is_sequence_paused;
+}
+
+
+void CineCam2D::_set_blend_is_paused(bool paused)
+{
+	if (Engine::get_singleton()->is_editor_hint()) return;
+	if (!is_blend_not_stopped) return;
+
+	if (paused)
+	{
+		blend_tween->pause();
+		emit_signal(SIGNAL_BLEND_PAUSED);
+	}
+	else
+	{
+		blend_tween->play();
+		is_blend_not_stopped = true;
+		emit_signal(SIGNAL_BLEND_RESUMED);
+	}
+}
+
+
+bool CineCam2D::_get_blend_is_paused() const
+{
+	if (Engine::get_singleton()->is_editor_hint()) return false;
+
+	return !blend_tween->is_running();
 }

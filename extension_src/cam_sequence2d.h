@@ -11,6 +11,8 @@
 #include "gdclass_metadata.h"
 #include "virtual_cam2d.h"
 
+#define SIGNAL_VCAM_INDEX_CHANGED "index_changed"
+
 namespace godot
 {
 	class CamSequence2D : public Node2D
@@ -56,11 +58,11 @@ namespace godot
 		void set_current_idx(int idx);
 		int get_current_idx() const;
 
-		VirtualCam2D* vcam_at(int idx) const;
-		VirtualCam2D* vcam_next() const;
-		VirtualCam2D* vcam_prev() const;
-		VirtualCam2D* vcam_first() const;
-		VirtualCam2D* vcam_last() const;
+		VirtualCam2D* vcam2d_at(int idx) const;
+		VirtualCam2D* vcam2d_next() const;
+		VirtualCam2D* vcam2d_prev() const;
+		VirtualCam2D* vcam2d_first() const;
+		VirtualCam2D* vcam2d_last() const;
 
 	protected:
 	};

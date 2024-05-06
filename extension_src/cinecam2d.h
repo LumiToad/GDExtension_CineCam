@@ -16,16 +16,26 @@
 
 #define DEFAULT_EASE Tween::EASE_OUT
 #define DEFAULT_TRANS Tween::TRANS_CUBIC
+
 #define SIGNAL_SHAKE_OFFSET_STARTED "shake_offset_started"
 #define SIGNAL_SHAKE_OFFSET_ENDED "shake_offset_ended"
 #define SIGNAL_SHAKE_ZOOM_STARTED "shake_zoom_started"
 #define SIGNAL_SHAKE_ZOOM_ENDED "shake_zoom_ended"
+
 #define SIGNAL_BLEND_STARTED "blend_started"
 #define SIGNAL_BLEND_COMPLETED "blend_completed"
+#define SIGNAL_BLEND_PAUSED "blend_paused"
+#define SIGNAL_BLEND_RESUMED "blend_resumed"
+
 #define SIGNAL_SEQUENCE_STARTED "sequence_started"
 #define SIGNAL_SEQUENCE_COMPLETED "sequence_completed"
-#define TARGET_MODE_HINTS "OFF,PRIO,PRIO_ONESHOT,PRIO_BLEND,TARGET,TARGET_BLEND"
+#define SIGNAL_SEQUENCE_PAUSED "sequence_paused"
+#define SIGNAL_SEQUENCE_RESUMED "sequence_resumed"
+#define SIGNAL_SEQUENCE_STOPPED "sequence_stopped"
+
 #define SIGNAL_PRIORITIZED_VCAM2D_CHANGED "prioritized_vcam2d_changed"
+
+#define TARGET_MODE_HINTS "OFF,PRIO,PRIO_ONESHOT,PRIO_BLEND,TARGET,TARGET_BLEND"
 
 namespace godot
 {
@@ -68,6 +78,8 @@ namespace godot
 		TypedArray<VirtualCam2D> vcams;
 
 		bool sequence_backwards;
+		bool sequence_playmode = false;
+		bool is_blend_not_stopped = false;
 
 		void initialize_internal();
 		void init_tweens();
@@ -77,6 +89,7 @@ namespace godot
 		double _calc_blend_duration_by_speed(Vector2 current_pos, Vector2 target_pos, double speed);
 		void _move_by_follow_mode();
 		void init_active_blend();
+		void cycle_sequence_internal();
 
 
 	public:
@@ -105,11 +118,16 @@ namespace godot
 		double shake_offset_duration;
 		double shake_zoom_intensity;
 		double shake_zoom_duration;
-		bool is_sequence_playing;
+		bool is_sequence_paused = false;
 
 
 	public:
 		void blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data);
+		void blend_pause();
+		void blend_resume();
+
+		void start_sequence(const bool& backwards);
+		void start_sequence_at(const int& idx = 0, const bool& backwards = false);
 		void seq_blend_next();
 		void seq_blend_prev();
 		void seq_blend_to(int idx);
@@ -129,7 +147,7 @@ namespace godot
 			Tween::EaseType p_ease = DEFAULT_EASE,
 			Tween::TransitionType p_trans = DEFAULT_TRANS);
 
-		void start_sequence(const bool& backwards);
+		
 		void _register_vcam_internal(VirtualCam2D* p_vcam);
 		void _remove_vcam_internal(VirtualCam2D* p_vcam);
 		bool _try_set_highest_vcam_internal(VirtualCam2D* p_vcam, int vcam_prio);
@@ -165,6 +183,11 @@ namespace godot
 		VirtualCam2D* prioritized_vcam() const;
 		VirtualCam2D* find_vcam_by_id(String id) const;
 
+		void _set_seq_is_paused(bool paused);
+		bool _get_seq_is_paused() const;
+
+		void _set_blend_is_paused(bool paused);
+		bool _get_blend_is_paused() const;
 
 	protected:
 	};

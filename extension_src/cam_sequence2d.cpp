@@ -28,9 +28,11 @@ void CamSequence2D::_bind_methods()
 {
 	ADD_METHOD_BINDING(get_vcam2d_array, CamSequence2D);
 	ADD_METHOD_BINDING(current_vcam, CamSequence2D);
-	ADD_METHOD_ARGS_BINDING(vcam_at, CamSequence2D, "index");
+	ADD_METHOD_ARGS_BINDING(vcam2d_at, CamSequence2D, "index");
 
 	ADD_GETSET_BINDING(get_current_idx, set_current_idx, current_idx, idx, CamSequence2D, Variant::INT);
+
+	ADD_SIGNAL(MethodInfo(SIGNAL_VCAM_INDEX_CHANGED, PropertyInfo(Variant::OBJECT, "vcam2d"), PropertyInfo(Variant::INT, "index")));
 }
 
 
@@ -95,6 +97,7 @@ VirtualCam2D* CamSequence2D::current_vcam() const
 void CamSequence2D::set_current_idx(int idx)
 {
 	current_vcam_idx = idx;
+	emit_signal(SIGNAL_VCAM_INDEX_CHANGED, vcam2d_at(idx), idx);
 }
 
 
@@ -104,7 +107,7 @@ int CamSequence2D::get_current_idx() const
 }
 
 
-VirtualCam2D* CamSequence2D::vcam_at(int idx) const
+VirtualCam2D* CamSequence2D::vcam2d_at(int idx) const
 {
 	if (idx > 0 && idx <= vcams.size())
 	{
@@ -119,26 +122,26 @@ VirtualCam2D* CamSequence2D::vcam_at(int idx) const
 }
 
 
-VirtualCam2D* CamSequence2D::vcam_next() const
+VirtualCam2D* CamSequence2D::vcam2d_next() const
 {
-	return vcam_at(current_vcam_idx + 1);
+	return vcam2d_at(current_vcam_idx + 1);
 }
 
 
-VirtualCam2D* CamSequence2D::vcam_prev() const
+VirtualCam2D* CamSequence2D::vcam2d_prev() const
 {
-	return vcam_at(current_vcam_idx - 1);
+	return vcam2d_at(current_vcam_idx - 1);
 }
 
 
-VirtualCam2D* CamSequence2D::vcam_first() const
+VirtualCam2D* CamSequence2D::vcam2d_first() const
 {
-	return vcam_at(0);
+	return vcam2d_at(0);
 }
 
 
-VirtualCam2D* CamSequence2D::vcam_last() const
+VirtualCam2D* CamSequence2D::vcam2d_last() const
 {
-	return vcam_at(vcams.size());
+	return vcam2d_at(vcams.size());
 }
 
