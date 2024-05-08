@@ -28,6 +28,7 @@ CineCam3D::CineCam3D()
 	current_sequence = nullptr;
 	highest_prio_vcam = nullptr;
 	follow_target = nullptr;
+
 	initialize_internal();
 }
 
@@ -115,8 +116,6 @@ void CineCam3D::initialize_internal()
 {
 	GDCLASS_Metadata meta(get_parent_class_static(), additional_description, *_get_extension_class_name());
 	set_editor_description(meta.get_metadata_string());
-
-	init_default_blend_data();
 }
 
 
@@ -149,16 +148,13 @@ void CineCam3D::init_tweens()
 
 void CineCam3D::init_default_blend_data()
 {
-	if (blend_data.is_valid()) return;
-
-	blend_data.instantiate();
-
-	blend_data.ptr()->set_blend_name("CineCam3D blend data");
-	blend_data.ptr()->set_duration(2.0f);
-	blend_data.ptr()->set_speed(2.0f);
-	blend_data.ptr()->set_blend_by(BlendData3D::BlendByType::DURATION);
-	blend_data.ptr()->set_ease(Tween::EASE_IN_OUT);
-	blend_data.ptr()->set_trans(Tween::TRANS_CUBIC);
+	blend_data->set_blend_name("CineCam3D blend data");
+	blend_data->set_blend_by_value(2.0f);
+	blend_data->set_blend_by(BlendData3D::BlendByType::DURATION);
+	blend_data->set_ease(Tween::EASE_IN_OUT);
+	blend_data->set_trans(Tween::TRANS_CUBIC);
+	blend_data->_set_callable_on_start(false);
+	blend_data->_set_callable_on_complete(false);
 }
 
 
@@ -209,14 +205,14 @@ void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend_data)
 	blend_tween->set_trans(blend_data->get_trans());
 	blend_tween->set_ease(blend_data->get_ease());
 
-	double calc_duration = blend_data->get_duration();
+	double calc_duration = blend_data->get_blend_by_value();
 
 	if (blend_data->get_blend_by() == BlendData3D::BlendByType::SPEED)
 	{
 		calc_duration = _calc_blend_duration_by_speed(
 			get_global_position(),
 			p_vcam->get_global_position(),
-			blend_data->get_speed()
+			calc_duration
 		);
 	}
 
@@ -321,10 +317,11 @@ void CineCam3D::reposition_to_vcam(VirtualCam3D* p_vcam)
 
 void CineCam3D::shake_offset(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
-	/*
-	set_offset(original_offset);
+	set_h_offset(original_offset.x);
+	set_v_offset(original_offset.y);
 
-	original_offset = get_offset();
+	original_offset.x = get_h_offset();
+	original_offset.y = get_v_offset();
 
 	if (shake_offset_duration > 0.0)
 	{
@@ -357,7 +354,7 @@ void CineCam3D::shake_offset(const double& p_intensity, const double& p_duration
 
 	is_shake_offset_active = true;
 	emit_signal(SIGNAL_SHAKE_OFFSET_STARTED);
-	*/
+	
 }
 
 
@@ -418,18 +415,17 @@ void CineCam3D::blend_pause()
 
 void CineCam3D::shake_offset_internal(double delta)
 {
-	/*
 	if (!is_shake_offset_active) return;
 
 	RandomNumberGenerator rng;
 	rng.randomize();
 	double rng_x = rng.randf_range(-shake_offset_intensity, shake_offset_duration);
 	double rng_y = rng.randf_range(-shake_offset_intensity, shake_offset_duration);
-	double rng_z = rng.randf_range(-shake_offset_intensity, shake_offset_duration);
 
-	Vector3 shake_vector = original_offset + Vector3(rng_x, rng_y, rng_z);
+	Vector2 shake_vector = original_offset + Vector2(rng_x, rng_y);
 
-	set_offset(shake_vector);
+	set_h_offset(shake_vector.x);
+	set_v_offset(shake_vector.y);
 
 	if (shake_offset_duration <= 0.0)
 	{
@@ -437,11 +433,11 @@ void CineCam3D::shake_offset_internal(double delta)
 		shake_offset_intensity_tween->stop();
 		shake_offset_duration_tween->stop();
 
-		set_offset(original_offset);
+		set_h_offset(original_offset.x);
+		set_v_offset(original_offset.y);
 
 		emit_signal(SIGNAL_SHAKE_OFFSET_ENDED);
 	}
-	*/
 }
 
 
@@ -655,6 +651,12 @@ void CineCam3D::_move_by_priority_mode()
 }
 
 
+void CineCam3D::_process(double delta)
+{
+
+}
+
+
 void CineCam3D::_process_internal(bool editor)
 {
 	if (editor) return;
@@ -666,36 +668,36 @@ void CineCam3D::_process_internal(bool editor)
 
 	switch (follow_mode)
 	{
-	default:
-		break;
-	case PRIO:
-		reposition_to_vcam(highest_prio_vcam);
-		break;
-	case OFF:
-		break;
-	case TARGET:
-		if (follow_target == nullptr)
-		{
-			UtilityFunctions::push_warning("WARNING! No target set! Can't follow! ::573");
-			follow_mode = FollowMode::OFF;
-		}
-		set_global_position(follow_target->get_global_position() + follow_target->get_target_offset());
-		break;
-	case TARGET_BLEND:
-		Vector3 delta_value = follow_target->get_global_position() - follow_origin;
-		Vector3 result = follow_tween->interpolate_value(
-			follow_origin,
-			delta_value * follow_target->scaled_speed(),
-			1.0,
-			1.0,
-			follow_target->get_trans(),
-			follow_target->get_ease()
-		);
+		default:
+			break;
+		case PRIO:
+			reposition_to_vcam(highest_prio_vcam);
+			break;
+		case OFF:
+			break;
+		case TARGET:
+			if (follow_target == nullptr)
+			{
+				UtilityFunctions::push_warning("WARNING! No target set! Can't follow! ::573");
+				follow_mode = FollowMode::OFF;
+			}
+			set_global_position(follow_target->get_global_position() + follow_target->get_target_offset());
+			break;
+		case TARGET_BLEND:
+			Vector3 delta_value = follow_target->get_global_position() - follow_origin;
+			Vector3 result = follow_tween->interpolate_value(
+				follow_origin,
+				delta_value * follow_target->scaled_speed(),
+				1.0,
+				1.0,
+				follow_target->get_trans(),
+				follow_target->get_ease()
+			);
 
-		Vector3 offset = follow_target->get_target_offset();
-		set_global_position(result + offset);
-		follow_origin = result + offset;
-		break;
+			Vector3 offset = follow_target->get_target_offset();
+			set_global_position(result + offset);
+			follow_origin = result + offset;
+			break;
 	}
 }
 
@@ -706,18 +708,18 @@ void CineCam3D::_notification(int p_what)
 
 	switch (p_what)
 	{
-	default:
-		break;
-	case NOTIFICATION_READY:
-		if (!is_in_editor)
-		{
-			init_tweens();
-			_move_by_priority_mode();
-			_move_by_follow_mode();
-		}
-		break;
-	case NOTIFICATION_PROCESS:
-		_process_internal(is_in_editor);
+		default:
+			break;
+		case NOTIFICATION_READY:
+			if (!is_in_editor)
+			{
+				init_tweens();
+				_move_by_priority_mode();
+				_move_by_follow_mode();
+			}
+			break;
+		case NOTIFICATION_PROCESS:
+			_process_internal(is_in_editor);
 	}
 }
 
@@ -809,6 +811,12 @@ Ref<BlendData3D> CineCam3D::_get_blend_data() const
 void CineCam3D::_set_blend_data(Ref<BlendData3D> blend)
 {
 	blend_data = blend;
+	if (blend.ptr() == nullptr) return;
+
+	if (blend->_is_default_blend())
+	{
+		init_default_blend_data();
+	}
 }
 
 

@@ -66,7 +66,7 @@
     <ClCompile Include="cam_target3d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cinecam_ver_info.cpp">
+    <ClCompile Include="cinecam_editor_start.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -122,7 +122,7 @@
     <ClInclude Include="cam_target3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cinecam_ver_info.h">
+    <ClInclude Include="cinecam_editor_start.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

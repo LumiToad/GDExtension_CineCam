@@ -103,6 +103,7 @@ namespace godot
 
 		// GODOT Overrides
 	public:
+		void _process(double delta) override;
 		void _process_internal(bool editor);
 		void _notification(int p_what);
 

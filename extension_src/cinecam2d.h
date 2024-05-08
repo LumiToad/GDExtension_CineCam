@@ -101,13 +101,14 @@ namespace godot
 		static void _bind_methods();
 
 
-	// GODOT Overrides
+		// GODOT Overrides
 	public:
+		void _process(double delta) override;
 		void _process_internal(bool editor);
 		void _notification(int p_what);
 
 
-	// GODOT public
+		// GODOT public
 	private:
 		Ref<BlendData2D> blend_data;
 		Ref<BlendData2D> active_blend;

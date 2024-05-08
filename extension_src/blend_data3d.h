@@ -39,6 +39,7 @@ namespace godot
 	public:
 		BlendData3D();
 		~BlendData3D();
+		bool _is_default_blend() const;
 
 
 	protected:
@@ -50,8 +51,7 @@ namespace godot
 	private:
 		godot::String blend_name;
 		BlendData3D::BlendByType blend_by;
-		double duration;
-		double speed;
+		double blend_by_value;
 		Tween::EaseType ease;
 		Tween::TransitionType trans;
 		Callable callable;
@@ -66,11 +66,8 @@ namespace godot
 		void set_blend_by(BlendData3D::BlendByType by);
 		BlendData3D::BlendByType get_blend_by() const;
 
-		void set_duration(double duration);
-		double get_duration() const;
-
-		void set_speed(double speed);
-		double get_speed() const;
+		void set_blend_by_value(double p_value);
+		double get_blend_by_value() const;
 
 		void set_ease(Tween::EaseType ease);
 		Tween::EaseType get_ease() const;

@@ -106,6 +106,12 @@ void CamSequence2D::_debug_lines_drawing(bool editor)
 }
 
 
+void CamSequence2D::_process(double delta)
+{
+
+}
+
+
 void CamSequence2D::_process_internal(bool editor)
 {
 	double delta = get_process_delta_time();

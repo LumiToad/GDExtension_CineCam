@@ -115,8 +115,6 @@ void CineCam2D::initialize_internal()
 {
 	GDCLASS_Metadata meta(get_parent_class_static(), additional_description, *_get_extension_class_name());
 	set_editor_description(meta.get_metadata_string());
-
-	init_default_blend_data();
 }
 
 
@@ -148,17 +146,14 @@ void CineCam2D::init_tweens()
 
 
 void CineCam2D::init_default_blend_data()
-{
-	if (blend_data.is_valid()) return;
-
-	blend_data.instantiate();
-
-	blend_data.ptr()->set_blend_name("CineCam2D blend data");
-	blend_data.ptr()->set_duration(2.0f);
-	blend_data.ptr()->set_speed(2.0f);
-	blend_data.ptr()->set_blend_by(BlendData2D::BlendByType::DURATION);
-	blend_data.ptr()->set_ease(Tween::EASE_IN_OUT);
-	blend_data.ptr()->set_trans(Tween::TRANS_CUBIC);
+{	
+	blend_data->set_blend_name("CineCam2D blend data");
+	blend_data->set_blend_by_value(2.0f);
+	blend_data->set_blend_by(BlendData2D::BlendByType::DURATION);
+	blend_data->set_ease(Tween::EASE_IN_OUT);
+	blend_data->set_trans(Tween::TRANS_CUBIC);
+	blend_data->_set_callable_on_start(false);
+	blend_data->_set_callable_on_complete(false);
 }
 
 
@@ -209,14 +204,14 @@ void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data)
 	blend_tween->set_trans(blend_data->get_trans());
 	blend_tween->set_ease(blend_data->get_ease());
 
-	double calc_duration = blend_data->get_duration();
+	double calc_duration = blend_data->get_blend_by_value();
 
 	if (blend_data->get_blend_by() == BlendData2D::BlendByType::SPEED)
 	{
 		calc_duration = _calc_blend_duration_by_speed(
 			get_global_position(),
 			p_vcam->get_global_position(),
-			blend_data->get_speed()
+			calc_duration
 		);
 	}
 
@@ -645,6 +640,12 @@ void CineCam2D::_move_by_priority_mode()
 }
 
 
+void CineCam2D::_process(double delta)
+{
+
+}
+
+
 void CineCam2D::_process_internal(bool editor)
 {
 	if (editor) return;
@@ -799,6 +800,12 @@ Ref<BlendData2D> CineCam2D::_get_blend_data() const
 void CineCam2D::_set_blend_data(Ref<BlendData2D> blend)
 {
 	blend_data = blend;
+	if (blend.ptr() == nullptr) return;
+
+	if (blend->_is_default_blend())
+	{
+		init_default_blend_data();
+	}
 }
 
 

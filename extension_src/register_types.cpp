@@ -26,7 +26,7 @@
 #include "cinecam3d.h"
 #include "cam_target3d.h"
 
-#include "cinecam_ver_info.h"
+#include "cinecam_editor_start.h"
 
 using namespace godot;
 
@@ -51,8 +51,8 @@ void initialize_cinecam_module(ModuleInitializationLevel p_level)
 
 	if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR)
 	{
-		GDREGISTER_CLASS(CineCamVerInfo)
-		EditorPlugins::add_plugin_class(StringName("CineCamVerInfo"));
+		GDREGISTER_CLASS(CineCamEditorStart)
+		EditorPlugins::add_plugin_class(StringName("CineCamEditorStart"));
 	}
 }
 

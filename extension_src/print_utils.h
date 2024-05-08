@@ -7,6 +7,7 @@
 #include "godot_cpp/variant/utility_functions.hpp"
 
 #define PRINT(...) UtilityFunctions::print(__VA_ARGS__)
+#define PRINT_R(...) UtilityFunctions::print_rich(__VA_ARGS__)
 #define WARN(...) UtilityFunctions::push_warning("CineCam WARN! Line: ", __LINE__, " in File: ", __FILE__, "\n", __VA_ARGS__, "\n")
 #define ERROR(...) UtilityFunctions::push_error("CineCam ERROR! Line: ", __LINE__, " in File: ", __FILE__, "\n", __VA_ARGS__, "\n")
 
@@ -15,7 +16,7 @@ namespace godot
 	static class PrintUtils
 	{
 	public:
-		static void welcome_text();
+		static void welcome_text(String version, String url);
 		static void blend_before_init();
 		static void no_cam2d_seq_found();
 		static void no_cam3d_seq_found();

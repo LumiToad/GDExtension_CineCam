@@ -115,6 +115,12 @@ void CamSequence3D::_debug_gizmos_drawing(bool editor)
 }
 
 
+void CamSequence3D::_process(double delta)
+{
+
+}
+
+
 void CamSequence3D::_process_internal(bool editor)
 {
 	double delta = get_process_delta_time();

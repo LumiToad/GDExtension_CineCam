@@ -13,10 +13,11 @@ BlendData3D::BlendData3D()
 {
 	blend_name = "";
 	blend_by = BlendByType::DURATION;
-	duration = 0.0;
-	speed = 0.0;
+	blend_by_value = 0.0;
 	ease = Tween::EaseType::EASE_IN;
 	trans = Tween::TransitionType::TRANS_LINEAR;
+	callable_on_start = false;
+	callable_on_complete = false;
 
 	additional_description = "";
 	initialize_internal();
@@ -31,15 +32,15 @@ BlendData3D::~BlendData3D()
 void BlendData3D::_bind_methods()
 {
 	ADD_GETSET_BINDING(get_blend_name, set_blend_name, blend_name, p_name, BlendData3D, STRING);
-	ADD_GETSET_BINDING(get_duration, set_duration, duration, p_duration, BlendData3D, FLOAT);
-	ADD_GETSET_BINDING(get_speed, set_speed, speed, p_speed, BlendData3D, FLOAT);
-
-	BIND_ENUM_CONSTANT(SPEED)
-	BIND_ENUM_CONSTANT(DURATION)
 
 	ClassDB::bind_method(D_METHOD("get_blend_by"), &BlendData3D::get_blend_by);
 	ClassDB::bind_method(D_METHOD("set_blend_by", "p_by"), &BlendData3D::set_blend_by);
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "blend_by", PROPERTY_HINT_ENUM, BLEND_BY_HINTS), "set_blend_by", "get_blend_by");
+
+	ADD_GETSET_BINDING(get_blend_by_value, set_blend_by_value, blend_by_value, value, BlendData3D, FLOAT);
+
+	BIND_ENUM_CONSTANT(SPEED)
+	BIND_ENUM_CONSTANT(DURATION)
 
 	ClassDB::bind_method(D_METHOD("get_ease"), &BlendData3D::get_ease);
 	ClassDB::bind_method(D_METHOD("set_ease", "p_ease"), &BlendData3D::set_ease);
@@ -58,6 +59,25 @@ void BlendData3D::_bind_methods()
 void BlendData3D::initialize_internal()
 {
 	GDCLASS_Metadata meta(get_parent_class_static(), additional_description, *_get_extension_class_name());
+}
+
+
+bool BlendData3D::_is_default_blend() const
+{
+	if (
+		blend_name == "" &&
+		blend_by == BlendByType::DURATION &&
+		blend_by_value == 0.0 &&
+		ease == Tween::EaseType::EASE_IN &&
+		trans == Tween::TransitionType::TRANS_LINEAR &&
+		callable_on_start == false &&
+		callable_on_complete == false
+		)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 
@@ -85,27 +105,15 @@ BlendData3D::BlendByType BlendData3D::get_blend_by() const
 }
 
 
-void BlendData3D::set_duration(double p_duration)
+void BlendData3D::set_blend_by_value(double p_value)
 {
-	duration = p_duration;
+	blend_by_value = p_value;
 }
 
 
-double BlendData3D::get_duration() const
+double BlendData3D::get_blend_by_value() const
 {
-	return duration;
-}
-
-
-void BlendData3D::set_speed(double p_speed)
-{
-	speed = p_speed;
-}
-
-
-double BlendData3D::get_speed() const
-{
-	return speed;
+	return blend_by_value;
 }
 
 

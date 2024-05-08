@@ -192,24 +192,18 @@ void VirtualCam3D::initialize_internal()
 {
 	GDCLASS_Metadata meta(get_parent_class_static(), additional_description, *_get_extension_class_name());
 	set_editor_description(meta.get_metadata_string());
-
-	init_default_blend_data();
 }
 
 
 void VirtualCam3D::init_default_blend_data()
 {
-	if (!Engine::get_singleton()->is_editor_hint()) return;
-	if (blend_data.ptr() != nullptr) return;
-
-	blend_data.instantiate();
-
-	blend_data.ptr()->set_blend_name("VirtualCam3D blend data");
-	blend_data.ptr()->set_duration(2.0f);
-	blend_data.ptr()->set_speed(2.0f);
-	blend_data.ptr()->set_blend_by(BlendData3D::BlendByType::DURATION);
-	blend_data.ptr()->set_ease(Tween::EASE_IN_OUT);
-	blend_data.ptr()->set_trans(Tween::TRANS_CUBIC);
+	blend_data->set_blend_name("VirtualCam3D blend data");
+	blend_data->set_blend_by_value(2.0f);
+	blend_data->set_blend_by(BlendData3D::BlendByType::DURATION);
+	blend_data->set_ease(Tween::EASE_IN_OUT);
+	blend_data->set_trans(Tween::TRANS_CUBIC);
+	blend_data->_set_callable_on_start(false);
+	blend_data->_set_callable_on_complete(false);
 }
 
 
@@ -220,12 +214,6 @@ void VirtualCam3D::_register_to_cinecam3d()
 	{
 		((CineCam3D*)camera3d)->_register_vcam_internal(this);
 	}
-}
-
-
-void VirtualCam3D::_process(double delta)
-{
-
 }
 
 
@@ -628,4 +616,10 @@ Ref<BlendData3D> VirtualCam3D::_get_blend_data() const
 void VirtualCam3D::_set_blend_data(Ref<BlendData3D> blend)
 {
 	blend_data = blend;
+	if (blend.ptr() == nullptr) return;
+
+	if (blend->_is_default_blend())
+	{
+		init_default_blend_data();
+	}
 }

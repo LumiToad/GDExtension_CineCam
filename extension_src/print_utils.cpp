@@ -8,12 +8,10 @@
 using namespace godot;
 
 
-void PrintUtils::welcome_text()
+void PrintUtils::welcome_text(String version, String url)
 {
-	String CINECAM_VERSION = "v1.0";
-	String CINECAM_URL = "https://github.com/lumitoad/";
 #ifdef DEBUG_ENABLED
-	PRINT("CineCam ", CINECAM_VERSION, " initialized! GDExtension made by LumiToad! (", CINECAM_URL, ")\n");
+	PRINT_R("CineCam ", version, " initialized! GDExtension made by LumiToad! ([url]", url, "[/url])\n");
 #endif
 }
 
