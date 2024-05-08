@@ -261,7 +261,7 @@ void CineCam2D::start_sequence_at(const int &idx, const bool& backwards)
 {
 	if (current_sequence == nullptr)
 	{
-		PrintUtils::no_cam_seq_found();
+		PrintUtils::no_cam2d_seq_found();
 
 		return;
 	}

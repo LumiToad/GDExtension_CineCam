@@ -91,7 +91,7 @@ void CamSequence2D::_debug_lines_drawing(bool editor)
 		Vector2 va = a->get_global_position();
 		Vector2 vb = b->get_global_position();
 
-		draw_line(va, vb, debug_lines_color, debug_lines_width);
+		draw_dashed_line(va, vb, debug_lines_color, debug_lines_width);
 		Ref<Font> font = get_window()->get_theme_default_font();
 		draw_string(
 			font,

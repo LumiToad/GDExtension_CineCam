@@ -26,11 +26,9 @@
 #include "cinecam3d.h"
 #include "cam_target3d.h"
 
-#include "welcome.h"
+#include "cinecam_ver_info.h"
 
 using namespace godot;
-
-static Welcome* welcome;
 
 void initialize_cinecam_module(ModuleInitializationLevel p_level)
 {
@@ -53,10 +51,8 @@ void initialize_cinecam_module(ModuleInitializationLevel p_level)
 
 	if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR)
 	{
-		GDREGISTER_CLASS(Welcome)
-		welcome = memnew(Welcome);
-		welcome->print_welcome();
-		memdelete(welcome);
+		GDREGISTER_CLASS(CineCamVerInfo)
+		EditorPlugins::add_plugin_class(StringName("CineCamVerInfo"));
 	}
 }
 

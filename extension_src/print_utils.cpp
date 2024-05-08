@@ -17,6 +17,7 @@ void PrintUtils::welcome_text()
 #endif
 }
 
+
 void PrintUtils::blend_before_init()
 {
 #ifdef DEBUG_ENABLED
@@ -25,12 +26,21 @@ void PrintUtils::blend_before_init()
 }
 
 
-void PrintUtils::no_cam_seq_found()
+void PrintUtils::no_cam2d_seq_found()
 {
 #ifdef DEBUG_ENABLED
 	WARN("No CamSequence2D Node found!\n", "Use set_current_sequence method or assign it using the Inspector!");
 #endif
 }
+
+
+void PrintUtils::no_cam3d_seq_found()
+{
+#ifdef DEBUG_ENABLED
+	WARN("No CamSequence3D Node found!\n", "Use set_current_sequence method or assign it using the Inspector!");
+#endif
+}
+
 
 
 void PrintUtils::idx_out_of_bounds(int idx, int size)
@@ -68,7 +78,7 @@ void PrintUtils::no_highest_prio_cam3d(int amount)
 void PrintUtils::test_warns()
 {
 	blend_before_init();
-	no_cam_seq_found();
+	no_cam2d_seq_found();
 	idx_out_of_bounds(0, 0);
 	speed_0_100(0);
 	no_highest_prio_cam2d(0);

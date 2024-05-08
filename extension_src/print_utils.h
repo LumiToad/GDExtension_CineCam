@@ -17,7 +17,8 @@ namespace godot
 	public:
 		static void welcome_text();
 		static void blend_before_init();
-		static void no_cam_seq_found();
+		static void no_cam2d_seq_found();
+		static void no_cam3d_seq_found();
 		static void idx_out_of_bounds(int idx, int size);
 		static void speed_0_100(int percent);
 		static void no_highest_prio_cam2d(int amount);
