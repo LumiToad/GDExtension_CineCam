@@ -73,6 +73,22 @@ void PrintUtils::no_highest_prio_cam3d(int amount)
 }
 
 
+void PrintUtils::no_target2d_found(String set_to, String follow_mode)
+{
+#ifdef DEBUG_ENABLED
+	WARN("No CamTarget2D set! Follow mode set to: ", set_to, ". (current was : ", follow_mode, ")");
+#endif
+}
+
+
+void PrintUtils::no_target3d_found(String set_to, String follow_mode)
+{
+#ifdef DEBUG_ENABLED
+	WARN("No CamTarget3D set! Follow mode set to: ", set_to, ". (current was : ", follow_mode, ")");
+#endif
+}
+
+
 void PrintUtils::test_warns()
 {
 	blend_before_init();
@@ -80,4 +96,6 @@ void PrintUtils::test_warns()
 	idx_out_of_bounds(0, 0);
 	speed_0_100(0);
 	no_highest_prio_cam2d(0);
+	no_target2d_found("BLA_OFF", "BLA_FOLLOW_BLEND");
+	no_target3d_found("BLA_OFF", "BLA_FOLLOW_BLEND");
 }

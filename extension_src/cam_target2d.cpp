@@ -17,7 +17,7 @@ CamTarget2D::CamTarget2D()
 	initialize_internal();
 
 	target_offset = Vector2();
-	speed = 0.0;
+	speed_x = 0.0;
 	ease = Tween::EaseType::EASE_IN_OUT;
 	trans = Tween::TransitionType::TRANS_CUBIC;
 }
@@ -32,7 +32,8 @@ CamTarget2D::~CamTarget2D()
 void CamTarget2D::_bind_methods()
 {
 	ADD_GETSET_BINDING(get_target_offset, set_target_offset, offset, offset, CamTarget2D, Variant::VECTOR2);
-	ADD_GETSET_HINT_BINDING(get_speed, set_speed, speed, speed, CamTarget2D, Variant::FLOAT, PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%");
+	ADD_GETSET_HINT_BINDING(get_speed_x, set_speed_x, speed_x, speed_x, CamTarget2D, Variant::FLOAT, PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%");
+	ADD_GETSET_HINT_BINDING(get_speed_y, set_speed_y, speed_y, speed_y, CamTarget2D, Variant::FLOAT, PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%");
 	ADD_GETSET_HINT_BINDING(get_ease, set_ease, ease, ease, CamTarget2D, Variant::INT, PROPERTY_HINT_ENUM, EASE_HINTS);
 	ADD_GETSET_HINT_BINDING(get_trans, set_trans, trans, trans, CamTarget2D, Variant::INT, PROPERTY_HINT_ENUM, TRANS_HINTS);
 
@@ -47,17 +48,20 @@ void CamTarget2D::initialize_internal()
 }
 
 
-double CamTarget2D::scaled_speed() const
+Vector2 CamTarget2D::scaled_speed() const
 {
-	double ret_val = 0.0;
-	if (speed > 0.0)
+	Vector2 ret_val = Vector2(0.0, 0.0);
+	if (speed_x > 0.0)
 	{
-		ret_val = speed / 100;
+		ret_val.x = speed_x / 100;
+	}
+	if (speed_y > 0.0)
+	{
+		ret_val.y = speed_y / 100;
 	}
 
 	return ret_val;
 }
-
 
 
 Vector2 CamTarget2D::get_target_offset() const
@@ -72,22 +76,38 @@ void CamTarget2D::set_target_offset(Vector2 offset)
 }
 
 
-void CamTarget2D::set_speed(double p_speed)
+void CamTarget2D::set_speed_x(double p_speed_x)
 {
-	if (speed < 0.0 || speed > 100.0)
+	if (speed_x < 0.0 || speed_x > 100.0)
 	{
-		UtilityFunctions::push_warning("WARNING! Speed must be between 0 % and 100 %, but was: ", p_speed);
+		UtilityFunctions::push_warning("WARNING! Speed must be between 0 % and 100 %, but was: ", p_speed_x);
 		return;
 	}
-	speed = p_speed;
+	speed_x = p_speed_x;
 }
 
 
-double CamTarget2D::get_speed() const
+double CamTarget2D::get_speed_y() const
 {
-	return speed;
+	return speed_y;
 }
 
+
+void CamTarget2D::set_speed_y(double p_speed_y)
+{
+	if (speed_y < 0.0 || speed_y > 100.0)
+	{
+		UtilityFunctions::push_warning("WARNING! Speed must be between 0 % and 100 %, but was: ", p_speed_y);
+		return;
+	}
+	speed_y = p_speed_y;
+}
+
+
+double CamTarget2D::get_speed_x() const
+{
+	return speed_x;
+}
 
 void CamTarget2D::set_ease(Tween::EaseType p_ease)
 {

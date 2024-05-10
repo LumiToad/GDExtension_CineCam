@@ -606,9 +606,9 @@ void CineCam2D::_move_by_priority_mode()
 	if (!tweens_ready) return;
 
 	if (
-		follow_mode != FollowMode::OFF ||
-		follow_mode != FollowMode::TARGET ||
-		follow_mode != FollowMode::TARGET_BLEND
+		follow_mode == FollowMode::PRIO ||
+		follow_mode == FollowMode::PRIO_BLEND ||
+		follow_mode == FollowMode::PRIO_ONESHOT
 		)
 	{
 		if (highest_prio_vcam == nullptr)
@@ -642,7 +642,7 @@ void CineCam2D::_move_by_priority_mode()
 
 void CineCam2D::_process(double delta)
 {
-
+	// must be overridden and exist in .cpp for NOTIFICATION_PROCESS to work.
 }
 
 
@@ -667,13 +667,19 @@ void CineCam2D::_process_internal(bool editor)
 		case TARGET:
 			if (follow_target == nullptr)
 			{
-				UtilityFunctions::push_warning("WARNING! No target set! Can't follow! ::573");
+				PrintUtils::no_target2d_found("OFF", "TARGET");
 				follow_mode = FollowMode::OFF;
 			}
 			set_global_position(follow_target->get_global_position() + follow_target->get_target_offset());
 			break;
 		case TARGET_BLEND:
-			Vector2 delta_value = follow_target->get_global_position() - follow_origin;
+			if (follow_target == nullptr)
+			{
+				PrintUtils::no_target2d_found("OFF", "TARGET_BLEND");
+				follow_mode = FollowMode::OFF;
+			}
+			Vector2 offset = follow_target->get_target_offset();
+			Vector2 delta_value = (follow_target->get_global_position() + offset) - follow_origin;
 			Vector2 result = follow_tween->interpolate_value(
 				follow_origin,
 				delta_value * follow_target->scaled_speed(),
@@ -683,9 +689,8 @@ void CineCam2D::_process_internal(bool editor)
 				follow_target->get_ease()
 			);
 
-			Vector2 offset = follow_target->get_target_offset();
-			set_global_position(result + offset);
-			follow_origin = result + offset;
+			set_global_position(result);
+			follow_origin = result;
 			break;
 	}
 }

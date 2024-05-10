@@ -653,7 +653,7 @@ void CineCam3D::_move_by_priority_mode()
 
 void CineCam3D::_process(double delta)
 {
-
+	// must be overridden and exist in .cpp for NOTIFICATION_PROCESS to work.
 }
 
 
@@ -678,13 +678,24 @@ void CineCam3D::_process_internal(bool editor)
 		case TARGET:
 			if (follow_target == nullptr)
 			{
-				UtilityFunctions::push_warning("WARNING! No target set! Can't follow! ::573");
+				PrintUtils::no_target3d_found("OFF", "TARGET");
 				follow_mode = FollowMode::OFF;
 			}
-			set_global_position(follow_target->get_global_position() + follow_target->get_target_offset());
+			
+			set_global_position(
+				camera_origin + (follow_target->get_global_position() + follow_target->get_target_offset())
+			);
 			break;
 		case TARGET_BLEND:
-			Vector3 delta_value = follow_target->get_global_position() - follow_origin;
+			if (follow_target == nullptr)
+			{
+				PrintUtils::no_target2d_found("OFF", "TARGET_BLEND");
+				follow_mode = FollowMode::OFF;
+			}
+			
+			Vector3 final_pos =
+				camera_origin + (follow_target->get_global_position() + follow_target->get_target_offset());
+			Vector3 delta_value = final_pos - follow_origin;
 			Vector3 result = follow_tween->interpolate_value(
 				follow_origin,
 				delta_value * follow_target->scaled_speed(),
@@ -694,9 +705,8 @@ void CineCam3D::_process_internal(bool editor)
 				follow_target->get_ease()
 			);
 
-			Vector3 offset = follow_target->get_target_offset();
-			set_global_position(result + offset);
-			follow_origin = result + offset;
+			set_global_position(result);
+			follow_origin = result;
 			break;
 	}
 }
@@ -716,6 +726,7 @@ void CineCam3D::_notification(int p_what)
 				init_tweens();
 				_move_by_priority_mode();
 				_move_by_follow_mode();
+				camera_origin = get_global_position();
 			}
 			break;
 		case NOTIFICATION_PROCESS:

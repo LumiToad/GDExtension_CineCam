@@ -24,6 +24,9 @@ namespace godot
 		static void speed_0_100(int percent);
 		static void no_highest_prio_cam2d(int amount);
 		static void no_highest_prio_cam3d(int amount);
+		static void no_target2d_found(String set_to, String follow_mode);
+		static void no_target3d_found(String set_to, String follow_mode);
+
 		static void test_warns();
 	};
 }

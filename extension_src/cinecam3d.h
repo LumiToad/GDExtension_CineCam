@@ -72,6 +72,7 @@ namespace godot
 
 		Ref<Tween> follow_tween;
 		Vector3 follow_origin;
+		Vector3 camera_origin;
 
 		bool tweens_ready;
 		VirtualCam3D* highest_prio_vcam;

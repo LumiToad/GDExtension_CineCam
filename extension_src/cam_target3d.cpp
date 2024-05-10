@@ -31,7 +31,7 @@ CamTarget3D::~CamTarget3D()
 
 void CamTarget3D::_bind_methods()
 {
-	ADD_GETSET_BINDING(get_target_offset, set_target_offset, offset, offset, CamTarget3D, Variant::VECTOR2);
+	ADD_GETSET_BINDING(get_target_offset, set_target_offset, offset, offset, CamTarget3D, Variant::VECTOR3);
 	ADD_GETSET_HINT_BINDING(get_speed, set_speed, speed, speed, CamTarget3D, Variant::FLOAT, PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%");
 	ADD_GETSET_HINT_BINDING(get_ease, set_ease, ease, ease, CamTarget3D, Variant::INT, PROPERTY_HINT_ENUM, EASE_HINTS);
 	ADD_GETSET_HINT_BINDING(get_trans, set_trans, trans, trans, CamTarget3D, Variant::INT, PROPERTY_HINT_ENUM, TRANS_HINTS);
