@@ -89,7 +89,7 @@ void CamTarget3D::set_speed_x(double p_speed_x)
 {
 	if (p_speed_x < 0.0 || p_speed_x > 100.0)
 	{
-		PrintUtils::speed_0_100(p_speed_x);
+		PrintUtils::speed_0_100(__LINE__, __FILE__, p_speed_x);
 		return;
 	}
 	speed_x = p_speed_x;
@@ -106,7 +106,7 @@ void CamTarget3D::set_speed_y(double p_speed_y)
 {
 	if (p_speed_y < 0.0 || p_speed_y > 100.0)
 	{
-		PrintUtils::speed_0_100(p_speed_y);
+		PrintUtils::speed_0_100(__LINE__, __FILE__, p_speed_y);
 		return;
 	}
 	speed_y = p_speed_y;
@@ -123,7 +123,7 @@ void CamTarget3D::set_speed_z(double p_speed_z)
 {
 	if (p_speed_z < 0.0 || p_speed_z > 100.0)
 	{
-		PrintUtils::speed_0_100(p_speed_z);
+		PrintUtils::speed_0_100(__LINE__, __FILE__, p_speed_z);
 		return;
 	}
 	speed_z = p_speed_z;

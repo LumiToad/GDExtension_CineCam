@@ -74,6 +74,9 @@ namespace godot
 		Vector3 follow_origin;
 		Vector3 camera_origin;
 
+		Ref<Tween> look_at_tween;
+		Vector3 rotation_origin;
+
 		bool tweens_ready;
 		VirtualCam3D* highest_prio_vcam;
 		TypedArray<VirtualCam3D> vcams;
@@ -121,6 +124,7 @@ namespace godot
 		double shake_zoom_intensity;
 		double shake_zoom_duration;
 		bool is_sequence_paused = false;
+		CamTarget3D* look_at_target;
 
 
 	public:
@@ -190,6 +194,9 @@ namespace godot
 
 		void _set_blend_is_paused(bool paused);
 		bool _get_blend_is_paused() const;
+
+		void set_look_at_target(CamTarget3D* p_target);
+		CamTarget3D* get_look_at_target() const;
 
 	protected:
 	};

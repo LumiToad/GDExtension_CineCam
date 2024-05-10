@@ -28,6 +28,7 @@ CineCam3D::CineCam3D()
 	current_sequence = nullptr;
 	highest_prio_vcam = nullptr;
 	follow_target = nullptr;
+	look_at_target = nullptr;
 
 	initialize_internal();
 }
@@ -71,6 +72,7 @@ void CineCam3D::_bind_methods()
 	ADD_GETSET_HINT_BINDING(_get_blend_data, _set_blend_data, blend_data, blend_data, CineCam3D, OBJECT, PROPERTY_HINT_RESOURCE_TYPE, "BlendData3D");
 	ADD_GETSET_HINT_BINDING(get_current_sequence, set_current_sequence, current_sequence, p_sequence, CineCam3D, OBJECT, PROPERTY_HINT_NODE_TYPE, "CamSequence3D");
 	ADD_GETSET_HINT_BINDING(get_target, set_target, target, p_target, CineCam3D, Variant::OBJECT, PROPERTY_HINT_NODE_TYPE, "CamTarget3D");
+	ADD_GETSET_HINT_BINDING(get_look_at_target, set_look_at_target, look_at_target, p_target, CineCam3D, Variant::OBJECT, PROPERTY_HINT_NODE_TYPE, "CamTarget3D");
 
 	ADD_GETSET_HINT_BINDING(get_shake_offset_intensity, set_shake_offset_intensity, shake_offset_intensity, intensity, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
 	ADD_GETSET_HINT_BINDING(get_shake_offset_duration, set_shake_offset_duration, shake_offset_duration, duration, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
@@ -142,6 +144,9 @@ void CineCam3D::init_tweens()
 	follow_tween = get_tree()->create_tween();
 	follow_tween->stop();
 
+	look_at_tween = get_tree()->create_tween();
+	look_at_tween->stop();
+
 	tweens_ready = true;
 }
 
@@ -191,7 +196,7 @@ void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend_data)
 {
 	if (!tweens_ready)
 	{
-		PrintUtils::blend_before_init();
+		PrintUtils::blend_before_init(__LINE__, __FILE__);
 		return;
 	}
 
@@ -257,7 +262,7 @@ void CineCam3D::start_sequence_at(const int& idx, const bool& backwards)
 {
 	if (current_sequence == nullptr)
 	{
-		PrintUtils::no_cam3d_seq_found();
+		PrintUtils::no_cam3d_seq_found(__LINE__, __FILE__);
 
 		return;
 	}
@@ -624,7 +629,7 @@ void CineCam3D::_move_by_priority_mode()
 	{
 		if (highest_prio_vcam == nullptr)
 		{
-			PrintUtils::no_highest_prio_cam3d(vcams.size());
+			PrintUtils::no_highest_prio_cam3d(__LINE__, __FILE__, vcams.size());
 		}
 	}
 
@@ -666,6 +671,24 @@ void CineCam3D::_process_internal(bool editor)
 	shake_offset_internal(delta);
 	shake_zoom_internal(delta);
 
+	if (look_at_target != nullptr)
+	{
+		Vector3 final_look_at =
+			look_at_target->get_global_position() + look_at_target->get_target_offset();
+		Vector3 delta_value = final_look_at - rotation_origin;
+		Vector3 result = look_at_tween->interpolate_value(
+			rotation_origin,
+			delta_value * look_at_target->scaled_speed(),
+			1.0,
+			1.0,
+			look_at_target->get_trans(),
+			look_at_target->get_ease()
+		);
+
+		look_at(result);
+		rotation_origin = result;
+	}
+
 	switch (follow_mode)
 	{
 		default:
@@ -678,8 +701,9 @@ void CineCam3D::_process_internal(bool editor)
 		case TARGET:
 			if (follow_target == nullptr)
 			{
-				PrintUtils::no_target3d_found("OFF", "TARGET");
+				PrintUtils::no_target3d_found(__LINE__, __FILE__, "OFF", "TARGET");
 				follow_mode = FollowMode::OFF;
+				break;
 			}
 			
 			set_global_position(
@@ -689,8 +713,9 @@ void CineCam3D::_process_internal(bool editor)
 		case TARGET_BLEND:
 			if (follow_target == nullptr)
 			{
-				PrintUtils::no_target2d_found("OFF", "TARGET_BLEND");
+				PrintUtils::no_target2d_found(__LINE__, __FILE__, "OFF", "TARGET_BLEND");
 				follow_mode = FollowMode::OFF;
+				break;
 			}
 			
 			Vector3 final_pos =
@@ -727,6 +752,7 @@ void CineCam3D::_notification(int p_what)
 				_move_by_priority_mode();
 				_move_by_follow_mode();
 				camera_origin = get_global_position();
+				rotation_origin = get_global_rotation();
 			}
 			break;
 		case NOTIFICATION_PROCESS:
@@ -900,4 +926,16 @@ bool CineCam3D::_get_blend_is_paused() const
 	if (Engine::get_singleton()->is_editor_hint()) return false;
 
 	return !blend_tween->is_running();
+}
+
+
+void CineCam3D::set_look_at_target(CamTarget3D* p_target)
+{
+	look_at_target = p_target;
+}
+
+
+CamTarget3D* CineCam3D::get_look_at_target() const
+{
+	return look_at_target;
 }

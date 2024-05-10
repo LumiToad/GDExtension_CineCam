@@ -181,7 +181,7 @@ VirtualCam2D* CamSequence2D::vcam2d_at(int idx) const
 		return cast_to<VirtualCam2D>(vcams[idx]);
 	}
 
-	PrintUtils::idx_out_of_bounds(idx, vcams.size());
+	PrintUtils::idx_out_of_bounds(__LINE__, __FILE__, idx, vcams.size());
 
 	return nullptr;
 }

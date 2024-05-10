@@ -188,7 +188,7 @@ VirtualCam3D* CamSequence3D::vcam3d_at(int idx) const
 		return cast_to<VirtualCam3D>(vcams[idx]);
 	}
 
-	PrintUtils::idx_out_of_bounds(idx, vcams.size());
+	PrintUtils::idx_out_of_bounds(__LINE__, __FILE__, idx, vcams.size());
 
 	return nullptr;
 }

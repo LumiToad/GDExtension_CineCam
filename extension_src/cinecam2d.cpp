@@ -190,7 +190,7 @@ void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data)
 {
 	if (!tweens_ready)
 	{
-		PrintUtils::blend_before_init();
+		PrintUtils::blend_before_init(__LINE__, __FILE__);
 		return;
 	}
 
@@ -256,7 +256,7 @@ void CineCam2D::start_sequence_at(const int &idx, const bool& backwards)
 {
 	if (current_sequence == nullptr)
 	{
-		PrintUtils::no_cam2d_seq_found();
+		PrintUtils::no_cam2d_seq_found(__LINE__, __FILE__);
 
 		return;
 	}
@@ -613,7 +613,7 @@ void CineCam2D::_move_by_priority_mode()
 	{
 		if (highest_prio_vcam == nullptr)
 		{
-			PrintUtils::no_highest_prio_cam2d(vcams.size());
+			PrintUtils::no_highest_prio_cam2d(__LINE__, __FILE__, vcams.size());
 		}
 	}
 
@@ -667,16 +667,18 @@ void CineCam2D::_process_internal(bool editor)
 		case TARGET:
 			if (follow_target == nullptr)
 			{
-				PrintUtils::no_target2d_found("OFF", "TARGET");
+				PrintUtils::no_target2d_found(__LINE__, __FILE__, "OFF", "TARGET");
 				follow_mode = FollowMode::OFF;
+				break;
 			}
 			set_global_position(follow_target->get_global_position() + follow_target->get_target_offset());
 			break;
 		case TARGET_BLEND:
 			if (follow_target == nullptr)
 			{
-				PrintUtils::no_target2d_found("OFF", "TARGET_BLEND");
+				PrintUtils::no_target2d_found(__LINE__, __FILE__, "OFF", "TARGET_BLEND");
 				follow_mode = FollowMode::OFF;
+				break;
 			}
 			Vector2 offset = follow_target->get_target_offset();
 			Vector2 delta_value = (follow_target->get_global_position() + offset) - follow_origin;
