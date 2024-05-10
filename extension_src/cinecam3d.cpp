@@ -18,11 +18,14 @@ CineCam3D::CineCam3D()
 {
 	follow_mode = FollowMode::OFF;
 	is_shake_offset_active = false;
-	is_shake_zoom_active = false;
+	is_shake_fov_active = false;
+	is_shake_rotation_active = false;
 	shake_offset_intensity = 0.0;
 	shake_offset_duration = 0.0;
-	shake_zoom_intensity = 0.0;
-	shake_zoom_duration = 0.0;
+	shake_fov_intensity = 0.0;
+	shake_fov_duration = 0.0;
+	shake_rotation_intensity = 0.0;
+	shake_rotation_duration = 0.0;
 	tweens_ready = false;
 	additional_description = "";
 	current_sequence = nullptr;
@@ -77,21 +80,27 @@ void CineCam3D::_bind_methods()
 	ADD_GETSET_HINT_BINDING(get_shake_offset_intensity, set_shake_offset_intensity, shake_offset_intensity, intensity, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
 	ADD_GETSET_HINT_BINDING(get_shake_offset_duration, set_shake_offset_duration, shake_offset_duration, duration, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
 
-	ADD_GETSET_HINT_BINDING(get_shake_zoom_intensity, set_shake_zoom_intensity, shake_zoom_intensity, intensity, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
-	ADD_GETSET_HINT_BINDING(get_shake_zoom_duration, set_shake_zoom_duration, shake_zoom_duration, duration, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
+	ADD_GETSET_HINT_BINDING(get_shake_fov_intensity, set_shake_fov_intensity, shake_fov_intensity, intensity, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
+	ADD_GETSET_HINT_BINDING(get_shake_fov_duration, set_shake_fov_duration, shake_fov_duration, duration, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
+
+	ADD_GETSET_HINT_BINDING(get_shake_rotation_intensity, set_shake_rotation_intensity, shake_rotation_intensity, intensity, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
+	ADD_GETSET_HINT_BINDING(get_shake_rotation_duration, set_shake_rotation_duration, shake_rotation_duration, duration, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
 
 	ADD_GETSET_BINDING(_get_seq_is_paused, _set_seq_is_paused, sequence_paused, paused, CineCam3D, BOOL);
 	ADD_GETSET_BINDING(_get_blend_is_paused, _set_blend_is_paused, blend_paused, paused, CineCam3D, BOOL);
 
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_offset, CineCam3D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
-	ADD_METHOD_DEFAULTARGS_BINDING(shake_zoom, CineCam3D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
+	ADD_METHOD_DEFAULTARGS_BINDING(shake_fov, CineCam3D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
+	ADD_METHOD_DEFAULTARGS_BINDING(shake_rotation, CineCam3D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 
 	ADD_METHOD_ARGS_BINDING(blend_to, CineCam3D, VA_LIST("vcam2d", "blend_data"));
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_STARTED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_ENDED));
-	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_ZOOM_STARTED));
-	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_ZOOM_ENDED));
+	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_FOV_STARTED));
+	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_FOV_ENDED));
+	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_ROTATION_STARTED));
+	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_ROTATION_ENDED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_BLEND_STARTED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_BLEND_COMPLETED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_BLEND_PAUSED));
@@ -130,12 +139,19 @@ void CineCam3D::init_tweens()
 	shake_offset_duration_tween->stop();
 	shake_offset_duration_tween->set_trans(DEFAULT_TRANS);
 
-	shake_zoom_intensity_tween = get_tree()->create_tween();
-	shake_zoom_intensity_tween->stop();
+	shake_fov_intensity_tween = get_tree()->create_tween();
+	shake_fov_intensity_tween->stop();
 
-	shake_zoom_duration_tween = get_tree()->create_tween();
-	shake_zoom_duration_tween->stop();
-	shake_zoom_duration_tween->set_trans(DEFAULT_TRANS);
+	shake_fov_duration_tween = get_tree()->create_tween();
+	shake_fov_duration_tween->stop();
+	shake_fov_duration_tween->set_trans(DEFAULT_TRANS);
+
+	shake_rotation_intensity_tween = get_tree()->create_tween();
+	shake_rotation_intensity_tween->stop();
+
+	shake_rotation_duration_tween = get_tree()->create_tween();
+	shake_rotation_duration_tween->stop();
+	shake_rotation_duration_tween->set_trans(DEFAULT_TRANS);
 
 	blend_tween = get_tree()->create_tween();
 	blend_tween->stop();
@@ -363,45 +379,83 @@ void CineCam3D::shake_offset(const double& p_intensity, const double& p_duration
 }
 
 
-void CineCam3D::shake_zoom(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
+void CineCam3D::shake_fov(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
-	/*
-	set_zoom(original_zoom);
+	set_fov(original_fov);
 
-	original_zoom = get_zoom();
+	original_fov = get_fov();
 
-	if (shake_zoom_duration > 0.0)
+	if (shake_fov_duration > 0.0)
 	{
-		shake_zoom_intensity_tween->stop();
-		shake_zoom_duration_tween->stop();
+		shake_fov_intensity_tween->stop();
+		shake_fov_duration_tween->stop();
 	}
 
-	shake_zoom_intensity_tween->set_ease(p_ease);
-	shake_zoom_intensity_tween->set_trans(p_trans);
+	shake_fov_intensity_tween->set_ease(p_ease);
+	shake_fov_intensity_tween->set_trans(p_trans);
 
-	shake_zoom_intensity = p_intensity;
-	shake_zoom_duration = p_duration;
+	shake_fov_intensity = p_intensity;
+	shake_fov_duration = p_duration;
 
-	shake_zoom_intensity_tween->play();
-	shake_zoom_duration_tween->play();
+	shake_fov_intensity_tween->play();
+	shake_fov_duration_tween->play();
 
-	shake_zoom_intensity_tween->tween_method(
-		Callable(this, "set_shake_zoom_intensity"),
-		shake_zoom_intensity,
+	shake_fov_intensity_tween->tween_method(
+		Callable(this, "set_shake_fov_intensity"),
+		shake_fov_intensity,
 		0.0,
 		p_duration
 	);
 
-	shake_zoom_duration_tween->tween_method(
-		Callable(this, "set_shake_zoom_duration"),
-		shake_zoom_duration,
+	shake_fov_duration_tween->tween_method(
+		Callable(this, "set_shake_fov_duration"),
+		shake_fov_duration,
 		0.0,
 		p_duration
 	);
 
-	is_shake_zoom_active = true;
-	emit_signal(SIGNAL_SHAKE_ZOOM_STARTED);
-	*/
+	is_shake_fov_active = true;
+	emit_signal(SIGNAL_SHAKE_FOV_STARTED);
+}
+
+
+void CineCam3D::shake_rotation(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
+{
+	set_rotation(original_rotation);
+
+	original_rotation = get_rotation();
+
+	if (shake_rotation_duration > 0.0)
+	{
+		shake_rotation_intensity_tween->stop();
+		shake_rotation_duration_tween->stop();
+	}
+
+	shake_rotation_intensity_tween->set_ease(p_ease);
+	shake_rotation_intensity_tween->set_trans(p_trans);
+
+	shake_rotation_intensity = p_intensity;
+	shake_rotation_duration = p_duration;
+
+	shake_rotation_intensity_tween->play();
+	shake_rotation_duration_tween->play();
+
+	shake_rotation_intensity_tween->tween_method(
+		Callable(this, "set_shake_rotation_intensity"),
+		shake_rotation_intensity,
+		0.0,
+		p_duration
+	);
+
+	shake_rotation_duration_tween->tween_method(
+		Callable(this, "set_shake_rotation_duration"),
+		shake_rotation_duration,
+		0.0,
+		p_duration
+	);
+
+	is_shake_rotation_active = true;
+	emit_signal(SIGNAL_SHAKE_ROTATION_STARTED);
 }
 
 
@@ -418,7 +472,7 @@ void CineCam3D::blend_pause()
 }
 
 
-void CineCam3D::shake_offset_internal(double delta)
+void CineCam3D::shake_offset_internal()
 {
 	if (!is_shake_offset_active) return;
 
@@ -446,32 +500,52 @@ void CineCam3D::shake_offset_internal(double delta)
 }
 
 
-void CineCam3D::shake_zoom_internal(double delta)
+void CineCam3D::shake_fov_internal()
 {
-	/*
-	if (!is_shake_zoom_active) return;
+	if (!is_shake_fov_active) return;
 
 	RandomNumberGenerator rng;
 	rng.randomize();
-	double rng_x = rng.randf_range(0.0, shake_zoom_intensity);
-	double rng_y = rng.randf_range(0.0, shake_zoom_intensity);
-	double rng_z = rng.randf_range(0.0, shake_zoom_intensity);
 
-	Vector3 shake_vector = original_zoom + Vector3(rng_x, rng_y, rng_z);
+	set_fov(original_fov + rng.randf_range(0.0, shake_fov_intensity));
 
-	set_zoom(shake_vector);
-
-	if (shake_zoom_duration <= 0.0)
+	if (shake_fov_duration <= 0.0)
 	{
-		is_shake_zoom_active = false;
-		shake_zoom_intensity_tween->stop();
-		shake_zoom_duration_tween->stop();
+		is_shake_fov_active = false;
+		shake_fov_intensity_tween->stop();
+		shake_fov_duration_tween->stop();
 
-		set_zoom(original_zoom);
+		set_fov(original_fov);
 
-		emit_signal(SIGNAL_SHAKE_ZOOM_ENDED);
+		emit_signal(SIGNAL_SHAKE_FOV_ENDED);
 	}
-	*/
+}
+
+
+void CineCam3D::shake_rotation_internal()
+{
+	if (!is_shake_rotation_active) return;
+
+	RandomNumberGenerator rng;
+	rng.randomize();
+	double rng_x = rng.randf_range(-shake_rotation_intensity, shake_rotation_intensity);
+	double rng_y = rng.randf_range(-shake_rotation_intensity, shake_rotation_intensity);
+	double rng_z = rng.randf_range(-shake_rotation_intensity, shake_rotation_intensity);
+
+	Vector3 shake_vector = original_rotation + Vector3(rng_x, rng_y, rng_z);
+
+	set_rotation(shake_vector);
+
+	if (shake_rotation_duration <= 0.0)
+	{
+		is_shake_rotation_active = false;
+		shake_rotation_intensity_tween->stop();
+		shake_rotation_duration_tween->stop();
+
+		set_rotation(original_rotation);
+
+		emit_signal(SIGNAL_SHAKE_ROTATION_ENDED);
+	}
 }
 
 
@@ -668,16 +742,17 @@ void CineCam3D::_process_internal(bool editor)
 
 	double delta = get_process_delta_time();
 
-	shake_offset_internal(delta);
-	shake_zoom_internal(delta);
+	shake_offset_internal();
+	shake_fov_internal();
+	shake_rotation_internal();
 
 	if (look_at_target != nullptr)
 	{
 		Vector3 final_look_at =
 			look_at_target->get_global_position() + look_at_target->get_target_offset();
-		Vector3 delta_value = final_look_at - rotation_origin;
+		Vector3 delta_value = final_look_at - origin_for_look_at;
 		Vector3 result = look_at_tween->interpolate_value(
-			rotation_origin,
+			origin_for_look_at,
 			delta_value * look_at_target->scaled_speed(),
 			1.0,
 			1.0,
@@ -686,7 +761,7 @@ void CineCam3D::_process_internal(bool editor)
 		);
 
 		look_at(result);
-		rotation_origin = result;
+		origin_for_look_at = result;
 	}
 
 	switch (follow_mode)
@@ -713,7 +788,7 @@ void CineCam3D::_process_internal(bool editor)
 		case TARGET_BLEND:
 			if (follow_target == nullptr)
 			{
-				PrintUtils::no_target2d_found(__LINE__, __FILE__, "OFF", "TARGET_BLEND");
+				PrintUtils::no_target3d_found(__LINE__, __FILE__, "OFF", "TARGET_BLEND");
 				follow_mode = FollowMode::OFF;
 				break;
 			}
@@ -752,11 +827,16 @@ void CineCam3D::_notification(int p_what)
 				_move_by_priority_mode();
 				_move_by_follow_mode();
 				camera_origin = get_global_position();
-				rotation_origin = get_global_rotation();
+				origin_for_look_at = get_global_rotation();
+				original_offset.x = get_h_offset();
+				original_offset.y = get_v_offset();
+				original_fov = get_fov();
+				original_rotation = get_rotation();
 			}
 			break;
 		case NOTIFICATION_PROCESS:
 			_process_internal(is_in_editor);
+			break;
 	}
 }
 
@@ -815,27 +895,51 @@ void CineCam3D::set_shake_offset_duration(const double& duration)
 }
 
 
-double CineCam3D::get_shake_zoom_intensity() const
+double CineCam3D::get_shake_fov_intensity() const
 {
-	return shake_zoom_intensity;
+	return shake_fov_intensity;
 }
 
 
-void CineCam3D::set_shake_zoom_intensity(const double& intensity)
+void CineCam3D::set_shake_fov_intensity(const double& intensity)
 {
-	shake_zoom_intensity = intensity;
+	shake_fov_intensity = intensity;
 }
 
 
-double CineCam3D::get_shake_zoom_duration() const
+double CineCam3D::get_shake_fov_duration() const
 {
-	return shake_zoom_duration;
+	return shake_fov_duration;
 }
 
 
-void CineCam3D::set_shake_zoom_duration(const double& duration)
+void CineCam3D::set_shake_fov_duration(const double& duration)
 {
-	shake_zoom_duration = duration;
+	shake_fov_duration = duration;
+}
+
+
+double CineCam3D::get_shake_rotation_intensity() const
+{
+	return shake_rotation_intensity;
+}
+
+
+void CineCam3D::set_shake_rotation_intensity(const double& intensity)
+{
+	shake_rotation_intensity = intensity;
+}
+
+
+double CineCam3D::get_shake_rotation_duration() const
+{
+	return shake_rotation_duration;
+}
+
+
+void CineCam3D::set_shake_rotation_duration(const double& duration)
+{
+	shake_rotation_duration = duration;
 }
 
 
