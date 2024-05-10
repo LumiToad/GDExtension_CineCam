@@ -8,6 +8,7 @@
 #include "godot_cpp/variant/utility_functions.hpp"
 
 #include "bind_utils.h"
+#include "print_utils.h"
 
 using namespace godot;
 
@@ -17,7 +18,9 @@ CamTarget3D::CamTarget3D()
 	initialize_internal();
 
 	target_offset = Vector3();
-	speed = 0.0;
+	speed_x = 0.0;
+	speed_y = 0.0;
+	speed_z = 0.0;
 	ease = Tween::EaseType::EASE_IN_OUT;
 	trans = Tween::TransitionType::TRANS_CUBIC;
 }
@@ -32,7 +35,9 @@ CamTarget3D::~CamTarget3D()
 void CamTarget3D::_bind_methods()
 {
 	ADD_GETSET_BINDING(get_target_offset, set_target_offset, offset, offset, CamTarget3D, Variant::VECTOR3);
-	ADD_GETSET_HINT_BINDING(get_speed, set_speed, speed, speed, CamTarget3D, Variant::FLOAT, PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%");
+	ADD_GETSET_HINT_BINDING(get_speed_x, set_speed_x, speed_x, speed_x, CamTarget3D, Variant::FLOAT, PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%");
+	ADD_GETSET_HINT_BINDING(get_speed_y, set_speed_y, speed_y, speed_y, CamTarget3D, Variant::FLOAT, PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%");
+	ADD_GETSET_HINT_BINDING(get_speed_z, set_speed_z, speed_z, speed_z, CamTarget3D, Variant::FLOAT, PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%");
 	ADD_GETSET_HINT_BINDING(get_ease, set_ease, ease, ease, CamTarget3D, Variant::INT, PROPERTY_HINT_ENUM, EASE_HINTS);
 	ADD_GETSET_HINT_BINDING(get_trans, set_trans, trans, trans, CamTarget3D, Variant::INT, PROPERTY_HINT_ENUM, TRANS_HINTS);
 
@@ -47,12 +52,20 @@ void CamTarget3D::initialize_internal()
 }
 
 
-double CamTarget3D::scaled_speed() const
+Vector3 CamTarget3D::scaled_speed() const
 {
-	double ret_val = 0.0;
-	if (speed > 0.0)
+	Vector3 ret_val = Vector3(0.0, 0.0, 0.0);
+	if (speed_x > 0.0)
 	{
-		ret_val = speed / 100;
+		ret_val.x = speed_x / 100;
+	}
+	if (speed_y > 0.0)
+	{
+		ret_val.y = speed_y / 100;
+	}
+	if (speed_z > 0.0)
+	{
+		ret_val.z = speed_z / 100;
 	}
 
 	return ret_val;
@@ -72,20 +85,54 @@ void CamTarget3D::set_target_offset(Vector3 offset)
 }
 
 
-void CamTarget3D::set_speed(double p_speed)
+void CamTarget3D::set_speed_x(double p_speed_x)
 {
-	if (speed < 0.0 || speed > 100.0)
+	if (p_speed_x < 0.0 || p_speed_x > 100.0)
 	{
-		UtilityFunctions::push_warning("WARNING! Speed must be between 0 % and 100 %, but was: ", p_speed);
+		PrintUtils::speed_0_100(p_speed_x);
 		return;
 	}
-	speed = p_speed;
+	speed_x = p_speed_x;
 }
 
 
-double CamTarget3D::get_speed() const
+double CamTarget3D::get_speed_x() const
 {
-	return speed;
+	return speed_x;
+}
+
+
+void CamTarget3D::set_speed_y(double p_speed_y)
+{
+	if (p_speed_y < 0.0 || p_speed_y > 100.0)
+	{
+		PrintUtils::speed_0_100(p_speed_y);
+		return;
+	}
+	speed_y = p_speed_y;
+}
+
+
+double CamTarget3D::get_speed_y() const
+{
+	return speed_y;
+}
+
+
+void CamTarget3D::set_speed_z(double p_speed_z)
+{
+	if (p_speed_z < 0.0 || p_speed_z > 100.0)
+	{
+		PrintUtils::speed_0_100(p_speed_z);
+		return;
+	}
+	speed_z = p_speed_z;
+}
+
+
+double CamTarget3D::get_speed_z() const
+{
+	return speed_z;
 }
 
 

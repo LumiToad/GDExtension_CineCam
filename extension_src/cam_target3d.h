@@ -32,7 +32,7 @@ namespace godot
 		CamTarget3D();
 		~CamTarget3D();
 
-		double scaled_speed() const;
+		Vector3 scaled_speed() const;
 
 
 	protected:
@@ -47,7 +47,9 @@ namespace godot
 		// GODOT public
 	private:
 		Vector3 target_offset;
-		double speed;
+		double speed_x;
+		double speed_y;
+		double speed_z;
 		Tween::EaseType ease;
 		Tween::TransitionType trans;
 
@@ -55,8 +57,14 @@ namespace godot
 		Vector3 get_target_offset() const;
 		void set_target_offset(Vector3 offset);
 
-		void set_speed(double speed);
-		double get_speed() const;
+		void set_speed_x(double speed_x);
+		double get_speed_x() const;
+
+		void set_speed_y(double speed_y);
+		double get_speed_y() const;
+
+		void set_speed_z(double speed_z);
+		double get_speed_z() const;
 
 		void set_ease(Tween::EaseType ease);
 		Tween::EaseType get_ease() const;

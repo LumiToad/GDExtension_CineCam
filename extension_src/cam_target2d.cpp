@@ -8,6 +8,7 @@
 #include "godot_cpp/variant/utility_functions.hpp"
 
 #include "bind_utils.h"
+#include "print_utils.h"
 
 using namespace godot;
 
@@ -18,6 +19,7 @@ CamTarget2D::CamTarget2D()
 
 	target_offset = Vector2();
 	speed_x = 0.0;
+	speed_y = 0.0;
 	ease = Tween::EaseType::EASE_IN_OUT;
 	trans = Tween::TransitionType::TRANS_CUBIC;
 }
@@ -78,9 +80,9 @@ void CamTarget2D::set_target_offset(Vector2 offset)
 
 void CamTarget2D::set_speed_x(double p_speed_x)
 {
-	if (speed_x < 0.0 || speed_x > 100.0)
+	if (p_speed_x < 0.0 || p_speed_x > 100.0)
 	{
-		UtilityFunctions::push_warning("WARNING! Speed must be between 0 % and 100 %, but was: ", p_speed_x);
+		PrintUtils::speed_0_100(p_speed_x);
 		return;
 	}
 	speed_x = p_speed_x;
@@ -95,9 +97,9 @@ double CamTarget2D::get_speed_y() const
 
 void CamTarget2D::set_speed_y(double p_speed_y)
 {
-	if (speed_y < 0.0 || speed_y > 100.0)
+	if (p_speed_y < 0.0 || p_speed_y > 100.0)
 	{
-		UtilityFunctions::push_warning("WARNING! Speed must be between 0 % and 100 %, but was: ", p_speed_y);
+		PrintUtils::speed_0_100(p_speed_y);
 		return;
 	}
 	speed_y = p_speed_y;
