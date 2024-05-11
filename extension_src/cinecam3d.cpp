@@ -24,8 +24,9 @@ CineCam3D::CineCam3D()
 	shake_offset_duration = 0.0;
 	shake_fov_intensity = 0.0;
 	shake_fov_duration = 0.0;
-	shake_rotation_intensity = 0.0;
+	shake_rotation_intensity = Vector3();
 	shake_rotation_duration = 0.0;
+	rotation_shake = Vector3();
 	tweens_ready = false;
 	additional_description = "";
 	current_sequence = nullptr;
@@ -83,7 +84,7 @@ void CineCam3D::_bind_methods()
 	ADD_GETSET_HINT_BINDING(get_shake_fov_intensity, set_shake_fov_intensity, shake_fov_intensity, intensity, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
 	ADD_GETSET_HINT_BINDING(get_shake_fov_duration, set_shake_fov_duration, shake_fov_duration, duration, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
 
-	ADD_GETSET_HINT_BINDING(get_shake_rotation_intensity, set_shake_rotation_intensity, shake_rotation_intensity, intensity, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
+	ADD_GETSET_BINDING(get_shake_rotation_intensity, set_shake_rotation_intensity, shake_rotation_intensity, intensity, CineCam3D, VECTOR3);
 	ADD_GETSET_HINT_BINDING(get_shake_rotation_duration, set_shake_rotation_duration, shake_rotation_duration, duration, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
 
 	ADD_GETSET_BINDING(_get_seq_is_paused, _set_seq_is_paused, sequence_paused, paused, CineCam3D, BOOL);
@@ -338,8 +339,8 @@ void CineCam3D::reposition_to_vcam(VirtualCam3D* p_vcam)
 
 void CineCam3D::shake_offset(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
-	set_h_offset(original_offset.x);
-	set_v_offset(original_offset.y);
+	// set_h_offset(original_offset.x);
+	// set_v_offset(original_offset.y);
 
 	original_offset.x = get_h_offset();
 	original_offset.y = get_v_offset();
@@ -381,7 +382,7 @@ void CineCam3D::shake_offset(const double& p_intensity, const double& p_duration
 
 void CineCam3D::shake_fov(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
-	set_fov(original_fov);
+	// set_fov(original_fov);
 
 	original_fov = get_fov();
 
@@ -419,10 +420,8 @@ void CineCam3D::shake_fov(const double& p_intensity, const double& p_duration, T
 }
 
 
-void CineCam3D::shake_rotation(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
+void CineCam3D::shake_rotation(const Vector3& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
-	set_rotation(original_rotation);
-
 	original_rotation = get_rotation();
 
 	if (shake_rotation_duration > 0.0)
@@ -443,7 +442,7 @@ void CineCam3D::shake_rotation(const double& p_intensity, const double& p_durati
 	shake_rotation_intensity_tween->tween_method(
 		Callable(this, "set_shake_rotation_intensity"),
 		shake_rotation_intensity,
-		0.0,
+		Vector3(0.0, 0.0, 0.0),
 		p_duration
 	);
 
@@ -528,13 +527,26 @@ void CineCam3D::shake_rotation_internal()
 
 	RandomNumberGenerator rng;
 	rng.randomize();
-	double rng_x = rng.randf_range(-shake_rotation_intensity, shake_rotation_intensity);
-	double rng_y = rng.randf_range(-shake_rotation_intensity, shake_rotation_intensity);
-	double rng_z = rng.randf_range(-shake_rotation_intensity, shake_rotation_intensity);
+	Vector3 origin = Vector3(0.0, 0.0, 0.0);
+	double divisor = 1;
 
-	Vector3 shake_vector = original_rotation + Vector3(rng_x, rng_y, rng_z);
+	if (look_at_target == nullptr)
+	{
+		origin = original_rotation;
+		divisor = 100;
+	}
 
-	set_rotation(shake_vector);
+	Vector3 shake_vector = origin + Vector3(
+		rng.randf_range(-shake_rotation_intensity.x, shake_rotation_intensity.x) / divisor,
+		rng.randf_range(-shake_rotation_intensity.y, shake_rotation_intensity.y) / divisor,
+		rng.randf_range(-shake_rotation_intensity.z, shake_rotation_intensity.z) / divisor
+	);
+		
+	rotation_shake = shake_vector;
+	if (look_at_target == nullptr)
+	{
+		set_rotation(shake_vector);
+	}
 
 	if (shake_rotation_duration <= 0.0)
 	{
@@ -542,6 +554,7 @@ void CineCam3D::shake_rotation_internal()
 		shake_rotation_intensity_tween->stop();
 		shake_rotation_duration_tween->stop();
 
+		rotation_shake = Vector3(0.0, 0.0, 0.0);
 		set_rotation(original_rotation);
 
 		emit_signal(SIGNAL_SHAKE_ROTATION_ENDED);
@@ -749,7 +762,8 @@ void CineCam3D::_process_internal(bool editor)
 	if (look_at_target != nullptr)
 	{
 		Vector3 final_look_at =
-			look_at_target->get_global_position() + look_at_target->get_target_offset();
+			look_at_target->get_global_position() +
+			look_at_target->get_target_offset();
 		Vector3 delta_value = final_look_at - origin_for_look_at;
 		Vector3 result = look_at_tween->interpolate_value(
 			origin_for_look_at,
@@ -760,8 +774,8 @@ void CineCam3D::_process_internal(bool editor)
 			look_at_target->get_ease()
 		);
 
-		look_at(result);
-		origin_for_look_at = result;
+		look_at(result + rotation_shake);
+		origin_for_look_at = result + rotation_shake;
 	}
 
 	switch (follow_mode)
@@ -919,13 +933,13 @@ void CineCam3D::set_shake_fov_duration(const double& duration)
 }
 
 
-double CineCam3D::get_shake_rotation_intensity() const
+Vector3 CineCam3D::get_shake_rotation_intensity() const
 {
 	return shake_rotation_intensity;
 }
 
 
-void CineCam3D::set_shake_rotation_intensity(const double& intensity)
+void CineCam3D::set_shake_rotation_intensity(const Vector3& intensity)
 {
 	shake_rotation_intensity = intensity;
 }

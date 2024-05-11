@@ -83,6 +83,7 @@ namespace godot
 
 		Ref<Tween> look_at_tween;
 		Vector3 origin_for_look_at;
+		Vector3 rotation_shake;
 
 		bool tweens_ready;
 		VirtualCam3D* highest_prio_vcam;
@@ -131,7 +132,7 @@ namespace godot
 		double shake_offset_duration;
 		double shake_fov_intensity;
 		double shake_fov_duration;
-		double shake_rotation_intensity;
+		Vector3 shake_rotation_intensity;
 		double shake_rotation_duration;
 		bool is_sequence_paused = false;
 		CamTarget3D* look_at_target;
@@ -163,7 +164,7 @@ namespace godot
 			Tween::EaseType p_ease = DEFAULT_EASE,
 			Tween::TransitionType p_trans = DEFAULT_TRANS);
 
-		void shake_rotation(const double& p_intensity,
+		void shake_rotation(const Vector3& p_intensity,
 			const double& p_duration,
 			Tween::EaseType p_ease = DEFAULT_EASE,
 			Tween::TransitionType p_trans = DEFAULT_TRANS);
@@ -194,8 +195,8 @@ namespace godot
 		double get_shake_fov_duration() const;
 		void set_shake_fov_duration(const double& p_duration);
 
-		double get_shake_rotation_intensity() const;
-		void set_shake_rotation_intensity(const double& p_intensity);
+		Vector3 get_shake_rotation_intensity() const;
+		void set_shake_rotation_intensity(const Vector3& p_intensity);
 
 		double get_shake_rotation_duration() const;
 		void set_shake_rotation_duration(const double& p_duration);
