@@ -19,9 +19,9 @@ CineCam2D::CineCam2D()
 	follow_mode = FollowMode::OFF;
 	is_shake_offset_active = false;
 	is_shake_zoom_active = false;
-	shake_offset_intensity = 0.0;
+	shake_offset_intensity = Vector2(0.0, 0.0);
 	shake_offset_duration = 0.0;
-	shake_zoom_intensity = 0.0;
+	shake_zoom_intensity = Vector2(0.0, 0.0);
 	shake_zoom_duration = 0.0;
 	tweens_ready = false;
 	additional_description = "";
@@ -71,11 +71,11 @@ void CineCam2D::_bind_methods()
 	ADD_GETSET_HINT_BINDING(get_current_sequence, set_current_sequence, current_sequence, p_sequence, CineCam2D, OBJECT, PROPERTY_HINT_NODE_TYPE, "CamSequence2D");
 	ADD_GETSET_HINT_BINDING(get_target, set_target, target, p_target, CineCam2D, Variant::OBJECT, PROPERTY_HINT_NODE_TYPE, "CamTarget2D");
 
-	ADD_GETSET_HINT_BINDING(get_shake_offset_intensity, set_shake_offset_intensity, shake_offset_intensity, intensity, CineCam2D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
-	ADD_GETSET_HINT_BINDING(get_shake_offset_duration, set_shake_offset_duration, shake_offset_duration, duration, CineCam2D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
+	ADD_GETSET_BINDING(_get_shake_offset_intensity, _set_shake_offset_intensity, shake_offset_intensity, intensity, CineCam2D, VECTOR2);
+	ADD_GETSET_BINDING(_get_shake_offset_duration, _set_shake_offset_duration, shake_offset_duration, duration, CineCam2D, FLOAT);
 
-	ADD_GETSET_HINT_BINDING(get_shake_zoom_intensity, set_shake_zoom_intensity, shake_zoom_intensity, intensity, CineCam2D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
-	ADD_GETSET_HINT_BINDING(get_shake_zoom_duration, set_shake_zoom_duration, shake_zoom_duration, duration, CineCam2D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
+	ADD_GETSET_BINDING(_get_shake_zoom_intensity, _set_shake_zoom_intensity, shake_zoom_intensity, intensity, CineCam2D, VECTOR2);
+	ADD_GETSET_BINDING(_get_shake_zoom_duration, _set_shake_zoom_duration, shake_zoom_duration, duration, CineCam2D, FLOAT);
 
 	ADD_GETSET_BINDING(_get_seq_is_paused, _set_seq_is_paused, sequence_paused, paused, CineCam2D, BOOL);
 	ADD_GETSET_BINDING(_get_blend_is_paused, _set_blend_is_paused, blend_paused, paused, CineCam2D, BOOL);
@@ -314,7 +314,7 @@ void CineCam2D::reposition_to_vcam(VirtualCam2D* p_vcam)
 }
 
 
-void CineCam2D::shake_offset(const double &p_intensity, const double &p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
+void CineCam2D::shake_offset(const Vector2 &p_intensity, const double &p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
 	set_offset(original_offset);
 
@@ -336,14 +336,14 @@ void CineCam2D::shake_offset(const double &p_intensity, const double &p_duration
 	shake_offset_duration_tween->play();
 
 	shake_offset_intensity_tween->tween_method(
-		Callable(this, "set_shake_offset_intensity"),
+		Callable(this, "_set_shake_offset_intensity"),
 		shake_offset_intensity,
-		0.0,
+		Vector2(0.0, 0.0),
 		p_duration
 	);
 
 	shake_offset_duration_tween->tween_method(
-		Callable(this, "set_shake_offset_duration"),
+		Callable(this, "_set_shake_offset_duration"),
 		shake_offset_duration,
 		0.0,
 		p_duration
@@ -354,7 +354,7 @@ void CineCam2D::shake_offset(const double &p_intensity, const double &p_duration
 }
 
 
-void CineCam2D::shake_zoom(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
+void CineCam2D::shake_zoom(const Vector2& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
 	set_zoom(original_zoom);
 
@@ -376,14 +376,14 @@ void CineCam2D::shake_zoom(const double& p_intensity, const double& p_duration, 
 	shake_zoom_duration_tween->play();
 
 	shake_zoom_intensity_tween->tween_method(
-		Callable(this, "set_shake_zoom_intensity"),
+		Callable(this, "_set_shake_zoom_intensity"),
 		shake_zoom_intensity,
-		0.0,
+		Vector2(0.0, 0.0),
 		p_duration
 	);
 
 	shake_zoom_duration_tween->tween_method(
-		Callable(this, "set_shake_zoom_duration"),
+		Callable(this, "_set_shake_zoom_duration"),
 		shake_zoom_duration,
 		0.0,
 		p_duration
@@ -413,8 +413,8 @@ void CineCam2D::shake_offset_internal(double delta)
 
 	RandomNumberGenerator rng;
 	rng.randomize();
-	double rng_x = rng.randf_range(-shake_offset_intensity, shake_offset_duration);
-	double rng_y = rng.randf_range(-shake_offset_intensity, shake_offset_duration);
+	double rng_x = rng.randf_range(-shake_offset_intensity.x, shake_offset_intensity.x);
+	double rng_y = rng.randf_range(-shake_offset_intensity.y, shake_offset_intensity.y);
 
 	Vector2 shake_vector = original_offset + Vector2(rng_x, rng_y);
 
@@ -439,8 +439,8 @@ void CineCam2D::shake_zoom_internal(double delta)
 
 	RandomNumberGenerator rng;
 	rng.randomize();
-	double rng_x = rng.randf_range(0.0, shake_zoom_intensity);
-	double rng_y = rng.randf_range(0.0, shake_zoom_intensity);
+	double rng_x = rng.randf_range(0.0, shake_zoom_intensity.x);
+	double rng_y = rng.randf_range(0.0, shake_zoom_intensity.y);
 
 	Vector2 shake_vector = original_zoom + Vector2(rng_x, rng_y);
 
@@ -750,49 +750,49 @@ void CineCam2D::set_target(CamTarget2D* p_target)
 }
 
 
-double CineCam2D::get_shake_offset_intensity() const
+Vector2 CineCam2D::_get_shake_offset_intensity() const
 {
 	return shake_offset_intensity;
 }
 
 
-void CineCam2D::set_shake_offset_intensity(const double &intensity)
+void CineCam2D::_set_shake_offset_intensity(const Vector2 &intensity)
 {
 	shake_offset_intensity = intensity;
 }
 
 
-double CineCam2D::get_shake_offset_duration() const
+double CineCam2D::_get_shake_offset_duration() const
 {
 	return shake_offset_duration;
 }
 
 
-void CineCam2D::set_shake_offset_duration(const double &duration)
+void CineCam2D::_set_shake_offset_duration(const double &duration)
 {
 	shake_offset_duration = duration;
 }
 
 
-double CineCam2D::get_shake_zoom_intensity() const
+Vector2 CineCam2D::_get_shake_zoom_intensity() const
 {
 	return shake_zoom_intensity;
 }
 
 
-void CineCam2D::set_shake_zoom_intensity(const double &intensity)
+void CineCam2D::_set_shake_zoom_intensity(const Vector2 &intensity)
 {
 	shake_zoom_intensity = intensity;
 }
 
 
-double CineCam2D::get_shake_zoom_duration() const
+double CineCam2D::_get_shake_zoom_duration() const
 {
 	return shake_zoom_duration;
 }
 
 
-void CineCam2D::set_shake_zoom_duration(const double &duration)
+void CineCam2D::_set_shake_zoom_duration(const double &duration)
 {
 	shake_zoom_duration = duration;
 }

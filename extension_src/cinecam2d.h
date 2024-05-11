@@ -115,9 +115,9 @@ namespace godot
 		CamSequence2D* current_sequence;
 		CineCam2D::FollowMode follow_mode;
 		CamTarget2D* follow_target;
-		double shake_offset_intensity;
+		Vector2 shake_offset_intensity;
 		double shake_offset_duration;
-		double shake_zoom_intensity;
+		Vector2 shake_zoom_intensity;
 		double shake_zoom_duration;
 		bool is_sequence_paused = false;
 
@@ -138,12 +138,12 @@ namespace godot
 
 		void reposition_to_vcam(VirtualCam2D* p_vcam);
 
-		void shake_offset(const double &p_intensity,
-			const double &p_duration,
+		void shake_offset(const Vector2& p_intensity,
+			const double& p_duration,
 			Tween::EaseType p_ease = DEFAULT_EASE,
 			Tween::TransitionType p_trans = DEFAULT_TRANS);
 
-		void shake_zoom(const double& p_intensity,
+		void shake_zoom(const Vector2& p_intensity,
 			const double& p_duration,
 			Tween::EaseType p_ease = DEFAULT_EASE,
 			Tween::TransitionType p_trans = DEFAULT_TRANS);
@@ -163,17 +163,17 @@ namespace godot
 		CamTarget2D* get_target() const;
 		void set_target(CamTarget2D* p_target);
 
-		double get_shake_offset_intensity() const;
-		void set_shake_offset_intensity(const double &p_intensity);
+		Vector2 _get_shake_offset_intensity() const;
+		void _set_shake_offset_intensity(const Vector2&p_intensity);
 
-		double get_shake_offset_duration() const;
-		void set_shake_offset_duration(const double &p_duration);
+		double _get_shake_offset_duration() const;
+		void _set_shake_offset_duration(const double&p_duration);
 
-		double get_shake_zoom_intensity() const;
-		void set_shake_zoom_intensity(const double &p_intensity);
+		Vector2 _get_shake_zoom_intensity() const;
+		void _set_shake_zoom_intensity(const Vector2&p_intensity);
 
-		double get_shake_zoom_duration() const;
-		void set_shake_zoom_duration(const double &p_duration);
+		double _get_shake_zoom_duration() const;
+		void _set_shake_zoom_duration(const double &p_duration);
 
 		Ref<BlendData2D> _get_blend_data() const;
 		void _set_blend_data(Ref<BlendData2D> blend);

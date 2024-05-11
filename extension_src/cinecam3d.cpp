@@ -20,7 +20,7 @@ CineCam3D::CineCam3D()
 	is_shake_offset_active = false;
 	is_shake_fov_active = false;
 	is_shake_rotation_active = false;
-	shake_offset_intensity = 0.0;
+	shake_offset_intensity = Vector2();
 	shake_offset_duration = 0.0;
 	shake_fov_intensity = 0.0;
 	shake_fov_duration = 0.0;
@@ -78,14 +78,14 @@ void CineCam3D::_bind_methods()
 	ADD_GETSET_HINT_BINDING(get_target, set_target, target, p_target, CineCam3D, Variant::OBJECT, PROPERTY_HINT_NODE_TYPE, "CamTarget3D");
 	ADD_GETSET_HINT_BINDING(get_look_at_target, set_look_at_target, look_at_target, p_target, CineCam3D, Variant::OBJECT, PROPERTY_HINT_NODE_TYPE, "CamTarget3D");
 
-	ADD_GETSET_HINT_BINDING(get_shake_offset_intensity, set_shake_offset_intensity, shake_offset_intensity, intensity, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
-	ADD_GETSET_HINT_BINDING(get_shake_offset_duration, set_shake_offset_duration, shake_offset_duration, duration, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
+	ADD_GETSET_BINDING(_get_shake_offset_intensity, _set_shake_offset_intensity, shake_offset_intensity, intensity, CineCam3D, VECTOR2);
+	ADD_GETSET_BINDING(_get_shake_offset_duration, _set_shake_offset_duration, shake_offset_duration, duration, CineCam3D, FLOAT);
 
-	ADD_GETSET_HINT_BINDING(get_shake_fov_intensity, set_shake_fov_intensity, shake_fov_intensity, intensity, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
-	ADD_GETSET_HINT_BINDING(get_shake_fov_duration, set_shake_fov_duration, shake_fov_duration, duration, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
+	ADD_GETSET_BINDING(_get_shake_fov_intensity, _set_shake_fov_intensity, shake_fov_intensity, intensity, CineCam3D, FLOAT);
+	ADD_GETSET_BINDING(_get_shake_fov_duration, _set_shake_fov_duration, shake_fov_duration, duration, CineCam3D, FLOAT);
 
-	ADD_GETSET_BINDING(get_shake_rotation_intensity, set_shake_rotation_intensity, shake_rotation_intensity, intensity, CineCam3D, VECTOR3);
-	ADD_GETSET_HINT_BINDING(get_shake_rotation_duration, set_shake_rotation_duration, shake_rotation_duration, duration, CineCam3D, FLOAT, PROPERTY_HINT_RANGE, "0.1, 0.001 or_greater");
+	ADD_GETSET_BINDING(_get_shake_rotation_intensity, _set_shake_rotation_intensity, shake_rotation_intensity, intensity, CineCam3D, VECTOR3);
+	ADD_GETSET_BINDING(_get_shake_rotation_duration, _set_shake_rotation_duration, shake_rotation_duration, duration, CineCam3D, FLOAT);
 
 	ADD_GETSET_BINDING(_get_seq_is_paused, _set_seq_is_paused, sequence_paused, paused, CineCam3D, BOOL);
 	ADD_GETSET_BINDING(_get_blend_is_paused, _set_blend_is_paused, blend_paused, paused, CineCam3D, BOOL);
@@ -337,10 +337,10 @@ void CineCam3D::reposition_to_vcam(VirtualCam3D* p_vcam)
 }
 
 
-void CineCam3D::shake_offset(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
+void CineCam3D::shake_offset(const Vector2& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
-	// set_h_offset(original_offset.x);
-	// set_v_offset(original_offset.y);
+	set_h_offset(original_offset.x);
+	set_v_offset(original_offset.y);
 
 	original_offset.x = get_h_offset();
 	original_offset.y = get_v_offset();
@@ -361,14 +361,14 @@ void CineCam3D::shake_offset(const double& p_intensity, const double& p_duration
 	shake_offset_duration_tween->play();
 
 	shake_offset_intensity_tween->tween_method(
-		Callable(this, "set_shake_offset_intensity"),
+		Callable(this, "_set_shake_offset_intensity"),
 		shake_offset_intensity,
-		0.0,
+		Vector2(0.0, 0.0),
 		p_duration
 	);
 
 	shake_offset_duration_tween->tween_method(
-		Callable(this, "set_shake_offset_duration"),
+		Callable(this, "_set_shake_offset_duration"),
 		shake_offset_duration,
 		0.0,
 		p_duration
@@ -382,7 +382,7 @@ void CineCam3D::shake_offset(const double& p_intensity, const double& p_duration
 
 void CineCam3D::shake_fov(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
-	// set_fov(original_fov);
+	set_fov(original_fov);
 
 	original_fov = get_fov();
 
@@ -402,14 +402,14 @@ void CineCam3D::shake_fov(const double& p_intensity, const double& p_duration, T
 	shake_fov_duration_tween->play();
 
 	shake_fov_intensity_tween->tween_method(
-		Callable(this, "set_shake_fov_intensity"),
+		Callable(this, "_set_shake_fov_intensity"),
 		shake_fov_intensity,
 		0.0,
 		p_duration
 	);
 
 	shake_fov_duration_tween->tween_method(
-		Callable(this, "set_shake_fov_duration"),
+		Callable(this, "_set_shake_fov_duration"),
 		shake_fov_duration,
 		0.0,
 		p_duration
@@ -422,6 +422,11 @@ void CineCam3D::shake_fov(const double& p_intensity, const double& p_duration, T
 
 void CineCam3D::shake_rotation(const Vector3& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
+	if (look_at_target == nullptr)
+	{
+		set_rotation(original_rotation);
+	}
+
 	original_rotation = get_rotation();
 
 	if (shake_rotation_duration > 0.0)
@@ -440,14 +445,14 @@ void CineCam3D::shake_rotation(const Vector3& p_intensity, const double& p_durat
 	shake_rotation_duration_tween->play();
 
 	shake_rotation_intensity_tween->tween_method(
-		Callable(this, "set_shake_rotation_intensity"),
+		Callable(this, "_set_shake_rotation_intensity"),
 		shake_rotation_intensity,
 		Vector3(0.0, 0.0, 0.0),
 		p_duration
 	);
 
 	shake_rotation_duration_tween->tween_method(
-		Callable(this, "set_shake_rotation_duration"),
+		Callable(this, "_set_shake_rotation_duration"),
 		shake_rotation_duration,
 		0.0,
 		p_duration
@@ -477,10 +482,11 @@ void CineCam3D::shake_offset_internal()
 
 	RandomNumberGenerator rng;
 	rng.randomize();
-	double rng_x = rng.randf_range(-shake_offset_intensity, shake_offset_duration);
-	double rng_y = rng.randf_range(-shake_offset_intensity, shake_offset_duration);
 
-	Vector2 shake_vector = original_offset + Vector2(rng_x, rng_y);
+	Vector2 shake_vector = original_offset + Vector2(
+		rng.randf_range(-shake_offset_intensity.x, shake_offset_intensity.x),
+		rng.randf_range(-shake_offset_intensity.y, shake_offset_intensity.y)
+	);
 
 	set_h_offset(shake_vector.x);
 	set_v_offset(shake_vector.y);
@@ -885,73 +891,73 @@ void CineCam3D::set_target(CamTarget3D* p_target)
 }
 
 
-double CineCam3D::get_shake_offset_intensity() const
+Vector2 CineCam3D::_get_shake_offset_intensity() const
 {
 	return shake_offset_intensity;
 }
 
 
-void CineCam3D::set_shake_offset_intensity(const double& intensity)
+void CineCam3D::_set_shake_offset_intensity(const Vector2& intensity)
 {
 	shake_offset_intensity = intensity;
 }
 
 
-double CineCam3D::get_shake_offset_duration() const
+double CineCam3D::_get_shake_offset_duration() const
 {
 	return shake_offset_duration;
 }
 
 
-void CineCam3D::set_shake_offset_duration(const double& duration)
+void CineCam3D::_set_shake_offset_duration(const double& duration)
 {
 	shake_offset_duration = duration;
 }
 
 
-double CineCam3D::get_shake_fov_intensity() const
+double CineCam3D::_get_shake_fov_intensity() const
 {
 	return shake_fov_intensity;
 }
 
 
-void CineCam3D::set_shake_fov_intensity(const double& intensity)
+void CineCam3D::_set_shake_fov_intensity(const double& intensity)
 {
 	shake_fov_intensity = intensity;
 }
 
 
-double CineCam3D::get_shake_fov_duration() const
+double CineCam3D::_get_shake_fov_duration() const
 {
 	return shake_fov_duration;
 }
 
 
-void CineCam3D::set_shake_fov_duration(const double& duration)
+void CineCam3D::_set_shake_fov_duration(const double& duration)
 {
 	shake_fov_duration = duration;
 }
 
 
-Vector3 CineCam3D::get_shake_rotation_intensity() const
+Vector3 CineCam3D::_get_shake_rotation_intensity() const
 {
 	return shake_rotation_intensity;
 }
 
 
-void CineCam3D::set_shake_rotation_intensity(const Vector3& intensity)
+void CineCam3D::_set_shake_rotation_intensity(const Vector3& intensity)
 {
 	shake_rotation_intensity = intensity;
 }
 
 
-double CineCam3D::get_shake_rotation_duration() const
+double CineCam3D::_get_shake_rotation_duration() const
 {
 	return shake_rotation_duration;
 }
 
 
-void CineCam3D::set_shake_rotation_duration(const double& duration)
+void CineCam3D::_set_shake_rotation_duration(const double& duration)
 {
 	shake_rotation_duration = duration;
 }
