@@ -54,6 +54,13 @@ void CineCam2D::_bind_methods()
 	ADD_METHOD_BINDING(seq_pause, CineCam2D);
 	ADD_METHOD_BINDING(seq_stop, CineCam2D);
 
+	ADD_METHOD_BINDING(follow_target_pause, CineCam2D);
+	ADD_METHOD_BINDING(follow_target_resume, CineCam2D);
+	ADD_METHOD_BINDING(follow_target_toggle, CineCam2D);
+
+	ADD_METHOD_BINDING(follow_prio_pause, CineCam2D);
+	ADD_METHOD_BINDING(follow_prio_resume, CineCam2D);
+	ADD_METHOD_BINDING(follow_prio_toggle, CineCam2D);
 
 	ADD_METHOD_ARGS_BINDING(reposition_to_vcam, CineCam2D, "vcam");
 
@@ -83,8 +90,10 @@ void CineCam2D::_bind_methods()
 	ADD_GETSET_BINDING(_get_shake_rotation_intensity, _set_shake_rotation_intensity, shake_rotation_intensity, intensity, CineCam2D, FLOAT);
 	ADD_GETSET_BINDING(_get_shake_rotation_duration, _set_shake_rotation_duration, shake_rotation_duration, duration, CineCam2D, FLOAT);
 
-	ADD_GETSET_BINDING(_get_seq_is_paused, _set_seq_is_paused, sequence_paused, paused, CineCam2D, BOOL);
-	ADD_GETSET_BINDING(_get_blend_is_paused, _set_blend_is_paused, blend_paused, paused, CineCam2D, BOOL);
+	ADD_GETSET_BINDING(_is_seq_paused, _set_seq_paused, sequence_paused, paused, CineCam2D, BOOL);
+	ADD_GETSET_BINDING(_is_blend_paused, _set_blend_paused, blend_paused, paused, CineCam2D, BOOL);
+	ADD_GETSET_BINDING(_is_follow_target_paused, _set_follow_target_paused, follow_target_paused, paused, CineCam2D, BOOL);
+	ADD_GETSET_BINDING(_is_follow_prio_paused, _set_follow_prio_paused, follow_prio_paused, paused, CineCam2D, BOOL);
 
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_offset, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_zoom, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
@@ -289,7 +298,7 @@ void CineCam2D::seq_blend_prev()
 
 void CineCam2D::blend_resume()
 {
-	_set_blend_is_paused(false);
+	_set_blend_paused(false);
 }
 
 
@@ -347,6 +356,43 @@ void CineCam2D::seq_stop()
 	sequence_playmode = false;
 	emit_signal(SIGNAL_SEQUENCE_STOPPED);
 }
+
+
+void CineCam2D::follow_target_pause()
+{
+	_set_follow_target_paused(true);
+}
+
+
+void CineCam2D::follow_target_resume()
+{
+	_set_follow_target_paused(false);
+}
+
+
+void CineCam2D::follow_target_toggle()
+{
+	is_follow_target_paused = !is_follow_target_paused;
+}
+
+
+void CineCam2D::follow_prio_pause()
+{
+	_set_follow_prio_paused(true);
+}
+
+
+void CineCam2D::follow_prio_resume()
+{
+	_set_follow_prio_paused(false);
+}
+
+
+void CineCam2D::follow_prio_toggle()
+{
+	_set_follow_prio_paused(!is_follow_prio_paused);
+}
+
 
 
 void CineCam2D::reposition_to_vcam(VirtualCam2D* p_vcam)
@@ -498,7 +544,7 @@ void CineCam2D::start_sequence(const bool& backwards)
 
 void CineCam2D::blend_pause()
 {
-	_set_blend_is_paused(true);
+	_set_blend_paused(true);
 }
 
 
@@ -750,9 +796,6 @@ void CineCam2D::_move_by_priority_mode()
 		case FollowMode::PRIO_ONESHOT:
 			reposition_to_vcam(highest_prio_vcam);
 			break;
-		case FollowMode::PRIO:
-			reposition_to_vcam(highest_prio_vcam);
-			break;
 		case FollowMode::PRIO_BLEND:
 			blend_to(highest_prio_vcam, active_blend);
 			break;
@@ -781,6 +824,7 @@ void CineCam2D::_process_internal(bool editor)
 		default:
 			break;
 		case PRIO:
+			if (is_follow_prio_paused) break;
 			reposition_to_vcam(highest_prio_vcam);
 			break;
 		case OFF:
@@ -792,6 +836,9 @@ void CineCam2D::_process_internal(bool editor)
 				follow_mode = FollowMode::OFF;
 				break;
 			}
+
+			if (is_follow_target_paused) break;
+
 			set_global_position(follow_target->get_global_position() + follow_target->get_target_offset());
 			break;
 		case TARGET_BLEND:
@@ -801,6 +848,9 @@ void CineCam2D::_process_internal(bool editor)
 				follow_mode = FollowMode::OFF;
 				break;
 			}
+
+			if (is_follow_target_paused) break;
+
 			Vector2 offset = follow_target->get_target_offset();
 			Vector2 delta_value = (follow_target->get_global_position() + offset) - follow_origin;
 			Vector2 result = follow_tween->interpolate_value(
@@ -996,20 +1046,20 @@ VirtualCam2D* CineCam2D::find_vcam_by_id(String id) const
 }
 
 
-void CineCam2D::_set_seq_is_paused(bool paused)
+void CineCam2D::_set_seq_paused(bool paused)
 {
 	is_sequence_paused = paused;
 	emit_signal(paused ? SIGNAL_SEQUENCE_PAUSED : SIGNAL_SEQUENCE_RESUMED);
 }
 
 
-bool CineCam2D::_get_seq_is_paused() const
+bool CineCam2D::_is_seq_paused() const
 {
 	return is_sequence_paused;
 }
 
 
-void CineCam2D::_set_blend_is_paused(bool paused)
+void CineCam2D::_set_blend_paused(bool paused)
 {
 	if (Engine::get_singleton()->is_editor_hint()) return;
 	if (!is_blend_not_stopped) return;
@@ -1017,20 +1067,55 @@ void CineCam2D::_set_blend_is_paused(bool paused)
 	if (paused)
 	{
 		blend_position_tween->pause();
+		blend_rotation_tween->pause();
 		emit_signal(SIGNAL_BLEND_PAUSED);
 	}
 	else
 	{
 		blend_position_tween->play();
+		blend_rotation_tween->play();
 		is_blend_not_stopped = true;
 		emit_signal(SIGNAL_BLEND_RESUMED);
 	}
 }
 
 
-bool CineCam2D::_get_blend_is_paused() const
+bool CineCam2D::_is_blend_paused() const
 {
 	if (Engine::get_singleton()->is_editor_hint()) return false;
 
 	return !blend_position_tween->is_running();
+}
+
+
+void CineCam2D::_set_follow_target_paused(bool paused)
+{
+	if (Engine::get_singleton()->is_editor_hint()) return;
+	is_follow_target_paused = paused;
+}
+
+
+bool CineCam2D::_is_follow_target_paused() const
+{
+	if (Engine::get_singleton()->is_editor_hint()) return false;
+	return is_follow_target_paused;
+}
+
+
+void CineCam2D::_set_follow_prio_paused(bool paused)
+{
+	if (Engine::get_singleton()->is_editor_hint()) return;
+	is_follow_prio_paused = paused;
+
+	if (follow_mode == FollowMode::PRIO_BLEND)
+	{
+		_set_blend_paused(paused);
+	}
+}
+
+
+bool CineCam2D::_is_follow_prio_paused() const
+{
+	if (Engine::get_singleton()->is_editor_hint()) return false;
+	return is_follow_prio_paused;
 }

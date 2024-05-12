@@ -131,6 +131,8 @@ namespace godot
 		double shake_rotation_intensity;
 		double shake_rotation_duration;
 		bool is_sequence_paused = false;
+		bool is_follow_target_paused = false;
+		bool is_follow_prio_paused = false;
 
 
 	public:
@@ -146,6 +148,14 @@ namespace godot
 		void seq_resume();
 		void seq_pause();
 		void seq_stop();
+
+		void follow_target_pause();
+		void follow_target_resume();
+		void follow_target_toggle();
+
+		void follow_prio_pause();
+		void follow_prio_resume();
+		void follow_prio_toggle();
 
 		void reposition_to_vcam(VirtualCam2D* p_vcam);
 
@@ -205,11 +215,17 @@ namespace godot
 		VirtualCam2D* prioritized_vcam() const;
 		VirtualCam2D* find_vcam_by_id(String id) const;
 
-		void _set_seq_is_paused(bool paused);
-		bool _get_seq_is_paused() const;
+		void _set_seq_paused(bool paused);
+		bool _is_seq_paused() const;
 
-		void _set_blend_is_paused(bool paused);
-		bool _get_blend_is_paused() const;
+		void _set_blend_paused(bool paused);
+		bool _is_blend_paused() const;
+
+		void _set_follow_target_paused(bool paused);
+		bool _is_follow_target_paused() const;
+
+		void _set_follow_prio_paused(bool paused);
+		bool _is_follow_prio_paused() const;
 
 	protected:
 	};
