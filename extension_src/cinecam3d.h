@@ -72,10 +72,11 @@ namespace godot
 
 		Ref<Tween> shake_rotation_intensity_tween;
 		Ref<Tween> shake_rotation_duration_tween;
-		Vector3 original_rotation;
+		Vector3 original_rotation; // for resetting shake only
 		bool is_shake_rotation_active;
 
-		Ref<Tween> blend_tween;
+		Ref<Tween> blend_position_tween;
+		Ref<Tween> blend_rotation_tween;
 
 		Ref<Tween> follow_tween;
 		Vector3 follow_origin;
@@ -103,6 +104,7 @@ namespace godot
 		void _move_by_follow_mode();
 		void init_active_blend();
 		void cycle_sequence_internal();
+		void look_at_target_internal();
 
 
 	public:
@@ -139,7 +141,7 @@ namespace godot
 
 
 	public:
-		void blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend_data);
+		void blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend);
 		void blend_pause();
 		void blend_resume();
 

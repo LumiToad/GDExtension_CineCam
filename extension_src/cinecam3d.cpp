@@ -154,9 +154,12 @@ void CineCam3D::init_tweens()
 	shake_rotation_duration_tween->stop();
 	shake_rotation_duration_tween->set_trans(DEFAULT_TRANS);
 
-	blend_tween = get_tree()->create_tween();
-	blend_tween->stop();
-	blend_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
+	blend_position_tween = get_tree()->create_tween();
+	blend_position_tween->stop();
+	blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
+
+	blend_rotation_tween = get_tree()->create_tween();
+	blend_rotation_tween->stop();
 
 	follow_tween = get_tree()->create_tween();
 	follow_tween->stop();
@@ -175,6 +178,7 @@ void CineCam3D::init_default_blend_data()
 	blend_data->set_blend_by(BlendData3D::BlendByType::DURATION);
 	blend_data->set_ease(Tween::EASE_IN_OUT);
 	blend_data->set_trans(Tween::TRANS_CUBIC);
+	blend_data->set_blend_rotation(true);
 	blend_data->_set_callable_on_start(false);
 	blend_data->_set_callable_on_complete(false);
 }
@@ -200,16 +204,19 @@ void CineCam3D::_on_blend_completed_internal()
 		active_blend->get_callable().call();
 	}
 
-	blend_tween = get_tree()->create_tween();
-	blend_tween->stop();
+	origin_for_look_at = get_global_rotation();
+
+	blend_position_tween = get_tree()->create_tween();
+	blend_position_tween->stop();
+	blend_rotation_tween->stop();
 	is_blend_not_stopped = false;
-	blend_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
+	blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
 
 	cycle_sequence_internal();
 }
 
 
-void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend_data)
+void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend)
 {
 	if (!tweens_ready)
 	{
@@ -217,19 +224,28 @@ void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend_data)
 		return;
 	}
 
-	if (blend_tween->is_running())
+	if (blend_position_tween->is_running())
 	{
-		blend_tween = get_tree()->create_tween();
-		blend_tween->stop();
+		blend_position_tween = get_tree()->create_tween();
+		blend_position_tween->stop();
 		is_blend_not_stopped = false;
 	}
 
-	blend_tween->set_trans(blend_data->get_trans());
-	blend_tween->set_ease(blend_data->get_ease());
+	if (blend_rotation_tween->is_running())
+	{
+		blend_rotation_tween = get_tree()->create_tween();
+		blend_rotation_tween->stop();
+	}
 
-	double calc_duration = blend_data->get_blend_by_value();
+	blend_position_tween->set_trans(blend->get_trans());
+	blend_position_tween->set_ease(blend->get_ease());
 
-	if (blend_data->get_blend_by() == BlendData3D::BlendByType::SPEED)
+	blend_rotation_tween->set_trans(blend->get_trans());
+	blend_rotation_tween->set_ease(blend->get_ease());
+
+	double calc_duration = blend->get_blend_by_value();
+
+	if (blend->get_blend_by() == BlendData3D::BlendByType::SPEED)
 	{
 		calc_duration = _calc_blend_duration_by_speed(
 			get_global_position(),
@@ -238,14 +254,26 @@ void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend_data)
 		);
 	}
 
-	blend_tween->tween_method(
+	blend_position_tween->tween_method(
 		Callable(this, "set_global_position"),
 		get_global_position(),
 		p_vcam->get_global_position(),
 		calc_duration
 	);
 
-	blend_tween->play();
+	if (blend->is_blend_rotation())
+	{
+		blend_rotation_tween->tween_method(
+			Callable(this, "set_global_rotation"),
+			get_global_rotation(),
+			p_vcam->get_global_rotation(),
+			calc_duration
+		);
+
+		blend_rotation_tween->play();
+	}
+
+	blend_position_tween->play();
 	is_blend_not_stopped = true;
 	_on_blend_started_internal();
 }
@@ -310,7 +338,7 @@ void CineCam3D::seq_blend_to(int idx)
 
 void CineCam3D::seq_resume()
 {
-	if (is_sequence_paused && !blend_tween->is_running())
+	if (is_sequence_paused && !blend_position_tween->is_running())
 	{
 		is_sequence_paused = false;
 		cycle_sequence_internal();
@@ -424,10 +452,10 @@ void CineCam3D::shake_rotation(const Vector3& p_intensity, const double& p_durat
 {
 	if (look_at_target == nullptr)
 	{
-		set_rotation(original_rotation);
+		set_global_rotation(original_rotation);
 	}
 
-	original_rotation = get_rotation();
+	original_rotation = get_global_rotation();
 
 	if (shake_rotation_duration > 0.0)
 	{
@@ -551,7 +579,7 @@ void CineCam3D::shake_rotation_internal()
 	rotation_shake = shake_vector;
 	if (look_at_target == nullptr)
 	{
-		set_rotation(shake_vector);
+		set_global_rotation(shake_vector);
 	}
 
 	if (shake_rotation_duration <= 0.0)
@@ -561,7 +589,7 @@ void CineCam3D::shake_rotation_internal()
 		shake_rotation_duration_tween->stop();
 
 		rotation_shake = Vector3(0.0, 0.0, 0.0);
-		set_rotation(original_rotation);
+		set_global_rotation(original_rotation);
 
 		emit_signal(SIGNAL_SHAKE_ROTATION_ENDED);
 	}
@@ -632,6 +660,31 @@ void CineCam3D::cycle_sequence_internal()
 			}
 			seq_blend_prev();
 		}
+	}
+}
+
+
+void CineCam3D::look_at_target_internal()
+{
+	if (is_blend_not_stopped && active_blend->is_blend_rotation()) return;
+
+	if (look_at_target != nullptr)
+	{
+		Vector3 final_look_at =
+			look_at_target->get_global_position() +
+			look_at_target->get_target_offset();
+		Vector3 delta_value = final_look_at - origin_for_look_at;
+		Vector3 result = look_at_tween->interpolate_value(
+			origin_for_look_at,
+			delta_value * look_at_target->scaled_speed(),
+			1.0,
+			1.0,
+			look_at_target->get_trans(),
+			look_at_target->get_ease()
+		);
+
+		look_at(result + rotation_shake);
+		origin_for_look_at = result + rotation_shake;
 	}
 }
 
@@ -765,33 +818,16 @@ void CineCam3D::_process_internal(bool editor)
 	shake_fov_internal();
 	shake_rotation_internal();
 
-	if (look_at_target != nullptr)
-	{
-		Vector3 final_look_at =
-			look_at_target->get_global_position() +
-			look_at_target->get_target_offset();
-		Vector3 delta_value = final_look_at - origin_for_look_at;
-		Vector3 result = look_at_tween->interpolate_value(
-			origin_for_look_at,
-			delta_value * look_at_target->scaled_speed(),
-			1.0,
-			1.0,
-			look_at_target->get_trans(),
-			look_at_target->get_ease()
-		);
-
-		look_at(result + rotation_shake);
-		origin_for_look_at = result + rotation_shake;
-	}
+	look_at_target_internal();
 
 	switch (follow_mode)
 	{
 		default:
 			break;
+		case OFF:
+			break;
 		case PRIO:
 			reposition_to_vcam(highest_prio_vcam);
-			break;
-		case OFF:
 			break;
 		case TARGET:
 			if (follow_target == nullptr)
@@ -800,7 +836,6 @@ void CineCam3D::_process_internal(bool editor)
 				follow_mode = FollowMode::OFF;
 				break;
 			}
-			
 			set_global_position(
 				camera_origin + (follow_target->get_global_position() + follow_target->get_target_offset())
 			);
@@ -851,7 +886,7 @@ void CineCam3D::_notification(int p_what)
 				original_offset.x = get_h_offset();
 				original_offset.y = get_v_offset();
 				original_fov = get_fov();
-				original_rotation = get_rotation();
+				original_rotation = get_global_rotation();
 			}
 			break;
 		case NOTIFICATION_PROCESS:
@@ -1033,12 +1068,12 @@ void CineCam3D::_set_blend_is_paused(bool paused)
 
 	if (paused)
 	{
-		blend_tween->pause();
+		blend_position_tween->pause();
 		emit_signal(SIGNAL_BLEND_PAUSED);
 	}
 	else
 	{
-		blend_tween->play();
+		blend_position_tween->play();
 		is_blend_not_stopped = true;
 		emit_signal(SIGNAL_BLEND_RESUMED);
 	}
@@ -1049,13 +1084,17 @@ bool CineCam3D::_get_blend_is_paused() const
 {
 	if (Engine::get_singleton()->is_editor_hint()) return false;
 
-	return !blend_tween->is_running();
+	return !blend_position_tween->is_running();
 }
 
 
 void CineCam3D::set_look_at_target(CamTarget3D* p_target)
 {
 	look_at_target = p_target;
+	if (tweens_ready)
+	{
+		origin_for_look_at = get_global_rotation();
+	}
 }
 
 

@@ -16,6 +16,7 @@ BlendData3D::BlendData3D()
 	blend_by_value = 0.0;
 	ease = Tween::EaseType::EASE_IN;
 	trans = Tween::TransitionType::TRANS_LINEAR;
+	blend_rotation = true;
 	callable_on_start = false;
 	callable_on_complete = false;
 
@@ -51,6 +52,7 @@ void BlendData3D::_bind_methods()
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "trans", PROPERTY_HINT_ENUM, TRANS_HINTS), "set_trans", "get_trans");
 
 	ADD_GETSET_BINDING(get_callable, set_callable, callable, p_callable, BlendData3D, CALLABLE);
+	ADD_GETSET_BINDING(is_blend_rotation, set_blend_rotation, blend_rotation, rotation, BlendData3D, BOOL);
 	ADD_GETSET_BINDING(_get_callable_on_start, _set_callable_on_start, _on_start, enable, BlendData3D, BOOL);
 	ADD_GETSET_BINDING(_get_callable_on_complete, _set_callable_on_complete, _on_complete, enable, BlendData3D, BOOL);
 }
@@ -70,6 +72,7 @@ bool BlendData3D::_is_default_blend() const
 		blend_by_value == 0.0 &&
 		ease == Tween::EaseType::EASE_IN &&
 		trans == Tween::TransitionType::TRANS_LINEAR &&
+		blend_rotation == true &&
 		callable_on_start == false &&
 		callable_on_complete == false
 		)
@@ -150,6 +153,18 @@ void BlendData3D::set_callable(Callable p_callable)
 Callable BlendData3D::get_callable() const
 {
 	return callable;
+}
+
+
+void BlendData3D::set_blend_rotation(bool rotation)
+{
+	blend_rotation = rotation;
+}
+
+
+bool BlendData3D::is_blend_rotation() const
+{
+	return blend_rotation;
 }
 
 
