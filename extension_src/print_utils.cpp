@@ -18,7 +18,7 @@ void PrintUtils::welcome_text(String version, String url)
 void PrintUtils::blend_before_init(int l, String f)
 {
 #ifdef DEBUG_ENABLED
-	WARN("Tried blending before tweens initialized!\n", "This is probably a bug in this GDExtension!");
+	ERROR("Tried blending before tweens initialized!\n", "This is probably a bug in this GDExtension!");
 #endif
 }
 
@@ -43,7 +43,7 @@ void PrintUtils::no_cam3d_seq_found(int l, String f)
 void PrintUtils::idx_out_of_bounds(int l, String f, int idx, int size)
 {
 #ifdef DEBUG_ENABLED
-	WARN("Index [", idx, "] was outside the bounds of the array. (min 0, current size[", size, "])");
+	ERROR("Index [", idx, "] was outside the bounds of the array. (min 0, current size[", size, "])");
 #endif
 }
 
@@ -84,6 +84,13 @@ void PrintUtils::no_target3d_found(int l, String f, String set_to, String follow
 {
 #ifdef DEBUG_ENABLED
 	WARN("No CamTarget3D set! Follow mode set to: ", set_to, ". (current was: ", follow_mode, ")");
+#endif
+}
+
+void PrintUtils::ignoring_rotation(int l, String f)
+{
+#ifdef DEBUG_ENABLED
+	WARN("The shake rotation has started, but will be ignored, as long as ignore_rotation is true!");
 #endif
 }
 

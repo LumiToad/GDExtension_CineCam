@@ -21,6 +21,8 @@
 #define SIGNAL_SHAKE_OFFSET_ENDED "shake_offset_ended"
 #define SIGNAL_SHAKE_ZOOM_STARTED "shake_zoom_started"
 #define SIGNAL_SHAKE_ZOOM_ENDED "shake_zoom_ended"
+#define SIGNAL_SHAKE_ROTATION_STARTED "shake_rotation_started"
+#define SIGNAL_SHAKE_ROTATION_ENDED "shake_rotation_ended"
 
 #define SIGNAL_BLEND_STARTED "blend_started"
 #define SIGNAL_BLEND_COMPLETED "blend_completed"
@@ -68,6 +70,11 @@ namespace godot
 		Vector2 original_zoom;
 		bool is_shake_zoom_active;
 
+		Ref<Tween> shake_rotation_intensity_tween;
+		Ref<Tween> shake_rotation_duration_tween;
+		double original_rotation;
+		bool is_shake_rotation_active;
+
 		Ref<Tween> blend_tween;
 		
 		Ref<Tween> follow_tween;
@@ -84,8 +91,9 @@ namespace godot
 		void initialize_internal();
 		void init_tweens();
 		void init_default_blend_data();
-		void shake_offset_internal(double);
-		void shake_zoom_internal(double);
+		void shake_offset_internal();
+		void shake_zoom_internal();
+		void shake_rotation_internal();
 		double _calc_blend_duration_by_speed(Vector2 current_pos, Vector2 target_pos, double speed);
 		void _move_by_follow_mode();
 		void init_active_blend();
@@ -119,6 +127,8 @@ namespace godot
 		double shake_offset_duration;
 		Vector2 shake_zoom_intensity;
 		double shake_zoom_duration;
+		double shake_rotation_intensity;
+		double shake_rotation_duration;
 		bool is_sequence_paused = false;
 
 
@@ -148,6 +158,10 @@ namespace godot
 			Tween::EaseType p_ease = DEFAULT_EASE,
 			Tween::TransitionType p_trans = DEFAULT_TRANS);
 
+		void shake_rotation(const double& p_intensity,
+			const double& p_duration,
+			Tween::EaseType p_ease = DEFAULT_EASE,
+			Tween::TransitionType p_trans = DEFAULT_TRANS);
 		
 		void _register_vcam_internal(VirtualCam2D* p_vcam);
 		void _remove_vcam_internal(VirtualCam2D* p_vcam);
@@ -174,6 +188,12 @@ namespace godot
 
 		double _get_shake_zoom_duration() const;
 		void _set_shake_zoom_duration(const double &p_duration);
+
+		double _get_shake_rotation_intensity() const;
+		void _set_shake_rotation_intensity(const double& p_intensity);
+
+		double _get_shake_rotation_duration() const;
+		void _set_shake_rotation_duration(const double& p_duration);
 
 		Ref<BlendData2D> _get_blend_data() const;
 		void _set_blend_data(Ref<BlendData2D> blend);

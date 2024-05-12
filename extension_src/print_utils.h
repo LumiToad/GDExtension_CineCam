@@ -26,6 +26,7 @@ namespace godot
 		static void no_highest_prio_cam3d(int l, String f, int amount);
 		static void no_target2d_found(int l, String f, String set_to, String follow_mode);
 		static void no_target3d_found(int l, String f, String set_to, String follow_mode);
+		static void ignoring_rotation(int l, String f);
 
 		static void test_warns();
 	};

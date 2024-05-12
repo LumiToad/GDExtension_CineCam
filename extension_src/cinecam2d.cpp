@@ -19,10 +19,13 @@ CineCam2D::CineCam2D()
 	follow_mode = FollowMode::OFF;
 	is_shake_offset_active = false;
 	is_shake_zoom_active = false;
+	is_shake_rotation_active = false;
 	shake_offset_intensity = Vector2(0.0, 0.0);
 	shake_offset_duration = 0.0;
 	shake_zoom_intensity = Vector2(0.0, 0.0);
 	shake_zoom_duration = 0.0;
+	shake_rotation_intensity = 0.0;
+	shake_rotation_duration = 0.0;
 	tweens_ready = false;
 	additional_description = "";
 	current_sequence = nullptr;
@@ -77,11 +80,15 @@ void CineCam2D::_bind_methods()
 	ADD_GETSET_BINDING(_get_shake_zoom_intensity, _set_shake_zoom_intensity, shake_zoom_intensity, intensity, CineCam2D, VECTOR2);
 	ADD_GETSET_BINDING(_get_shake_zoom_duration, _set_shake_zoom_duration, shake_zoom_duration, duration, CineCam2D, FLOAT);
 
+	ADD_GETSET_BINDING(_get_shake_rotation_intensity, _set_shake_rotation_intensity, shake_rotation_intensity, intensity, CineCam2D, FLOAT);
+	ADD_GETSET_BINDING(_get_shake_rotation_duration, _set_shake_rotation_duration, shake_rotation_duration, duration, CineCam2D, FLOAT);
+
 	ADD_GETSET_BINDING(_get_seq_is_paused, _set_seq_is_paused, sequence_paused, paused, CineCam2D, BOOL);
 	ADD_GETSET_BINDING(_get_blend_is_paused, _set_blend_is_paused, blend_paused, paused, CineCam2D, BOOL);
 
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_offset, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_zoom, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
+	ADD_METHOD_DEFAULTARGS_BINDING(shake_rotation, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 
 	ADD_METHOD_ARGS_BINDING(blend_to, CineCam2D, VA_LIST("vcam2d", "blend_data"));
 
@@ -89,6 +96,8 @@ void CineCam2D::_bind_methods()
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_ENDED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_ZOOM_STARTED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_ZOOM_ENDED));
+	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_ROTATION_STARTED));
+	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_ROTATION_ENDED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_BLEND_STARTED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_BLEND_COMPLETED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_BLEND_PAUSED));
@@ -133,6 +142,13 @@ void CineCam2D::init_tweens()
 	shake_zoom_duration_tween = get_tree()->create_tween();
 	shake_zoom_duration_tween->stop();
 	shake_zoom_duration_tween->set_trans(DEFAULT_TRANS);
+
+	shake_rotation_intensity_tween = get_tree()->create_tween();
+	shake_rotation_intensity_tween->stop();
+
+	shake_rotation_duration_tween = get_tree()->create_tween();
+	shake_rotation_duration_tween->stop();
+	shake_rotation_duration_tween->set_trans(DEFAULT_TRANS);
 
 	blend_tween = get_tree()->create_tween();
 	blend_tween->stop();
@@ -394,6 +410,51 @@ void CineCam2D::shake_zoom(const Vector2& p_intensity, const double& p_duration,
 }
 
 
+void CineCam2D::shake_rotation(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
+{
+	if (is_ignoring_rotation())
+	{
+		PrintUtils::ignoring_rotation(__LINE__, __FILE__);
+	}
+
+	set_rotation_degrees(original_rotation);
+
+	original_rotation = get_rotation_degrees();
+
+	if (shake_rotation_duration > 0.0)
+	{
+		shake_rotation_intensity_tween->stop();
+		shake_rotation_duration_tween->stop();
+	}
+
+	shake_rotation_intensity_tween->set_ease(p_ease);
+	shake_rotation_intensity_tween->set_trans(p_trans);
+
+	shake_rotation_intensity = p_intensity;
+	shake_rotation_duration = p_duration;
+
+	shake_rotation_intensity_tween->play();
+	shake_rotation_duration_tween->play();
+
+	shake_rotation_intensity_tween->tween_method(
+		Callable(this, "_set_shake_rotation_intensity"),
+		shake_rotation_intensity,
+		0.0,
+		p_duration
+	);
+
+	shake_rotation_duration_tween->tween_method(
+		Callable(this, "_set_shake_rotation_duration"),
+		shake_rotation_duration,
+		0.0,
+		p_duration
+	);
+
+	is_shake_rotation_active = true;
+	emit_signal(SIGNAL_SHAKE_ROTATION_STARTED);
+}
+
+
 void CineCam2D::start_sequence(const bool& backwards)
 {
 	int idx = 0 + (backwards ? current_sequence->get_vcam2d_array().size() - 1 : 0);
@@ -407,7 +468,7 @@ void CineCam2D::blend_pause()
 }
 
 
-void CineCam2D::shake_offset_internal(double delta)
+void CineCam2D::shake_offset_internal()
 {
 	if (!is_shake_offset_active) return;
 
@@ -433,7 +494,7 @@ void CineCam2D::shake_offset_internal(double delta)
 }
 
 
-void CineCam2D::shake_zoom_internal(double delta)
+void CineCam2D::shake_zoom_internal()
 {
 	if (!is_shake_zoom_active) return;
 
@@ -455,6 +516,31 @@ void CineCam2D::shake_zoom_internal(double delta)
 		set_zoom(original_zoom);
 
 		emit_signal(SIGNAL_SHAKE_ZOOM_ENDED);
+	}
+}
+
+
+void CineCam2D::shake_rotation_internal()
+{
+	if (!is_shake_rotation_active) return;
+
+	RandomNumberGenerator rng;
+	rng.randomize();
+	double shake_amount = 
+		original_rotation + rng.randf_range(-shake_rotation_intensity, shake_rotation_intensity);
+	shake_amount = Math::clamp(shake_amount, -360.0, 360.0);
+
+	set_rotation_degrees(shake_amount);
+
+	if (shake_rotation_duration <= 0.0)
+	{
+		is_shake_rotation_active = false;
+		shake_rotation_intensity_tween->stop();
+		shake_rotation_duration_tween->stop();
+
+		set_rotation_degrees(original_rotation);
+
+		emit_signal(SIGNAL_SHAKE_ROTATION_ENDED);
 	}
 }
 
@@ -652,8 +738,9 @@ void CineCam2D::_process_internal(bool editor)
 
 	double delta = get_process_delta_time();
 
-	shake_offset_internal(delta);
-	shake_zoom_internal(delta);
+	shake_offset_internal();
+	shake_zoom_internal();
+	shake_rotation_internal();
 
 	switch (follow_mode)
 	{
@@ -712,6 +799,9 @@ void CineCam2D::_notification(int p_what)
 				init_tweens();
 				_move_by_priority_mode();
 				_move_by_follow_mode();
+				original_offset = get_offset();
+				original_zoom = get_zoom();
+				original_rotation = get_rotation_degrees();
 			}
 			break;
 		case NOTIFICATION_PROCESS:
@@ -795,6 +885,30 @@ double CineCam2D::_get_shake_zoom_duration() const
 void CineCam2D::_set_shake_zoom_duration(const double &duration)
 {
 	shake_zoom_duration = duration;
+}
+
+
+double CineCam2D::_get_shake_rotation_intensity() const
+{
+	return shake_rotation_intensity;
+}
+
+
+void CineCam2D::_set_shake_rotation_intensity(const double& intensity)
+{
+	shake_rotation_intensity = intensity;
+}
+
+
+double CineCam2D::_get_shake_rotation_duration() const
+{
+	return shake_rotation_duration;
+}
+
+
+void CineCam2D::_set_shake_rotation_duration(const double& duration)
+{
+	shake_rotation_duration = duration;
 }
 
 
