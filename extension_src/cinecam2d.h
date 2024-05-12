@@ -75,7 +75,8 @@ namespace godot
 		double original_rotation;
 		bool is_shake_rotation_active;
 
-		Ref<Tween> blend_tween;
+		Ref<Tween> blend_position_tween;
+		Ref<Tween> blend_rotation_tween;
 		
 		Ref<Tween> follow_tween;
 		Vector2 follow_origin;

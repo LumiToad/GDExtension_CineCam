@@ -55,6 +55,7 @@ namespace godot
 		Tween::EaseType ease;
 		Tween::TransitionType trans;
 		Callable callable;
+		bool blend_rotation;
 		bool callable_on_start;
 		bool callable_on_complete;
 
@@ -77,6 +78,9 @@ namespace godot
 
 		void set_callable(Callable callable);
 		Callable get_callable() const;
+
+		void set_blend_rotation(bool rotation);
+		bool is_blend_rotation() const;
 
 		void _set_callable_on_start(bool enable);
 		bool _get_callable_on_start() const;

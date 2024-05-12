@@ -176,7 +176,7 @@ int CamSequence2D::get_current_idx() const
 
 VirtualCam2D* CamSequence2D::vcam2d_at(int idx) const
 {
-	if (idx > 0 && idx <= vcams.size())
+	if (idx >= 0 && idx <= vcams.size())
 	{
 		return cast_to<VirtualCam2D>(vcams[idx]);
 	}

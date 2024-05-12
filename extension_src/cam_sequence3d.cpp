@@ -183,7 +183,7 @@ int CamSequence3D::get_current_idx() const
 
 VirtualCam3D* CamSequence3D::vcam3d_at(int idx) const
 {
-	if (idx > 0 && idx <= vcams.size())
+	if (idx >= 0 && idx <= vcams.size())
 	{
 		return cast_to<VirtualCam3D>(vcams[idx]);
 	}

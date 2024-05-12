@@ -150,9 +150,12 @@ void CineCam2D::init_tweens()
 	shake_rotation_duration_tween->stop();
 	shake_rotation_duration_tween->set_trans(DEFAULT_TRANS);
 
-	blend_tween = get_tree()->create_tween();
-	blend_tween->stop();
-	blend_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
+	blend_position_tween = get_tree()->create_tween();
+	blend_position_tween->stop();
+	blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
+
+	blend_rotation_tween = get_tree()->create_tween();
+	blend_rotation_tween->stop();
 
 	follow_tween = get_tree()->create_tween();
 	follow_tween->stop();
@@ -168,6 +171,7 @@ void CineCam2D::init_default_blend_data()
 	blend_data->set_blend_by(BlendData2D::BlendByType::DURATION);
 	blend_data->set_ease(Tween::EASE_IN_OUT);
 	blend_data->set_trans(Tween::TRANS_CUBIC);
+	blend_data->set_blend_rotation(true);
 	blend_data->_set_callable_on_start(false);
 	blend_data->_set_callable_on_complete(false);
 }
@@ -193,16 +197,16 @@ void CineCam2D::_on_blend_completed_internal()
 		active_blend->get_callable().call();
 	}
 	
-	blend_tween = get_tree()->create_tween();
-	blend_tween->stop();
+	blend_position_tween = get_tree()->create_tween();
+	blend_position_tween->stop();
 	is_blend_not_stopped = false;
-	blend_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
+	blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
 
 	cycle_sequence_internal();
 }
 
 
-void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data)
+void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend)
 {
 	if (!tweens_ready)
 	{
@@ -210,19 +214,28 @@ void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data)
 		return;
 	}
 
-	if (blend_tween->is_running())
+	if (blend_position_tween->is_running())
 	{
-		blend_tween = get_tree()->create_tween();
-		blend_tween->stop();
+		blend_position_tween = get_tree()->create_tween();
+		blend_position_tween->stop();
 		is_blend_not_stopped = false;
 	}
+
+	if (blend_rotation_tween->is_running())
+	{
+		blend_rotation_tween = get_tree()->create_tween();
+		blend_rotation_tween->stop();
+	}
 	
-	blend_tween->set_trans(blend_data->get_trans());
-	blend_tween->set_ease(blend_data->get_ease());
+	blend_position_tween->set_trans(blend->get_trans());
+	blend_position_tween->set_ease(blend->get_ease());
 
-	double calc_duration = blend_data->get_blend_by_value();
+	blend_rotation_tween->set_trans(blend->get_trans());
+	blend_rotation_tween->set_ease(blend->get_ease());
 
-	if (blend_data->get_blend_by() == BlendData2D::BlendByType::SPEED)
+	double calc_duration = blend->get_blend_by_value();
+
+	if (blend->get_blend_by() == BlendData2D::BlendByType::SPEED)
 	{
 		calc_duration = _calc_blend_duration_by_speed(
 			get_global_position(),
@@ -231,14 +244,26 @@ void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data)
 		);
 	}
 
-	blend_tween->tween_method(
+	blend_position_tween->tween_method(
 			Callable(this, "set_global_position"),
 			get_global_position(),
 			p_vcam->get_global_position(),
 			calc_duration
 		);
 
-	blend_tween->play();
+	if (blend->is_blend_rotation())
+	{
+		blend_rotation_tween->tween_method(
+			Callable(this, "set_rotation_degrees"),
+			get_rotation_degrees(),
+			p_vcam->get_rotation_degrees(),
+			calc_duration
+		);
+
+		blend_rotation_tween->play();
+	}
+
+	blend_position_tween->play();
 	is_blend_not_stopped = true;
 	_on_blend_started_internal();
 }
@@ -303,7 +328,7 @@ void CineCam2D::seq_blend_to(int idx)
 
 void CineCam2D::seq_resume()
 {
-	if (is_sequence_paused && !blend_tween->is_running())
+	if (is_sequence_paused && !blend_position_tween->is_running())
 	{
 		is_sequence_paused = false;
 		cycle_sequence_internal();
@@ -982,12 +1007,12 @@ void CineCam2D::_set_blend_is_paused(bool paused)
 
 	if (paused)
 	{
-		blend_tween->pause();
+		blend_position_tween->pause();
 		emit_signal(SIGNAL_BLEND_PAUSED);
 	}
 	else
 	{
-		blend_tween->play();
+		blend_position_tween->play();
 		is_blend_not_stopped = true;
 		emit_signal(SIGNAL_BLEND_RESUMED);
 	}
@@ -998,5 +1023,5 @@ bool CineCam2D::_get_blend_is_paused() const
 {
 	if (Engine::get_singleton()->is_editor_hint()) return false;
 
-	return !blend_tween->is_running();
+	return !blend_position_tween->is_running();
 }
