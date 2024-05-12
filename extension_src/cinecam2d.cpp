@@ -357,7 +357,10 @@ void CineCam2D::reposition_to_vcam(VirtualCam2D* p_vcam)
 
 void CineCam2D::shake_offset(const Vector2 &p_intensity, const double &p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
-	set_offset(original_offset);
+	if (shake_offset_duration > 0.0)
+	{
+		set_offset(original_offset);
+	}
 
 	original_offset = get_offset();
 
@@ -397,7 +400,10 @@ void CineCam2D::shake_offset(const Vector2 &p_intensity, const double &p_duratio
 
 void CineCam2D::shake_zoom(const Vector2& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
-	set_zoom(original_zoom);
+	if (shake_zoom_duration > 0.0)
+	{
+		set_zoom(original_zoom);
+	}
 
 	original_zoom = get_zoom();
 
@@ -442,7 +448,10 @@ void CineCam2D::shake_rotation(const double& p_intensity, const double& p_durati
 		PrintUtils::ignoring_rotation(__LINE__, __FILE__);
 	}
 
-	set_rotation_degrees(original_rotation);
+	if (shake_rotation_duration > 0.0)
+	{
+		set_rotation_degrees(original_rotation);
+	}
 
 	original_rotation = get_rotation_degrees();
 

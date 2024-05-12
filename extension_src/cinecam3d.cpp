@@ -376,8 +376,11 @@ void CineCam3D::reposition_to_vcam(VirtualCam3D* p_vcam)
 
 void CineCam3D::shake_offset(const Vector2& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
-	set_h_offset(original_offset.x);
-	set_v_offset(original_offset.y);
+	if (shake_offset_duration > 0.0)
+	{
+		set_h_offset(original_offset.x);
+		set_v_offset(original_offset.y);
+	}
 
 	original_offset.x = get_h_offset();
 	original_offset.y = get_v_offset();
@@ -419,7 +422,10 @@ void CineCam3D::shake_offset(const Vector2& p_intensity, const double& p_duratio
 
 void CineCam3D::shake_fov(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
-	set_fov(original_fov);
+	if (shake_fov_duration > 0.0)
+	{
+		set_fov(original_fov);
+	}
 
 	original_fov = get_fov();
 
@@ -459,7 +465,9 @@ void CineCam3D::shake_fov(const double& p_intensity, const double& p_duration, T
 
 void CineCam3D::shake_rotation(const Vector3& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
-	if (look_at_target == nullptr)
+	if (is_blend_not_stopped && active_blend->is_blend_rotation()) return;
+
+	if (shake_rotation_duration > 0.0 && look_at_target == nullptr)
 	{
 		set_global_rotation(original_rotation);
 	}
