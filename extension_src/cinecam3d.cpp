@@ -57,15 +57,25 @@ void CineCam3D::_bind_methods()
 	ADD_METHOD_BINDING(seq_pause, CineCam3D);
 	ADD_METHOD_BINDING(seq_stop, CineCam3D);
 
-
 	ADD_METHOD_ARGS_BINDING(reposition_to_vcam, CineCam3D, "vcam");
 
 	ADD_METHOD_BINDING(prioritized_vcam, CineCam3D);
 	ADD_METHOD_BINDING(_on_vcam_priority_changed, CineCam3D);
 	ADD_METHOD_BINDING(_move_by_priority_mode, CineCam3D);
 	ADD_METHOD_BINDING(_move_by_follow_mode, CineCam3D);
+
 	ADD_METHOD_BINDING(blend_resume, CineCam3D);
 	ADD_METHOD_BINDING(blend_pause, CineCam3D);
+	ADD_METHOD_BINDING(blend_toggle, CineCam3D);
+
+	ADD_METHOD_BINDING(follow_target_pause, CineCam3D);
+	ADD_METHOD_BINDING(follow_target_resume, CineCam3D);
+	ADD_METHOD_BINDING(follow_target_toggle, CineCam3D);
+
+	ADD_METHOD_BINDING(follow_prio_pause, CineCam3D);
+	ADD_METHOD_BINDING(follow_prio_resume, CineCam3D);
+	ADD_METHOD_BINDING(follow_prio_toggle, CineCam3D);
+
 	ADD_METHOD_ARGS_BINDING(_calc_blend_duration_by_speed, CineCam3D, VA_LIST("current_pos", "target_pos", "speed"));
 	ADD_METHOD_ARGS_BINDING(find_vcam_by_id, CineCam3D, "id");
 
@@ -87,8 +97,10 @@ void CineCam3D::_bind_methods()
 	ADD_GETSET_BINDING(_get_shake_rotation_intensity, _set_shake_rotation_intensity, shake_rotation_intensity, intensity, CineCam3D, VECTOR3);
 	ADD_GETSET_BINDING(_get_shake_rotation_duration, _set_shake_rotation_duration, shake_rotation_duration, duration, CineCam3D, FLOAT);
 
-	ADD_GETSET_BINDING(_get_seq_is_paused, _set_seq_is_paused, sequence_paused, paused, CineCam3D, BOOL);
-	ADD_GETSET_BINDING(_get_blend_is_paused, _set_blend_is_paused, blend_paused, paused, CineCam3D, BOOL);
+	ADD_GETSET_BINDING(_is_seq_paused, _set_seq_paused, sequence_paused, paused, CineCam3D, BOOL);
+	ADD_GETSET_BINDING(_is_blend_paused, _set_blend_paused, blend_paused, paused, CineCam3D, BOOL);
+	ADD_GETSET_BINDING(_is_follow_target_paused, _set_follow_target_paused, follow_target_paused, paused, CineCam3D, BOOL);
+	ADD_GETSET_BINDING(_is_follow_prio_paused, _set_follow_prio_paused, follow_prio_paused, paused, CineCam3D, BOOL);
 
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_offset, CineCam3D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_fov, CineCam3D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
@@ -308,7 +320,13 @@ void CineCam3D::seq_blend_prev()
 
 void CineCam3D::blend_resume()
 {
-	_set_blend_is_paused(false);
+	_set_blend_paused(false);
+}
+
+
+void CineCam3D::blend_toggle()
+{
+	_set_blend_paused(!_is_blend_paused());
 }
 
 
@@ -365,6 +383,42 @@ void CineCam3D::seq_stop()
 {
 	sequence_playmode = false;
 	emit_signal(SIGNAL_SEQUENCE_STOPPED);
+}
+
+
+void CineCam3D::follow_target_pause()
+{
+	_set_follow_target_paused(true);
+}
+
+
+void CineCam3D::follow_target_resume()
+{
+	_set_follow_target_paused(false);
+}
+
+
+void CineCam3D::follow_target_toggle()
+{
+	is_follow_target_paused = !is_follow_target_paused;
+}
+
+
+void CineCam3D::follow_prio_pause()
+{
+	_set_follow_prio_paused(true);
+}
+
+
+void CineCam3D::follow_prio_resume()
+{
+	_set_follow_prio_paused(false);
+}
+
+
+void CineCam3D::follow_prio_toggle()
+{
+	_set_follow_prio_paused(!is_follow_prio_paused);
 }
 
 
@@ -517,7 +571,7 @@ void CineCam3D::start_sequence(const bool& backwards)
 
 void CineCam3D::blend_pause()
 {
-	_set_blend_is_paused(true);
+	_set_blend_paused(true);
 }
 
 
@@ -858,6 +912,7 @@ void CineCam3D::_process_internal(bool editor)
 		case OFF:
 			break;
 		case PRIO:
+			if (is_follow_prio_paused) break;
 			reposition_to_vcam(highest_prio_vcam);
 			break;
 		case TARGET:
@@ -867,6 +922,9 @@ void CineCam3D::_process_internal(bool editor)
 				follow_mode = FollowMode::OFF;
 				break;
 			}
+
+			if (is_follow_target_paused) break;
+
 			set_global_position(
 				camera_origin + (follow_target->get_global_position() + follow_target->get_target_offset())
 			);
@@ -879,6 +937,8 @@ void CineCam3D::_process_internal(bool editor)
 				break;
 			}
 			
+			if (is_follow_target_paused) break;
+
 			Vector3 final_pos =
 				camera_origin + (follow_target->get_global_position() + follow_target->get_target_offset());
 			Vector3 delta_value = final_pos - follow_origin;
@@ -1084,20 +1144,22 @@ VirtualCam3D* CineCam3D::find_vcam_by_id(String id) const
 }
 
 
-void CineCam3D::_set_seq_is_paused(bool paused)
+void CineCam3D::_set_seq_paused(bool paused)
 {
+	if (Engine::get_singleton()->is_editor_hint()) return;
 	is_sequence_paused = paused;
 	emit_signal(paused ? SIGNAL_SEQUENCE_PAUSED : SIGNAL_SEQUENCE_RESUMED);
 }
 
 
-bool CineCam3D::_get_seq_is_paused() const
+bool CineCam3D::_is_seq_paused() const
 {
+	if (Engine::get_singleton()->is_editor_hint()) return false;
 	return is_sequence_paused;
 }
 
 
-void CineCam3D::_set_blend_is_paused(bool paused)
+void CineCam3D::_set_blend_paused(bool paused)
 {
 	if (Engine::get_singleton()->is_editor_hint()) return;
 	if (!is_blend_not_stopped) return;
@@ -1105,22 +1167,56 @@ void CineCam3D::_set_blend_is_paused(bool paused)
 	if (paused)
 	{
 		blend_position_tween->pause();
+		blend_rotation_tween->pause();
 		emit_signal(SIGNAL_BLEND_PAUSED);
 	}
 	else
 	{
 		blend_position_tween->play();
+		blend_rotation_tween->play();
 		is_blend_not_stopped = true;
 		emit_signal(SIGNAL_BLEND_RESUMED);
 	}
 }
 
 
-bool CineCam3D::_get_blend_is_paused() const
+bool CineCam3D::_is_blend_paused() const
 {
 	if (Engine::get_singleton()->is_editor_hint()) return false;
-
 	return !blend_position_tween->is_running();
+}
+
+
+void CineCam3D::_set_follow_target_paused(bool paused)
+{
+	if (Engine::get_singleton()->is_editor_hint()) return;
+	is_follow_target_paused = paused;
+}
+
+
+bool CineCam3D::_is_follow_target_paused() const
+{
+	if (Engine::get_singleton()->is_editor_hint()) return false;
+	return is_follow_target_paused;
+}
+
+
+void CineCam3D::_set_follow_prio_paused(bool paused)
+{
+	if (Engine::get_singleton()->is_editor_hint()) return;
+	is_follow_prio_paused = paused;
+
+	if (follow_mode == FollowMode::PRIO_BLEND)
+	{
+		_set_blend_paused(paused);
+	}
+}
+
+
+bool CineCam3D::_is_follow_prio_paused() const
+{
+	if (Engine::get_singleton()->is_editor_hint()) return false;
+	return is_follow_prio_paused;
 }
 
 

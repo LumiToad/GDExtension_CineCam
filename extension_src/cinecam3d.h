@@ -141,12 +141,15 @@ namespace godot
 		double shake_rotation_duration;
 		bool is_sequence_paused = false;
 		CamTarget3D* look_at_target;
+		bool is_follow_target_paused = false;
+		bool is_follow_prio_paused = false;
 
 
 	public:
 		void blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend);
 		void blend_pause();
 		void blend_resume();
+		void blend_toggle();
 
 		void start_sequence(const bool& backwards);
 		void start_sequence_at(const int& idx = 0, const bool& backwards = false);
@@ -156,6 +159,14 @@ namespace godot
 		void seq_resume();
 		void seq_pause();
 		void seq_stop();
+
+		void follow_target_pause();
+		void follow_target_resume();
+		void follow_target_toggle();
+
+		void follow_prio_pause();
+		void follow_prio_resume();
+		void follow_prio_toggle();
 
 		void reposition_to_vcam(VirtualCam3D* p_vcam);
 
@@ -215,11 +226,17 @@ namespace godot
 		VirtualCam3D* prioritized_vcam() const;
 		VirtualCam3D* find_vcam_by_id(String id) const;
 
-		void _set_seq_is_paused(bool paused);
-		bool _get_seq_is_paused() const;
+		void _set_seq_paused(bool paused);
+		bool _is_seq_paused() const;
 
-		void _set_blend_is_paused(bool paused);
-		bool _get_blend_is_paused() const;
+		void _set_blend_paused(bool paused);
+		bool _is_blend_paused() const;
+
+		void _set_follow_target_paused(bool paused);
+		bool _is_follow_target_paused() const;
+
+		void _set_follow_prio_paused(bool paused);
+		bool _is_follow_prio_paused() const;
 
 		void set_look_at_target(CamTarget3D* p_target);
 		CamTarget3D* get_look_at_target() const;
