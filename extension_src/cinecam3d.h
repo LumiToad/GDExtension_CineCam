@@ -55,6 +55,7 @@ namespace godot
 			TARGET,
 			TARGET_BLEND
 		};
+
 		// Internal
 	private:
 		godot::String additional_description;
@@ -105,7 +106,8 @@ namespace godot
 		void init_active_blend();
 		void cycle_sequence_internal();
 		void look_at_target_internal();
-		Vector3 get_look_at_direction();
+		Vector3 get_look_at_direction() const;
+		void set_quaternion_internal(Quaternion q);
 
 
 	public:

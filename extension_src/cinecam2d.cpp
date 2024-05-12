@@ -179,6 +179,7 @@ void CineCam2D::init_default_blend_data()
 
 void CineCam2D::_on_blend_started_internal()
 {
+	is_blend_not_stopped = true;
 	emit_signal(SIGNAL_BLEND_STARTED);
 
 	if (active_blend->_get_callable_on_start())
@@ -264,7 +265,6 @@ void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend)
 	}
 
 	blend_position_tween->play();
-	is_blend_not_stopped = true;
 	_on_blend_started_internal();
 }
 

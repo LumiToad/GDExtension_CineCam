@@ -187,6 +187,7 @@ void CineCam3D::init_default_blend_data()
 void CineCam3D::_on_blend_started_internal()
 {
 	emit_signal(SIGNAL_BLEND_STARTED);
+	is_blend_not_stopped = true;
 
 	if (active_blend->_get_callable_on_start())
 	{
@@ -208,7 +209,9 @@ void CineCam3D::_on_blend_completed_internal()
 
 	blend_position_tween = get_tree()->create_tween();
 	blend_position_tween->stop();
+	blend_rotation_tween = get_tree()->create_tween();
 	blend_rotation_tween->stop();
+
 	is_blend_not_stopped = false;
 	blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
 
@@ -228,6 +231,7 @@ void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend)
 	{
 		blend_position_tween = get_tree()->create_tween();
 		blend_position_tween->stop();
+		blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
 		is_blend_not_stopped = false;
 	}
 
@@ -254,22 +258,16 @@ void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend)
 		);
 	}
 
-	blend_position_tween->tween_method(
-		Callable(this, "set_global_position"),
-		get_global_position(),
-		p_vcam->get_global_position(),
-		calc_duration
-	);
-
 	if (blend->is_blend_rotation())
 	{
-		Vector3 final_rotation = p_vcam->get_global_rotation_degrees();
-		final_rotation.x *= -1;
-		final_rotation.y += 180;
+		p_vcam->rotate_y(180.0);
+		Transform3D vcam_transform = p_vcam->get_global_transform();
+		Quaternion final_rotation = vcam_transform.basis.get_rotation_quaternion();
+		p_vcam->rotate_y(180.0);
 
 		blend_rotation_tween->tween_method(
-			Callable(this, "set_global_rotation_degrees"),
-			get_global_rotation_degrees(),
+			Callable(this, "set_quaternion"),
+			get_transform().basis.get_quaternion(),
 			final_rotation,
 			calc_duration
 		);
@@ -277,8 +275,15 @@ void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend)
 		blend_rotation_tween->play();
 	}
 
+	blend_position_tween->tween_method(
+		Callable(this, "set_global_position"),
+		get_global_position(),
+		p_vcam->get_global_position(),
+		calc_duration
+	);
+
+
 	blend_position_tween->play();
-	is_blend_not_stopped = true;
 	_on_blend_started_internal();
 }
 
@@ -692,11 +697,17 @@ void CineCam3D::look_at_target_internal()
 	}
 }
 
-Vector3 CineCam3D::get_look_at_direction()
+Vector3 CineCam3D::get_look_at_direction() const
 {
 	Transform3D transform = get_global_transform();
 
 	return transform.get_origin() - transform.basis.get_column(2);
+}
+
+
+void CineCam3D::set_quaternion_internal(Quaternion q)
+{
+	get_global_transform().basis.set_quaternion(q);
 }
 
 
@@ -798,17 +809,16 @@ void CineCam3D::_move_by_priority_mode()
 
 	switch (follow_mode)
 	{
-	case FollowMode::OFF:
-		break;
-	case FollowMode::PRIO_ONESHOT:
-		reposition_to_vcam(highest_prio_vcam);
-		break;
-	case FollowMode::PRIO:
-		reposition_to_vcam(highest_prio_vcam);
-		break;
-	case FollowMode::PRIO_BLEND:
-		blend_to(highest_prio_vcam, active_blend);
-		break;
+		default:
+			break;
+		case FollowMode::OFF:
+			break;
+		case FollowMode::PRIO_ONESHOT:
+			reposition_to_vcam(highest_prio_vcam);
+			break;
+		case FollowMode::PRIO_BLEND:
+			blend_to(highest_prio_vcam, active_blend);
+			break;
 	}
 }
 
@@ -830,6 +840,8 @@ void CineCam3D::_process_internal(bool editor)
 	shake_rotation_internal();
 
 	look_at_target_internal();
+
+	if (is_blend_not_stopped) return;
 
 	switch (follow_mode)
 	{
@@ -890,8 +902,7 @@ void CineCam3D::_notification(int p_what)
 			if (!is_in_editor)
 			{
 				init_tweens();
-				_move_by_priority_mode();
-				_move_by_follow_mode();
+				set_follow_mode(follow_mode);
 				camera_origin = get_global_position();
 				origin_for_look_at = get_look_at_direction();
 				original_offset.x = get_h_offset();
@@ -915,6 +926,12 @@ CineCam3D::FollowMode CineCam3D::get_follow_mode() const
 
 void CineCam3D::set_follow_mode(CineCam3D::FollowMode mode)
 {
+	if (is_blend_not_stopped)
+	{
+		PrintUtils::blend_running_command_ignored(__LINE__, __FILE__, "set_follow_mode");
+		return;
+	}
+
 	follow_mode = mode;
 
 	_move_by_priority_mode();

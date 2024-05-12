@@ -87,10 +87,19 @@ void PrintUtils::no_target3d_found(int l, String f, String set_to, String follow
 #endif
 }
 
+
 void PrintUtils::ignoring_rotation(int l, String f)
 {
 #ifdef DEBUG_ENABLED
 	WARN("The shake rotation has started, but will be ignored, as long as ignore_rotation is true!");
+#endif
+}
+
+
+void PrintUtils::blend_running_command_ignored(int l, String f, String command)
+{
+#ifdef DEBUG_ENABLED
+	WARN("A blend is currently running! ", command, " has been ignored!");
 #endif
 }
 
