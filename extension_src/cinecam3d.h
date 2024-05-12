@@ -105,6 +105,7 @@ namespace godot
 		void init_active_blend();
 		void cycle_sequence_internal();
 		void look_at_target_internal();
+		Vector3 get_look_at_direction();
 
 
 	public:

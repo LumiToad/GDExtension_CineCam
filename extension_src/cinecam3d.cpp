@@ -204,7 +204,7 @@ void CineCam3D::_on_blend_completed_internal()
 		active_blend->get_callable().call();
 	}
 
-	origin_for_look_at = get_global_rotation();
+	origin_for_look_at = get_look_at_direction();
 
 	blend_position_tween = get_tree()->create_tween();
 	blend_position_tween->stop();
@@ -263,10 +263,14 @@ void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend)
 
 	if (blend->is_blend_rotation())
 	{
+		Vector3 final_rotation = p_vcam->get_global_rotation_degrees();
+		final_rotation.x *= -1;
+		final_rotation.y += 180;
+
 		blend_rotation_tween->tween_method(
-			Callable(this, "set_global_rotation"),
-			get_global_rotation(),
-			p_vcam->get_global_rotation(),
+			Callable(this, "set_global_rotation_degrees"),
+			get_global_rotation_degrees(),
+			final_rotation,
 			calc_duration
 		);
 
@@ -688,6 +692,13 @@ void CineCam3D::look_at_target_internal()
 	}
 }
 
+Vector3 CineCam3D::get_look_at_direction()
+{
+	Transform3D transform = get_global_transform();
+
+	return transform.get_origin() - transform.basis.get_column(2);
+}
+
 
 void CineCam3D::_register_vcam_internal(VirtualCam3D* p_vcam)
 {
@@ -882,7 +893,7 @@ void CineCam3D::_notification(int p_what)
 				_move_by_priority_mode();
 				_move_by_follow_mode();
 				camera_origin = get_global_position();
-				origin_for_look_at = get_global_rotation();
+				origin_for_look_at = get_look_at_direction();
 				original_offset.x = get_h_offset();
 				original_offset.y = get_v_offset();
 				original_fov = get_fov();
@@ -1093,7 +1104,7 @@ void CineCam3D::set_look_at_target(CamTarget3D* p_target)
 	look_at_target = p_target;
 	if (tweens_ready)
 	{
-		origin_for_look_at = get_global_rotation();
+		origin_for_look_at = get_look_at_direction();
 	}
 }
 
