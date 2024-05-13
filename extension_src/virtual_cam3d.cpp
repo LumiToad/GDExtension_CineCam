@@ -5,27 +5,31 @@
 
 #include "godot_cpp/classes/viewport.hpp"
 #include "godot_cpp/classes/engine.hpp"
+#include "godot_cpp/classes/collision_object3d.hpp"
+#include "godot_cpp/core/math.hpp"
+#include "godot_cpp/variant/projection.hpp"
+#include "godot_cpp/classes/viewport.hpp"
+#include "godot_cpp/classes/scene_tree.hpp"
+#include "godot_cpp/classes/rendering_server.hpp"
+#include "godot_cpp/classes/physics_server3d.hpp"
+#include "godot_cpp/variant/array.hpp"
+
 #include "virtual_cam3d.h"
 #include "cinecam3d.h"
 
 #include "bind_utils.h"
+#include "print_utils.h"
 
 using namespace godot;
 
 VirtualCam3D::VirtualCam3D()
 {
-	limit[SIDE_LEFT] = -10000000;
-	limit[SIDE_TOP] = -10000000;
-	limit[SIDE_RIGHT] = 10000000;
-	limit[SIDE_BOTTOM] = 10000000;
-
-	drag_margin[SIDE_LEFT] = 0.2;
-	drag_margin[SIDE_TOP] = 0.2;
-	drag_margin[SIDE_RIGHT] = 0.2;
-	drag_margin[SIDE_BOTTOM] = 0.2;
-
 	priority = 0;
 	vcam_id = "";
+
+	set_perspective(75.0, 0.05, 4000.0);
+	set_notify_transform(true);
+	set_disable_scale(true);
 
 	additional_description = "This virtual camera contains target information for CineCam3D.\n";
 	initialize_internal();
@@ -34,7 +38,11 @@ VirtualCam3D::VirtualCam3D()
 
 VirtualCam3D::~VirtualCam3D()
 {
-
+	if (pyramid_shape.is_valid())
+	{
+		ERR_FAIL_NULL(PhysicsServer3D::get_singleton());
+		// PhysicsServer3D::get_singleton()->free(pyramid_shape);
+	}
 }
 
 
@@ -46,145 +54,76 @@ void VirtualCam3D::_bind_methods()
 
 	ADD_METHOD_BINDING(_register_to_cinecam3d, VirtualCam3D);
 
-	ClassDB::bind_method(D_METHOD("set_offset", "offset"), &VirtualCam3D::set_offset);
-	ClassDB::bind_method(D_METHOD("get_offset"), &VirtualCam3D::get_offset);
+	ClassDB::bind_method(D_METHOD("is_position_behind", "world_point"), &VirtualCam3D::is_position_behind);
+	ClassDB::bind_method(D_METHOD("set_perspective", "fov", "z_near", "z_far"), &VirtualCam3D::set_perspective);
+	ClassDB::bind_method(D_METHOD("set_orthogonal", "size", "z_near", "z_far"), &VirtualCam3D::set_orthogonal);
+	ClassDB::bind_method(D_METHOD("set_frustum", "size", "offset", "z_near", "z_far"), &VirtualCam3D::set_frustum);
+	ClassDB::bind_method(D_METHOD("set_current", "enabled"), &VirtualCam3D::set_current);
+	ClassDB::bind_method(D_METHOD("is_current"), &VirtualCam3D::is_current);
+	ClassDB::bind_method(D_METHOD("get_camera_transform"), &VirtualCam3D::get_camera_transform);
+	ClassDB::bind_method(D_METHOD("get_camera_projection"), &VirtualCam3D::get_camera_projection);
+	ClassDB::bind_method(D_METHOD("get_fov"), &VirtualCam3D::get_fov);
+	ClassDB::bind_method(D_METHOD("get_frustum_offset"), &VirtualCam3D::get_frustum_offset);
+	ClassDB::bind_method(D_METHOD("get_size"), &VirtualCam3D::get_size);
+	ClassDB::bind_method(D_METHOD("get_far"), &VirtualCam3D::get_far);
+	ClassDB::bind_method(D_METHOD("get_near"), &VirtualCam3D::get_near);
+	ClassDB::bind_method(D_METHOD("set_fov", "fov"), &VirtualCam3D::set_fov);
+	ClassDB::bind_method(D_METHOD("set_frustum_offset", "offset"), &VirtualCam3D::set_frustum_offset);
+	ClassDB::bind_method(D_METHOD("set_size", "size"), &VirtualCam3D::set_size);
+	ClassDB::bind_method(D_METHOD("set_far", "far"), &VirtualCam3D::set_far);
+	ClassDB::bind_method(D_METHOD("set_near", "near"), &VirtualCam3D::set_near);
+	ClassDB::bind_method(D_METHOD("get_projection"), &VirtualCam3D::get_projection);
+	ClassDB::bind_method(D_METHOD("set_projection", "mode"), &VirtualCam3D::set_projection);
+	ClassDB::bind_method(D_METHOD("set_h_offset", "offset"), &VirtualCam3D::set_h_offset);
+	ClassDB::bind_method(D_METHOD("get_h_offset"), &VirtualCam3D::get_h_offset);
+	ClassDB::bind_method(D_METHOD("set_v_offset", "offset"), &VirtualCam3D::set_v_offset);
+	ClassDB::bind_method(D_METHOD("get_v_offset"), &VirtualCam3D::get_v_offset);
+	ClassDB::bind_method(D_METHOD("set_cull_mask", "mask"), &VirtualCam3D::set_cull_mask);
+	ClassDB::bind_method(D_METHOD("get_cull_mask"), &VirtualCam3D::get_cull_mask);
+	ClassDB::bind_method(D_METHOD("set_environment", "env"), &VirtualCam3D::set_environment);
+	ClassDB::bind_method(D_METHOD("get_environment"), &VirtualCam3D::get_environment);
+	ClassDB::bind_method(D_METHOD("set_attributes", "env"), &VirtualCam3D::set_attributes);
+	ClassDB::bind_method(D_METHOD("get_attributes"), &VirtualCam3D::get_attributes);
+	ClassDB::bind_method(D_METHOD("set_keep_aspect_mode", "mode"), &VirtualCam3D::set_keep_aspect_mode);
+	ClassDB::bind_method(D_METHOD("get_keep_aspect_mode"), &VirtualCam3D::get_keep_aspect_mode);
+	ClassDB::bind_method(D_METHOD("set_doppler_tracking", "mode"), &VirtualCam3D::set_doppler_tracking);
+	ClassDB::bind_method(D_METHOD("get_doppler_tracking"), &VirtualCam3D::get_doppler_tracking);
+	ClassDB::bind_method(D_METHOD("get_frustum"), &VirtualCam3D::get_frustum);
+	ClassDB::bind_method(D_METHOD("is_position_in_frustum", "world_point"), &VirtualCam3D::is_position_in_frustum);
+	ClassDB::bind_method(D_METHOD("get_pyramid_shape_rid"), &VirtualCam3D::get_pyramid_shape_rid);
 
-	//ClassDB::bind_method(D_METHOD("set_anchor_mode", "anchor_mode"), &VirtualCam3D::set_anchor_mode);
-	//ClassDB::bind_method(D_METHOD("get_anchor_mode"), &VirtualCam3D::get_anchor_mode);
-
-	ClassDB::bind_method(D_METHOD("set_ignore_rotation", "ignore"), &VirtualCam3D::set_ignore_rotation);
-	ClassDB::bind_method(D_METHOD("is_ignoring_rotation"), &VirtualCam3D::is_ignoring_rotation);
-
-	//ClassDB::bind_method(D_METHOD("set_process_callback", "mode"), &VirtualCam3D::set_process_callback);
-	//ClassDB::bind_method(D_METHOD("get_process_callback"), &VirtualCam3D::get_process_callback);
-
-	ClassDB::bind_method(D_METHOD("set_enabled", "enabled"), &VirtualCam3D::set_enabled);
-	ClassDB::bind_method(D_METHOD("is_enabled"), &VirtualCam3D::is_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_limit_left", "limit"), &VirtualCam3D::set_limit_left);
-	ClassDB::bind_method(D_METHOD("get_limit_left"), &VirtualCam3D::get_limit_left);
-
-	ClassDB::bind_method(D_METHOD("set_limit_top", "limit"), &VirtualCam3D::set_limit_top);
-	ClassDB::bind_method(D_METHOD("get_limit_top"), &VirtualCam3D::get_limit_top);
-
-	ClassDB::bind_method(D_METHOD("set_limit_right", "limit"), &VirtualCam3D::set_limit_right);
-	ClassDB::bind_method(D_METHOD("get_limit_right"), &VirtualCam3D::get_limit_right);
-
-	ClassDB::bind_method(D_METHOD("set_limit_bottom", "limit"), &VirtualCam3D::set_limit_bottom);
-	ClassDB::bind_method(D_METHOD("get_limit_bottom"), &VirtualCam3D::get_limit_bottom);
-
-	ClassDB::bind_method(D_METHOD("set_limit_smoothing_enabled", "limit_smoothing_enabled"), &VirtualCam3D::set_limit_smoothing_enabled);
-	ClassDB::bind_method(D_METHOD("is_limit_smoothing_enabled"), &VirtualCam3D::is_limit_smoothing_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_drag_vertical_enabled", "enabled"), &VirtualCam3D::set_drag_vertical_enabled);
-	ClassDB::bind_method(D_METHOD("is_drag_vertical_enabled"), &VirtualCam3D::is_drag_vertical_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_drag_horizontal_enabled", "enabled"), &VirtualCam3D::set_drag_horizontal_enabled);
-	ClassDB::bind_method(D_METHOD("is_drag_horizontal_enabled"), &VirtualCam3D::is_drag_horizontal_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_drag_vertical_offset", "offset"), &VirtualCam3D::set_drag_vertical_offset);
-	ClassDB::bind_method(D_METHOD("get_drag_vertical_offset"), &VirtualCam3D::get_drag_vertical_offset);
-
-	ClassDB::bind_method(D_METHOD("set_drag_horizontal_offset", "offset"), &VirtualCam3D::set_drag_horizontal_offset);
-	ClassDB::bind_method(D_METHOD("get_drag_horizontal_offset"), &VirtualCam3D::get_drag_horizontal_offset);
-
-	ClassDB::bind_method(D_METHOD("set_drag_margin_left", "drag_margin"), &VirtualCam3D::set_drag_margin_left);
-	ClassDB::bind_method(D_METHOD("get_drag_margin_left"), &VirtualCam3D::get_drag_margin_left);
-
-	ClassDB::bind_method(D_METHOD("set_drag_margin_top", "drag_margin"), &VirtualCam3D::set_drag_margin_top);
-	ClassDB::bind_method(D_METHOD("get_drag_margin_top"), &VirtualCam3D::get_drag_margin_top);
-
-	ClassDB::bind_method(D_METHOD("set_drag_margin_right", "drag_margin"), &VirtualCam3D::set_drag_margin_right);
-	ClassDB::bind_method(D_METHOD("get_drag_margin_right"), &VirtualCam3D::get_drag_margin_right);
-
-	ClassDB::bind_method(D_METHOD("set_drag_margin_bottom", "drag_margin"), &VirtualCam3D::set_drag_margin_bottom);
-	ClassDB::bind_method(D_METHOD("get_drag_margin_bottom"), &VirtualCam3D::get_drag_margin_bottom);
-
-	ClassDB::bind_method(D_METHOD("set_zoom", "zoom"), &VirtualCam3D::set_zoom);
-	ClassDB::bind_method(D_METHOD("get_zoom"), &VirtualCam3D::get_zoom);
-
-	ClassDB::bind_method(D_METHOD("set_position_smoothing_speed", "position_smoothing_speed"), &VirtualCam3D::set_position_smoothing_speed);
-	ClassDB::bind_method(D_METHOD("get_position_smoothing_speed"), &VirtualCam3D::get_position_smoothing_speed);
-
-	ClassDB::bind_method(D_METHOD("set_position_smoothing_enabled", "position_smoothing_speed"), &VirtualCam3D::set_position_smoothing_enabled);
-	ClassDB::bind_method(D_METHOD("is_position_smoothing_enabled"), &VirtualCam3D::is_position_smoothing_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_rotation_smoothing_enabled", "enabled"), &VirtualCam3D::set_rotation_smoothing_enabled);
-	ClassDB::bind_method(D_METHOD("is_rotation_smoothing_enabled"), &VirtualCam3D::is_rotation_smoothing_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_rotation_smoothing_speed", "speed"), &VirtualCam3D::set_rotation_smoothing_speed);
-	ClassDB::bind_method(D_METHOD("get_rotation_smoothing_speed"), &VirtualCam3D::get_rotation_smoothing_speed);
-
-	ClassDB::bind_method(D_METHOD("set_screen_drawing_enabled", "screen_drawing_enabled"), &VirtualCam3D::set_screen_drawing_enabled);
-	ClassDB::bind_method(D_METHOD("is_screen_drawing_enabled"), &VirtualCam3D::is_screen_drawing_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_limit_drawing_enabled", "limit_drawing_enabled"), &VirtualCam3D::set_limit_drawing_enabled);
-	ClassDB::bind_method(D_METHOD("is_limit_drawing_enabled"), &VirtualCam3D::is_limit_drawing_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_margin_drawing_enabled", "margin_drawing_enabled"), &VirtualCam3D::set_margin_drawing_enabled);
-	ClassDB::bind_method(D_METHOD("is_margin_drawing_enabled"), &VirtualCam3D::is_margin_drawing_enabled);
+	ClassDB::bind_method(D_METHOD("set_cull_mask_value", "layer_number", "value"), &VirtualCam3D::set_cull_mask_value);
+	ClassDB::bind_method(D_METHOD("get_cull_mask_value", "layer_number"), &VirtualCam3D::get_cull_mask_value);
 
 	ADD_GROUP("Camera3D", "cam3d_");
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "cam3d_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
-	//ADD_PROPERTY(PropertyInfo(Variant::INT, "cam3d_anchor_mode", PROPERTY_HINT_ENUM, "Fixed TopLeft,Drag Center"), "set_anchor_mode", "get_anchor_mode");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam3d_ignore_rotation"), "set_ignore_rotation", "is_ignoring_rotation");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam3d_enabled"), "set_enabled", "is_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "cam3d_zoom", PROPERTY_HINT_LINK), "set_zoom", "get_zoom");
-	//ADD_PROPERTY(PropertyInfo(Variant::INT, "cam3d_process_callback", PROPERTY_HINT_ENUM, "Physics,Idle"), "set_process_callback", "get_process_callback");
-
-	ADD_SUBGROUP("Limit", "limit_");
-
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "limit_left", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_left", "get_limit_left");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "limit_top", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_top", "get_limit_top");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "limit_right", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_right", "get_limit_right");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "limit_bottom", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_bottom", "get_limit_bottom");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "limit_smoothed"), "set_limit_smoothing_enabled", "is_limit_smoothing_enabled");
-
-	ADD_SUBGROUP("Position Smoothing", "position_smoothing_");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "position_smoothing_enabled"), "set_position_smoothing_enabled", "is_position_smoothing_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "position_smoothing_speed", PROPERTY_HINT_NONE, "suffix:px/s"), "set_position_smoothing_speed", "get_position_smoothing_speed");
-
-	ADD_SUBGROUP("Rotation Smoothing", "rotation_smoothing_");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "rotation_smoothing_enabled"), "set_rotation_smoothing_enabled", "is_rotation_smoothing_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "rotation_smoothing_speed"), "set_rotation_smoothing_speed", "get_rotation_smoothing_speed");
-
-	ADD_SUBGROUP("Drag", "drag_");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "drag_horizontal_enabled"), "set_drag_horizontal_enabled", "is_drag_horizontal_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "drag_vertical_enabled"), "set_drag_vertical_enabled", "is_drag_vertical_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "drag_horizontal_offset", PROPERTY_HINT_RANGE, "-1,1,0.01"), "set_drag_horizontal_offset", "get_drag_horizontal_offset");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "drag_vertical_offset", PROPERTY_HINT_RANGE, "-1,1,0.01"), "set_drag_vertical_offset", "get_drag_vertical_offset");
-
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "drag_left_margin", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_drag_margin_left", "get_drag_margin_left");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "drag_top_margin", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_drag_margin_top", "get_drag_margin_top");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "drag_right_margin", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_drag_margin_right", "get_drag_margin_right");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "drag_bottom_margin", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_drag_margin_bottom", "get_drag_margin_bottom");
-
-	ADD_SUBGROUP("Editor", "editor_");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "editor_draw_screen"), "set_screen_drawing_enabled", "is_screen_drawing_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "editor_draw_limits"), "set_limit_drawing_enabled", "is_limit_drawing_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "editor_draw_drag_margin"), "set_margin_drawing_enabled", "is_margin_drawing_enabled");
-
-	//BIND_ENUM_CONSTANT(Camera3D::AnchorMode::ANCHOR_MODE_FIXED_TOP_LEFT);
-	//BIND_ENUM_CONSTANT(Camera3D::AnchorMode::ANCHOR_MODE_DRAG_CENTER);
-	//BIND_ENUM_CONSTANT(Camera3D::Camera3DProcessCallback::CAMERA3D_PROCESS_PHYSICS);
-	//BIND_ENUM_CONSTANT(Camera3D::Camera3DProcessCallback::CAMERA3D_PROCESS_IDLE);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "cam3d_keep_aspect", PROPERTY_HINT_ENUM, "Keep Width,Keep Height"), "set_keep_aspect_mode", "get_keep_aspect_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "cam3d_cull_mask", PROPERTY_HINT_LAYERS_3D_RENDER), "set_cull_mask", "get_cull_mask");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "cam3d_environment", PROPERTY_HINT_RESOURCE_TYPE, "Environment"), "set_environment", "get_environment");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "cam3d_attributes", PROPERTY_HINT_RESOURCE_TYPE, "CameraAttributesPractical,CameraAttributesPhysical"), "set_attributes", "get_attributes");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cam3d_h_offset", PROPERTY_HINT_NONE, "suffix:m"), "set_h_offset", "get_h_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cam3d_v_offset", PROPERTY_HINT_NONE, "suffix:m"), "set_v_offset", "get_v_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "cam3d_doppler_tracking", PROPERTY_HINT_ENUM, "Disabled,Idle,Physics"), "set_doppler_tracking", "get_doppler_tracking");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "cam3d_projection", PROPERTY_HINT_ENUM, "Perspective,Orthogonal,Frustum"), "set_projection", "get_projection");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam3d_current"), "set_current", "is_current");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cam3d_fov", PROPERTY_HINT_RANGE, "1,179,0.1,degrees"), "set_fov", "get_fov");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cam3d_size", PROPERTY_HINT_RANGE, "0.001,100,0.001,or_greater,suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "cam3d_frustum_offset", PROPERTY_HINT_NONE, "suffix:m"), "set_frustum_offset", "get_frustum_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cam3d_near", PROPERTY_HINT_RANGE, "0.001,10,0.001,or_greater,exp,suffix:m"), "set_near", "get_near");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cam3d_far", PROPERTY_HINT_RANGE, "0.01,4000,0.01,or_greater,exp,suffix:m"), "set_far", "get_far");
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_PRIORITY_CHANGED, PropertyInfo(Variant::OBJECT, "vcam3d"), PropertyInfo(Variant::INT, "priority")));
-}
 
+	BIND_ENUM_CONSTANT(Camera3D::ProjectionType::PROJECTION_PERSPECTIVE);
+	BIND_ENUM_CONSTANT(Camera3D::ProjectionType::PROJECTION_ORTHOGONAL);
+	BIND_ENUM_CONSTANT(Camera3D::ProjectionType::PROJECTION_FRUSTUM);
 
-void VirtualCam3D::_validate_property(PropertyInfo& p_property) const
-{
-	if (!position_smoothing_enabled && p_property.name == StringName("position_smoothing_speed"))
-	{
-		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
-	}
+	BIND_ENUM_CONSTANT(Camera3D::KeepAspect::KEEP_WIDTH);
+	BIND_ENUM_CONSTANT(Camera3D::KeepAspect::KEEP_HEIGHT);
 
-	if (!rotation_smoothing_enabled && p_property.name == StringName("rotation_smoothing_speed"))
-	{
-		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
-	}
+	BIND_ENUM_CONSTANT(Camera3D::DopplerTracking::DOPPLER_TRACKING_DISABLED);
+	BIND_ENUM_CONSTANT(Camera3D::DopplerTracking::DOPPLER_TRACKING_IDLE_STEP);
+	BIND_ENUM_CONSTANT(Camera3D::DopplerTracking::DOPPLER_TRACKING_PHYSICS_STEP);
 }
 
 
@@ -226,6 +165,24 @@ void VirtualCam3D::_notification(int p_what)
 	{
 	default:
 		break;
+	case NOTIFICATION_ENTER_WORLD:
+		viewport = get_viewport();
+		ERR_FAIL_NULL(viewport);
+#ifdef TOOLS_ENABLED
+		if (is_in_editor)
+		{
+			viewport->connect(StringName("size_changed"), callable_mp((Node3D*)this, &VirtualCam3D::update_gizmos));
+		}
+#endif
+		break;
+	case NOTIFICATION_EXIT_WORLD:
+#ifdef TOOLS_ENABLED
+				if (viewport && is_in_editor)
+				{
+					viewport->disconnect(StringName("size_changed"), callable_mp((Node3D*)this, &VirtualCam3D::update_gizmos));
+				}
+#endif
+			break;
 	case NOTIFICATION_READY:
 		if (!is_in_editor)
 		{
@@ -235,6 +192,7 @@ void VirtualCam3D::_notification(int p_what)
 	}
 }
 
+// original VirtualCam3D
 
 void VirtualCam3D::set_vcam_id(String id)
 {
@@ -262,353 +220,6 @@ int VirtualCam3D::get_priority() const
 }
 
 
-void VirtualCam3D::set_offset(const Vector3& p_offset)
-{
-	offset = p_offset;
-}
-
-
-Vector3 VirtualCam3D::get_offset() const
-{
-	return offset;
-}
-
-/*
-void VirtualCam3D::set_anchor_mode(Camera3D::AnchorMode p_anchor_mode)
-{
-	anchor_mode = p_anchor_mode;
-}
-
-
-Camera3D::AnchorMode VirtualCam3D::get_anchor_mode() const
-{
-	return anchor_mode;
-}
-*/
-
-
-void VirtualCam3D::set_ignore_rotation(bool p_ignore)
-{
-	ingore_rotation = p_ignore;
-}
-
-
-bool VirtualCam3D::is_ignoring_rotation() const
-{
-	return ingore_rotation;
-}
-
-
-void VirtualCam3D::set_enabled(bool p_enabled)
-{
-	enabled = p_enabled;
-}
-
-
-bool VirtualCam3D::is_enabled() const
-{
-	return enabled;
-}
-
-
-void VirtualCam3D::set_zoom(const Vector3& p_zoom)
-{
-	zoom = p_zoom;
-}
-
-
-Vector3 VirtualCam3D::get_zoom() const
-{
-	return zoom;
-}
-
-
-void VirtualCam3D::set_limit_left(int p_limit)
-{
-	set_limit(Side::SIDE_LEFT, p_limit);
-}
-
-
-int VirtualCam3D::get_limit_left() const
-{
-	return get_limit(Side::SIDE_LEFT);
-}
-
-
-void VirtualCam3D::set_limit_top(int p_limit)
-{
-	set_limit(Side::SIDE_TOP, p_limit);
-}
-
-
-int VirtualCam3D::get_limit_top() const
-{
-	return get_limit(Side::SIDE_TOP);
-}
-
-
-void VirtualCam3D::set_limit_right(int p_limit)
-{
-	set_limit(Side::SIDE_RIGHT, p_limit);
-}
-
-
-int VirtualCam3D::get_limit_right() const
-{
-	return get_limit(Side::SIDE_RIGHT);
-}
-
-
-void VirtualCam3D::set_limit_bottom(int p_limit)
-{
-	set_limit(Side::SIDE_BOTTOM, p_limit);
-}
-
-
-int VirtualCam3D::get_limit_bottom() const
-{
-	return get_limit(Side::SIDE_BOTTOM);
-}
-
-
-void VirtualCam3D::set_limit(Side p_side, int p_limit)
-{
-	ERR_FAIL_INDEX((int)p_side, 4);
-	limit[p_side] = p_limit;
-}
-
-
-int VirtualCam3D::get_limit(Side p_side) const
-{
-	ERR_FAIL_INDEX_V((int)p_side, 4, 0);
-	return limit[p_side];
-}
-
-/*
-void VirtualCam3D::set_process_callback(Camera3D::Camera3DProcessCallback p_mode)
-{
-	process_callback = p_mode;
-}
-
-
-Camera3D::Camera3DProcessCallback VirtualCam3D::get_process_callback() const
-{
-	return process_callback;
-}
-*/
-
-
-void VirtualCam3D::set_limit_smoothing_enabled(bool enable)
-{
-	limit_smoothing_enabled = enable;
-	PropertyInfo info = PropertyInfo(Variant::BOOL, "position_smoothing_enabled");
-	_validate_property(info);
-	notify_property_list_changed();
-}
-
-
-bool VirtualCam3D::is_limit_smoothing_enabled() const
-{
-	return limit_smoothing_enabled;
-}
-
-
-void VirtualCam3D::set_position_smoothing_enabled(bool p_enabled)
-{
-	position_smoothing_enabled = p_enabled;
-	PropertyInfo info = PropertyInfo(Variant::BOOL, "position_smoothing_enabled");
-	_validate_property(info);
-	notify_property_list_changed();
-}
-
-
-bool VirtualCam3D::is_position_smoothing_enabled() const
-{
-	return position_smoothing_enabled;
-}
-
-
-void VirtualCam3D::set_position_smoothing_speed(real_t p_speed)
-{
-	position_smoothing_speed = p_speed;
-}
-
-
-real_t VirtualCam3D::get_position_smoothing_speed() const
-{
-	return position_smoothing_speed;
-}
-
-
-void VirtualCam3D::set_rotation_smoothing_speed(real_t p_speed)
-{
-	rotation_smoothing_speed = p_speed;
-}
-
-
-real_t VirtualCam3D::get_rotation_smoothing_speed() const
-{
-	return rotation_smoothing_speed;
-}
-
-
-void VirtualCam3D::set_rotation_smoothing_enabled(bool p_enabled)
-{
-	rotation_smoothing_enabled = p_enabled;
-}
-
-
-bool VirtualCam3D::is_rotation_smoothing_enabled() const
-{
-	return rotation_smoothing_enabled;
-}
-
-
-void VirtualCam3D::set_drag_horizontal_enabled(bool p_enabled)
-{
-	drag_horizontal_enabled = p_enabled;
-}
-
-
-bool VirtualCam3D::is_drag_horizontal_enabled() const
-{
-	return drag_horizontal_enabled;
-}
-
-
-void VirtualCam3D::set_drag_vertical_enabled(bool p_enabled)
-{
-	drag_vertical_enabled = p_enabled;
-}
-
-
-bool VirtualCam3D::is_drag_vertical_enabled() const
-{
-	return drag_vertical_enabled;
-}
-
-
-void VirtualCam3D::set_drag_margin_left(real_t p_drag_margin)
-{
-	set_drag_margin(Side::SIDE_LEFT, p_drag_margin);
-}
-
-
-real_t VirtualCam3D::get_drag_margin_left() const
-{
-	return get_drag_margin(Side::SIDE_LEFT);
-}
-
-
-void VirtualCam3D::set_drag_margin_top(real_t p_drag_margin)
-{
-	set_drag_margin(Side::SIDE_TOP, p_drag_margin);
-}
-
-
-real_t VirtualCam3D::get_drag_margin_top() const
-{
-	return get_drag_margin(Side::SIDE_TOP);
-}
-
-
-void VirtualCam3D::set_drag_margin_right(real_t p_drag_margin)
-{
-	set_drag_margin(Side::SIDE_RIGHT, p_drag_margin);
-}
-
-
-real_t VirtualCam3D::get_drag_margin_right() const
-{
-	return get_drag_margin(Side::SIDE_RIGHT);
-}
-
-
-void VirtualCam3D::set_drag_margin_bottom(real_t p_drag_margin)
-{
-	set_drag_margin(Side::SIDE_BOTTOM, p_drag_margin);
-}
-
-
-real_t VirtualCam3D::get_drag_margin_bottom() const
-{
-	return get_drag_margin(Side::SIDE_BOTTOM);
-}
-
-
-void VirtualCam3D::set_drag_margin(Side p_side, real_t p_drag_margin)
-{
-	ERR_FAIL_INDEX((int)p_side, 4);
-	drag_margin[p_side] = p_drag_margin;
-	//queue_redraw(); //remove???
-}
-
-
-real_t VirtualCam3D::get_drag_margin(Side p_side) const
-{
-	ERR_FAIL_INDEX_V((int)p_side, 4, 0);
-	return drag_margin[p_side];
-}
-
-
-void VirtualCam3D::set_drag_horizontal_offset(real_t p_offset)
-{
-	drag_horizontal_offset = p_offset;
-}
-
-
-real_t VirtualCam3D::get_drag_horizontal_offset() const
-{
-	return drag_horizontal_offset;
-}
-
-
-void VirtualCam3D::set_drag_vertical_offset(real_t p_offset)
-{
-	drag_vertical_offset = p_offset;
-}
-
-
-real_t VirtualCam3D::get_drag_vertical_offset() const
-{
-	return drag_vertical_offset;
-}
-
-void VirtualCam3D::set_screen_drawing_enabled(bool enable)
-{
-	screen_drawing_enabled = enable;
-}
-
-
-bool VirtualCam3D::is_screen_drawing_enabled() const
-{
-	return screen_drawing_enabled;
-}
-
-
-void VirtualCam3D::set_limit_drawing_enabled(bool enable)
-{
-	limit_drawing_enabled = enable;
-}
-
-
-bool VirtualCam3D::is_limit_drawing_enabled() const
-{
-	return limit_drawing_enabled;
-}
-
-
-void VirtualCam3D::set_margin_drawing_enabled(bool enable)
-{
-	margin_drawing_enabled = enable;
-}
-
-
-bool VirtualCam3D::is_margin_drawing_enabled() const
-{
-	return margin_drawing_enabled;
-}
-
 Ref<BlendData3D> VirtualCam3D::_get_blend_data() const
 {
 	return blend_data;
@@ -623,4 +234,523 @@ void VirtualCam3D::_set_blend_data(Ref<BlendData3D> blend)
 	{
 		init_default_blend_data();
 	}
+}
+
+// from Camera3D
+
+
+void VirtualCam3D::_update_camera_mode()
+{
+	force_change = true;
+	switch (mode)
+	{
+		case Camera3D::PROJECTION_PERSPECTIVE:
+			set_perspective(fov, near, far);
+			break;
+		case Camera3D::PROJECTION_ORTHOGONAL:
+			set_orthogonal(size, near, far);
+			break;
+		case Camera3D::PROJECTION_FRUSTUM:
+			set_frustum(size, frustum_offset, near, far);
+			break;
+	}
+}
+
+
+void VirtualCam3D::_validate_property(PropertyInfo& p_property) const
+{
+	if (p_property.name == StringName("cam3d_fov"))
+	{
+		if (mode != Camera3D::PROJECTION_PERSPECTIVE)
+		{
+			p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+		}
+	}
+	else if (p_property.name == StringName("cam3d_size"))
+	{
+		if (mode != Camera3D::PROJECTION_ORTHOGONAL && mode != Camera3D::PROJECTION_FRUSTUM)
+		{
+			p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+		}
+	}
+	else if (p_property.name == StringName("cam3d_frustum_offset"))
+	{
+		if (mode != Camera3D::PROJECTION_FRUSTUM)
+		{
+			p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+		}
+	}
+
+	if (attributes.is_valid()) 
+	{
+		const CameraAttributesPhysical* physical_attributes = Object::cast_to<CameraAttributesPhysical>(attributes.ptr());
+		if (physical_attributes) 
+		{
+			if (
+				PRINT("Should_Change");
+				p_property.name == StringName("near") ||
+				p_property.name == StringName("far") ||
+				p_property.name == StringName("fov") ||
+				p_property.name == StringName("keep_aspect")
+				)
+			{
+				p_property.usage = PROPERTY_USAGE_READ_ONLY | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_EDITOR;
+			}
+		}
+	}
+
+	Node3D::_validate_property(p_property);
+}
+
+
+Transform3D VirtualCam3D::get_camera_transform() const
+{
+	Transform3D tr = get_global_transform().orthonormalized();
+	tr.origin += tr.basis.get_column(1) * v_offset;
+	tr.origin += tr.basis.get_column(0) * h_offset;
+	return tr;
+}
+
+
+Projection VirtualCam3D::_get_camera_projection(real_t p_near) const
+{
+	Size2 viewport_size = get_viewport()->get_visible_rect().size;
+	Projection cm;
+
+	switch (mode)
+	{
+	case Camera3D::PROJECTION_PERSPECTIVE: 
+		cm.set_perspective(fov, viewport_size.aspect(), p_near, far, keep_aspect == Camera3D::KEEP_WIDTH);
+		break;
+	case Camera3D::PROJECTION_ORTHOGONAL:
+		cm.set_orthogonal(size, viewport_size.aspect(), p_near, far, keep_aspect == Camera3D::KEEP_WIDTH);
+		break;
+	case Camera3D::PROJECTION_FRUSTUM:
+		cm.set_frustum(size, viewport_size.aspect(), frustum_offset, p_near, far);
+		break;
+	}
+
+	return cm;
+}
+
+
+Projection VirtualCam3D::get_camera_projection() const
+{
+	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Projection(), "Camera is not inside the scene tree.");
+	return _get_camera_projection(near);
+}
+
+
+void VirtualCam3D::set_perspective(real_t p_fovy_degrees, real_t p_z_near, real_t p_z_far)
+{
+	if (!force_change &&
+		fov == p_fovy_degrees &&
+		p_z_near == near &&
+		p_z_far == far &&
+		mode == Camera3D::PROJECTION_PERSPECTIVE) 
+	{
+		return;
+	}
+
+	fov = p_fovy_degrees;
+	near = p_z_near;
+	far = p_z_far;
+	mode = Camera3D::PROJECTION_PERSPECTIVE;
+
+	update_gizmos();
+	force_change = false;
+}
+
+
+void VirtualCam3D::set_orthogonal(real_t p_size, real_t p_z_near, real_t p_z_far)
+{
+	if (
+		!force_change &&
+		size == p_size &&
+		p_z_near == near &&
+		p_z_far == far &&
+		mode == Camera3D::PROJECTION_ORTHOGONAL
+		) 
+	{
+		return;
+	}
+
+	size = p_size;
+
+	near = p_z_near;
+	far = p_z_far;
+	mode = Camera3D::PROJECTION_ORTHOGONAL;
+	force_change = false;
+
+	update_gizmos();
+}
+
+
+void VirtualCam3D::set_frustum(real_t p_size, Vector2 p_offset, real_t p_z_near, real_t p_z_far)
+{
+	if (!force_change &&
+		size == p_size &&
+		frustum_offset == p_offset &&
+		p_z_near == near &&
+		p_z_far == far &&
+		mode == Camera3D::PROJECTION_FRUSTUM) 
+	{
+		return;
+	}
+
+	size = p_size;
+	frustum_offset = p_offset;
+
+	near = p_z_near;
+	far = p_z_far;
+	mode = Camera3D::PROJECTION_FRUSTUM;
+	force_change = false;
+
+	update_gizmos();
+}
+
+
+void VirtualCam3D::set_projection(Camera3D::ProjectionType p_mode)
+{
+	if (
+		p_mode == Camera3D::PROJECTION_PERSPECTIVE ||
+		p_mode == Camera3D::PROJECTION_ORTHOGONAL ||
+		p_mode == Camera3D::PROJECTION_FRUSTUM
+		)
+	{
+		mode = p_mode;
+		_update_camera_mode();
+		notify_property_list_changed();
+	}
+}
+
+
+void VirtualCam3D::set_current(bool p_enabled)
+{
+	current = p_enabled;
+}
+
+
+bool VirtualCam3D::is_current() const
+{
+	return current;
+}
+
+
+bool VirtualCam3D::is_position_behind(const Vector3& p_pos) const
+{
+	Transform3D t = get_global_transform();
+	Vector3 eyedir = -t.basis.get_column(2).normalized();
+	return eyedir.dot(p_pos - t.origin) < near;
+}
+
+
+Vector<Vector3> VirtualCam3D::get_near_plane_points() const
+{
+	ERR_FAIL_COND_V_MSG(!is_inside_tree(), Vector<Vector3>(), "Camera is not inside scene.");
+
+	Projection cm = _get_camera_projection(near);
+
+	Vector3 endpoints[8];
+	cm.get_endpoints(Transform3D(), endpoints);
+
+	Vector<Vector3> points =
+	{
+		Vector3(),
+		endpoints[4],
+		endpoints[5],
+		endpoints[6],
+		endpoints[7]
+	};
+	return points;
+}
+
+
+void VirtualCam3D::set_environment(const Ref<Environment>& p_environment)
+{
+	environment = p_environment;
+	_update_camera_mode();
+}
+
+
+Ref<Environment> VirtualCam3D::get_environment() const
+{
+	return environment;
+}
+
+
+void VirtualCam3D::set_attributes(const Ref<CameraAttributes>& p_attributes)
+{
+	if (attributes.is_valid()) 
+	{
+		CameraAttributesPhysical* physical_attributes = Object::cast_to<CameraAttributesPhysical>(attributes.ptr());
+		if (physical_attributes) 
+		{
+			attributes->disconnect("attributes_changed", callable_mp(this, &VirtualCam3D::_attributes_changed));
+		}
+	}
+
+	attributes = p_attributes;
+
+	if (attributes.is_valid())
+	{
+		CameraAttributesPhysical* physical_attributes = Object::cast_to<CameraAttributesPhysical>(attributes.ptr());
+		if (physical_attributes)
+		{
+			attributes->disconnect("attributes_changed", callable_mp(this, &VirtualCam3D::_attributes_changed));
+			_attributes_changed();
+		}
+	}
+
+	notify_property_list_changed();
+}
+
+
+Ref<CameraAttributes> VirtualCam3D::get_attributes() const
+{
+	return attributes;
+}
+
+
+void VirtualCam3D::_attributes_changed()
+{
+	CameraAttributesPhysical* physical_attributes = Object::cast_to<CameraAttributesPhysical>(attributes.ptr());
+	ERR_FAIL_NULL(physical_attributes);
+
+	fov = physical_attributes->get_fov();
+	near = physical_attributes->get_near();
+	far = physical_attributes->get_far();
+	keep_aspect = Camera3D::KEEP_HEIGHT;
+	_update_camera_mode();
+}
+
+
+void VirtualCam3D::set_keep_aspect_mode(Camera3D::KeepAspect p_aspect)
+{
+	keep_aspect = p_aspect;
+	_update_camera_mode();
+	notify_property_list_changed();
+}
+
+
+Camera3D::KeepAspect VirtualCam3D::get_keep_aspect_mode() const
+{
+	return keep_aspect;
+}
+
+
+void VirtualCam3D::set_doppler_tracking(Camera3D::DopplerTracking p_tracking)
+{
+	if (doppler_tracking == p_tracking) return;
+	doppler_tracking = p_tracking;
+	_update_camera_mode();
+}
+
+
+Camera3D::DopplerTracking VirtualCam3D::get_doppler_tracking() const
+{
+	return doppler_tracking;
+}
+
+
+real_t VirtualCam3D::get_fov() const
+{
+	return fov;
+}
+
+
+real_t VirtualCam3D::get_size() const
+{
+	return size;
+}
+
+real_t VirtualCam3D::get_near() const
+{
+	return near;
+}
+
+
+Vector2 VirtualCam3D::get_frustum_offset() const
+{
+	return frustum_offset;
+}
+
+
+real_t VirtualCam3D::get_far() const
+{
+	return far;
+}
+
+
+Camera3D::ProjectionType VirtualCam3D::get_projection() const
+{
+	return mode;
+}
+
+
+void VirtualCam3D::set_fov(real_t p_fov)
+{
+	ERR_FAIL_COND(p_fov < 1 || p_fov > 179);
+	fov = p_fov;
+	_update_camera_mode();
+}
+
+
+void VirtualCam3D::set_size(real_t p_size)
+{
+	ERR_FAIL_COND(p_size <= CMP_EPSILON);
+	size = p_size;
+	_update_camera_mode();
+}
+
+
+void VirtualCam3D::set_near(real_t p_near)
+{
+	near = p_near;
+	_update_camera_mode();
+}
+
+
+void VirtualCam3D::set_frustum_offset(Vector2 p_offset)
+{
+	frustum_offset = p_offset;
+	_update_camera_mode();
+}
+
+
+void VirtualCam3D::set_far(real_t p_far)
+{
+	far = p_far;
+	_update_camera_mode();
+}
+
+
+void VirtualCam3D::set_cull_mask(uint32_t p_layers)
+{
+	layers = p_layers;
+	_update_camera_mode();
+}
+
+
+uint32_t VirtualCam3D::get_cull_mask() const
+{
+	return layers;
+}
+
+
+void VirtualCam3D::set_cull_mask_value(int p_layer_number, bool p_value)
+{
+	ERR_FAIL_COND_MSG(p_layer_number < 1, "Render layer number must be between 1 and 20 inclusive.");
+	ERR_FAIL_COND_MSG(p_layer_number > 20, "Render layer number must be between 1 and 20 inclusive.");
+	uint32_t mask = get_cull_mask();
+	if (p_value) {
+		mask |= 1 << (p_layer_number - 1);
+	}
+	else {
+		mask &= ~(1 << (p_layer_number - 1));
+	}
+	set_cull_mask(mask);
+}
+
+
+bool VirtualCam3D::get_cull_mask_value(int p_layer_number) const
+{
+	ERR_FAIL_COND_V_MSG(p_layer_number < 1, false, "Render layer number must be between 1 and 20 inclusive.");
+	ERR_FAIL_COND_V_MSG(p_layer_number > 20, false, "Render layer number must be between 1 and 20 inclusive.");
+	return layers & (1 << (p_layer_number - 1));
+}
+
+
+TypedArray<Plane> VirtualCam3D::get_frustum() const
+{
+	TypedArray<Plane> result;
+
+	Projection cm = _get_camera_projection(near);
+	Array planes = cm.get_projection_planes(get_camera_transform());
+
+	for (int i = 0; i < planes.size(); i++)
+	{
+		result.append(planes[i]);
+	}
+
+	return result;
+}
+
+
+bool VirtualCam3D::is_position_in_frustum(const Vector3& p_position) const
+{
+	TypedArray<Plane> frustum_arr = get_frustum();
+	Vector<Plane> frustum;
+
+	for (int i = 0; i < frustum_arr.size(); i++)
+	{
+		frustum.append(frustum_arr[i]);
+	}
+
+	for (int i = 0; i < frustum.size(); i++) 
+	{
+		Plane f = frustum[i];
+		if (f.is_point_over(p_position)) 
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+
+void VirtualCam3D::set_v_offset(real_t p_offset)
+{
+	v_offset = p_offset;
+}
+
+
+real_t VirtualCam3D::get_v_offset() const
+{
+	return v_offset;
+}
+
+
+void VirtualCam3D::set_h_offset(real_t p_offset)
+{
+	h_offset = p_offset;
+}
+
+
+real_t VirtualCam3D::get_h_offset() const
+{
+	return h_offset;
+}
+
+
+RID VirtualCam3D::get_pyramid_shape_rid()
+{
+	ERR_FAIL_COND_V_MSG(!is_inside_tree(), RID(), "Camera is not inside scene.");
+	if (pyramid_shape == RID()) 
+	{
+		pyramid_shape_points = get_near_plane_points();
+		pyramid_shape = PhysicsServer3D::get_singleton()->convex_polygon_shape_create();
+	}
+	else 
+	{
+		//check if points changed
+		Vector<Vector3> local_points = get_near_plane_points();
+
+		bool all_equal = true;
+
+		for (int i = 0; i < 5; i++)
+		{
+			if (local_points[i] != pyramid_shape_points[i]) {
+				all_equal = false;
+				break;
+			}
+		}
+
+		if (!all_equal) 
+		{
+			pyramid_shape_points = local_points;
+		}
+	}
+
+	return pyramid_shape;
 }

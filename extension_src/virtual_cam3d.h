@@ -6,11 +6,19 @@
 #ifndef VIRTUAL_CAM3D_H
 #define VIRTUAL_CAM3D_H
 
-#include "godot_cpp/classes/node3d.hpp"
+#include "godot_cpp/templates/vector.hpp"
 #include "godot_cpp/classes/camera3d.hpp"
+#include "godot_cpp/classes/camera_attributes.hpp"
+#include "godot_cpp/classes/camera_attributes_physical.hpp"
+#include "godot_cpp/classes/environment.hpp"
 
 #include "gdclass_metadata.h"
 #include "blend_data3d.h"
+
+#ifdef MINGW_ENABLED
+#undef near
+#undef far
+#endif
 
 #define SIGNAL_PRIORITY_CHANGED "priority_changed"
 
@@ -47,133 +55,118 @@ namespace godot
 
 		// GODOT public
 	private:
+		// original VirtualCam3D
 		godot::String vcam_id;
 		int priority;
-
-		Vector3 offset;
-		//Camera3D::AnchorMode anchor_mode = Camera3D::AnchorMode::ANCHOR_MODE_DRAG_CENTER;
-		bool ingore_rotation = false;
-		bool enabled = true;
-		Vector3 zoom;
-		//Camera3D::Camera3DProcessCallback process_callback;
 		Ref<BlendData3D> blend_data;
 
-		int limit[4];
-		bool limit_smoothing_enabled = false;
+		// from Camera3D
+		bool force_change = false;
+		bool current = true;
+		Viewport* viewport = nullptr;
 
-		real_t position_smoothing_speed = 5.0;
-		bool position_smoothing_enabled = false;
+		Camera3D::ProjectionType mode = Camera3D::PROJECTION_PERSPECTIVE;
 
-		real_t rotation_smoothing_speed = 5.0;
-		bool rotation_smoothing_enabled = false;
+		real_t fov = 75.0;
+		real_t size = 1.0;
+		Vector2 frustum_offset;
+		real_t near = 0.05;
+		real_t far = 4000.0;
+		real_t v_offset = 0.0;
+		real_t h_offset = 0.0;
+		Camera3D::KeepAspect keep_aspect = Camera3D::KEEP_HEIGHT;
 
-		real_t drag_margin[4];
-		bool drag_horizontal_enabled = false;
-		bool drag_vertical_enabled = false;
-		real_t drag_horizontal_offset = 0.0;
-		real_t drag_vertical_offset = 0.0;
+		RID scenario_id;
 
-		bool screen_drawing_enabled = true;
-		bool limit_drawing_enabled = false;
-		bool margin_drawing_enabled = false;
+		uint32_t layers = 0xfffff;
 
+		Ref<Environment> environment;
+		Ref<CameraAttributes> attributes;
+		void _attributes_changed();
+
+		friend class Viewport;
+		TypedArray<Plane> _get_frustum() const;
+
+		Camera3D::DopplerTracking doppler_tracking = Camera3D::DOPPLER_TRACKING_DISABLED;
+
+		RID pyramid_shape;
+		godot::Vector<Vector3> pyramid_shape_points;
 
 	public:
+		// original VirtualCam3D
 		void set_vcam_id(String id);
 		String get_vcam_id() const;
-
 
 		void set_priority(int prio);
 		int get_priority() const;
 
-		void set_offset(const Vector3& p_offset);
-		Vector3 get_offset() const;
-
-		//void set_anchor_mode(Camera3D::AnchorMode p_anchor_mode);
-		//Camera3D::AnchorMode get_anchor_mode() const;
-
-		void set_ignore_rotation(bool p_ignore);
-		bool is_ignoring_rotation() const;
-
-		void set_enabled(bool p_enabled);
-		bool is_enabled() const;
-
-		void set_zoom(const Vector3& p_zoom);
-		Vector3 get_zoom() const;
-
-		void set_limit_left(int p_limit);
-		int get_limit_left() const;
-
-		void set_limit_top(int p_limit);
-		int get_limit_top() const;
-
-		void set_limit_right(int p_limit);
-		int get_limit_right() const;
-
-		void set_limit_bottom(int p_limit);
-		int get_limit_bottom() const;
-
-		void set_limit(Side p_side, int p_limit);
-		int get_limit(Side p_side) const;
-
-		//void set_process_callback(Camera3D::Camera3DProcessCallback p_mode);
-		//Camera3D::Camera3DProcessCallback get_process_callback() const;
-
-		void set_limit_smoothing_enabled(bool enable);
-		bool is_limit_smoothing_enabled() const;
-
-		void set_position_smoothing_enabled(bool p_enabled);
-		bool is_position_smoothing_enabled() const;
-
-		void set_position_smoothing_speed(real_t p_speed);
-		real_t get_position_smoothing_speed() const;
-
-		void set_rotation_smoothing_speed(real_t p_speed);
-		real_t get_rotation_smoothing_speed() const;
-
-		void set_rotation_smoothing_enabled(bool p_enabled);
-		bool is_rotation_smoothing_enabled() const;
-
-		void set_drag_horizontal_enabled(bool p_enabled);
-		bool is_drag_horizontal_enabled() const;
-
-		void set_drag_vertical_enabled(bool p_enabled);
-		bool is_drag_vertical_enabled() const;
-
-		void set_drag_margin_left(real_t p_drag_margin);
-		real_t get_drag_margin_left() const;
-
-		void set_drag_margin_top(real_t p_drag_margin);
-		real_t get_drag_margin_top() const;
-
-		void set_drag_margin_right(real_t p_drag_margin);
-		real_t get_drag_margin_right() const;
-
-		void set_drag_margin_bottom(real_t p_drag_margin);
-		real_t get_drag_margin_bottom() const;
-
-		void set_drag_margin(Side p_side, real_t p_drag_margin);
-		real_t get_drag_margin(Side p_side) const;
-
-		void set_drag_horizontal_offset(real_t p_offset);
-		real_t get_drag_horizontal_offset() const;
-
-		void set_drag_vertical_offset(real_t p_offset);
-		real_t get_drag_vertical_offset() const;
-
-		void set_screen_drawing_enabled(bool enable);
-		bool is_screen_drawing_enabled() const;
-
-		void set_limit_drawing_enabled(bool enable);
-		bool is_limit_drawing_enabled() const;
-
-		void set_margin_drawing_enabled(bool enable);
-		bool is_margin_drawing_enabled() const;
-
 		Ref<BlendData3D> _get_blend_data() const;
 		void _set_blend_data(Ref<BlendData3D> blend);
 
+		// from Camera3D
+		void set_perspective(real_t p_fovy_degrees, real_t p_z_near, real_t p_z_far);
+		void set_orthogonal(real_t p_size, real_t p_z_near, real_t p_z_far);
+		void set_frustum(real_t p_size, Vector2 p_offset, real_t p_z_near, real_t p_z_far);
+		void set_projection(Camera3D::ProjectionType p_mode);
+
+		void set_current(bool p_enabled);
+		bool is_current() const;
+
+		real_t get_fov() const;
+		real_t get_size() const;
+		real_t get_far() const;
+		real_t get_near() const;
+		Vector2 get_frustum_offset() const;
+
+		Camera3D::ProjectionType get_projection() const;
+
+		void set_fov(real_t p_fov);
+		void set_size(real_t p_size);
+		void set_far(real_t p_far);
+		void set_near(real_t p_near);
+		void set_frustum_offset(Vector2 p_offset);
+
+		virtual Transform3D get_camera_transform() const;
+		virtual Projection get_camera_projection() const;
+
+		bool is_position_behind(const Vector3& p_pos) const;
+
+		Vector<Vector3> get_near_plane_points() const;
+
+		void set_cull_mask(uint32_t p_layers);
+		uint32_t get_cull_mask() const;
+
+		void set_cull_mask_value(int p_layer_number, bool p_enable);
+		bool get_cull_mask_value(int p_layer_number) const;
+
+		virtual TypedArray<Plane> get_frustum() const;
+		bool is_position_in_frustum(const Vector3& p_position) const;
+
+		void set_environment(const Ref<Environment>& p_environment);
+		Ref<Environment> get_environment() const;
+
+		void set_attributes(const Ref<CameraAttributes>& p_effects);
+		Ref<CameraAttributes> get_attributes() const;
+
+		void set_keep_aspect_mode(Camera3D::KeepAspect p_aspect);
+		Camera3D::KeepAspect get_keep_aspect_mode() const;
+
+		void set_v_offset(real_t p_offset);
+		real_t get_v_offset() const;
+
+		void set_h_offset(real_t p_offset);
+		real_t get_h_offset() const;
+
+		void set_doppler_tracking(Camera3D::DopplerTracking p_tracking);
+		Camera3D::DopplerTracking get_doppler_tracking() const;
+
+		RID get_pyramid_shape_rid();
+
+
 	protected:
+		void _update_camera_mode();
+
+		Projection _get_camera_projection(real_t p_near) const;
 	};
 }
 

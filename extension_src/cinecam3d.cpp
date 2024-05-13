@@ -33,6 +33,7 @@ CineCam3D::CineCam3D()
 	highest_prio_vcam = nullptr;
 	follow_target = nullptr;
 	look_at_target = nullptr;
+	blend_duration = -1.0;
 
 	initialize_internal();
 }
@@ -76,6 +77,8 @@ void CineCam3D::_bind_methods()
 	ADD_METHOD_BINDING(follow_prio_resume, CineCam3D);
 	ADD_METHOD_BINDING(follow_prio_toggle, CineCam3D);
 
+	ADD_METHOD_ARGS_BINDING(apply_vcam3d_data, CineCam3D, "vcam3d");
+
 	ADD_METHOD_ARGS_BINDING(_calc_blend_duration_by_speed, CineCam3D, VA_LIST("current_pos", "target_pos", "speed"));
 	ADD_METHOD_ARGS_BINDING(find_vcam_by_id, CineCam3D, "id");
 
@@ -107,6 +110,8 @@ void CineCam3D::_bind_methods()
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_rotation, CineCam3D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 
 	ADD_METHOD_ARGS_BINDING(blend_to, CineCam3D, VA_LIST("vcam2d", "blend_data"));
+
+	ADD_METHOD_BINDING(full_blend_duration, CineCam3D);
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_STARTED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_ENDED));
@@ -227,6 +232,8 @@ void CineCam3D::_on_blend_completed_internal()
 	is_blend_not_stopped = false;
 	blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
 
+	blend_duration = -1.0;
+
 	cycle_sequence_internal();
 }
 
@@ -296,6 +303,7 @@ void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend)
 
 
 	blend_position_tween->play();
+	blend_duration = calc_duration;
 	_on_blend_started_internal();
 }
 
@@ -562,6 +570,36 @@ void CineCam3D::shake_rotation(const Vector3& p_intensity, const double& p_durat
 }
 
 
+String CineCam3D::apply_vcam3d_data(VirtualCam3D* p_vcam)
+{
+	String ret_val = "Applied properties:\n";
+
+	TypedArray<Dictionary> properties = p_vcam->get_property_list();
+	for (int i = 0; i < properties.size(); i++)
+	{
+		Dictionary prop = properties[i];
+		StringName prop_name = prop["name"];
+		if (prop_name.contains("cam3d_"))
+		{
+			StringName short_name = prop_name.replace("cam3d_", "");
+			Variant prop_from_cam = p_vcam->get(prop_name);
+			if (get(short_name) != prop_from_cam)
+			{
+				ret_val += short_name;
+				ret_val += " from: ";
+				ret_val += get(short_name);
+				ret_val += " to: ";
+				ret_val += prop_from_cam;
+				ret_val += "\n";
+				set(short_name, prop_from_cam);
+			}
+		}
+	}
+
+	return ret_val;
+}
+
+
 void CineCam3D::start_sequence(const bool& backwards)
 {
 	int idx = 0 + (backwards ? current_sequence->get_vcam3d_array().size() - 1 : 0);
@@ -669,7 +707,11 @@ void CineCam3D::shake_rotation_internal()
 
 double CineCam3D::_calc_blend_duration_by_speed(Vector3 current_pos, Vector3 target_pos, double speed)
 {
-	double distance = sqrt(pow((target_pos.x - current_pos.x), 2.0) + pow((target_pos.y - current_pos.y), 2.0));
+	double distance = sqrt(
+		pow((target_pos.x - current_pos.x), 2.0) +
+		pow((target_pos.y - current_pos.y), 2.0) +
+		pow((target_pos.z - current_pos.z), 2.0)
+	);
 	return distance / speed;
 }
 
@@ -1233,4 +1275,10 @@ void CineCam3D::set_look_at_target(CamTarget3D* p_target)
 CamTarget3D* CineCam3D::get_look_at_target() const
 {
 	return look_at_target;
+}
+
+
+double CineCam3D::full_blend_duration() const
+{
+	return blend_duration;
 }

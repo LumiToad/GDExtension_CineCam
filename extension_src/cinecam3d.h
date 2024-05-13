@@ -95,6 +95,8 @@ namespace godot
 		bool sequence_playmode = false;
 		bool is_blend_not_stopped = false;
 
+		double blend_duration;
+
 		void initialize_internal();
 		void init_tweens();
 		void init_default_blend_data();
@@ -185,6 +187,8 @@ namespace godot
 			Tween::EaseType p_ease = DEFAULT_EASE,
 			Tween::TransitionType p_trans = DEFAULT_TRANS);
 
+		String apply_vcam3d_data(VirtualCam3D* p_vcam);
+
 		void _register_vcam_internal(VirtualCam3D* p_vcam);
 		void _remove_vcam_internal(VirtualCam3D* p_vcam);
 		bool _try_set_highest_vcam_internal(VirtualCam3D* p_vcam, int vcam_prio);
@@ -240,6 +244,8 @@ namespace godot
 
 		void set_look_at_target(CamTarget3D* p_target);
 		CamTarget3D* get_look_at_target() const;
+
+		double full_blend_duration() const;
 
 	protected:
 	};

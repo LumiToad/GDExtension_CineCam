@@ -133,37 +133,41 @@ void VirtualCam2D::_bind_methods()
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "cam2d_zoom", PROPERTY_HINT_LINK), "set_zoom", "get_zoom");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "cam2d_process_callback", PROPERTY_HINT_ENUM, "Physics,Idle"), "set_process_callback", "get_process_callback");
 
-	ADD_SUBGROUP("Limit", "limit_");
+	ADD_SUBGROUP("Limit", "cam_2d_limit_");
 
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "limit_left", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_left", "get_limit_left");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "limit_top", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_top", "get_limit_top");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "limit_right", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_right", "get_limit_right");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "limit_bottom", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_bottom", "get_limit_bottom");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "limit_smoothed"), "set_limit_smoothing_enabled", "is_limit_smoothing_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "cam2d_limit_left", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_left", "get_limit_left");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "cam2d_limit_top", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_top", "get_limit_top");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "cam2d_limit_right", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_right", "get_limit_right");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "cam2d_limit_bottom", PROPERTY_HINT_NONE, "suffix:px"), "set_limit_bottom", "get_limit_bottom");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam2d_limit_smoothed"), "set_limit_smoothing_enabled", "is_limit_smoothing_enabled");
 	
-	ADD_SUBGROUP("Position Smoothing", "position_smoothing_");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "position_smoothing_enabled"), "set_position_smoothing_enabled", "is_position_smoothing_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "position_smoothing_speed", PROPERTY_HINT_NONE, "suffix:px/s"), "set_position_smoothing_speed", "get_position_smoothing_speed");
+	ADD_SUBGROUP("Position Smoothing", "cam2d_position_smoothing_");
 
-	ADD_SUBGROUP("Rotation Smoothing", "rotation_smoothing_");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "rotation_smoothing_enabled"), "set_rotation_smoothing_enabled", "is_rotation_smoothing_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "rotation_smoothing_speed"), "set_rotation_smoothing_speed", "get_rotation_smoothing_speed");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam2d_position_smoothing_enabled"), "set_position_smoothing_enabled", "is_position_smoothing_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cam2d_position_smoothing_speed", PROPERTY_HINT_NONE, "suffix:px/s"), "set_position_smoothing_speed", "get_position_smoothing_speed");
 
-	ADD_SUBGROUP("Drag", "drag_");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "drag_horizontal_enabled"), "set_drag_horizontal_enabled", "is_drag_horizontal_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "drag_vertical_enabled"), "set_drag_vertical_enabled", "is_drag_vertical_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "drag_horizontal_offset", PROPERTY_HINT_RANGE, "-1,1,0.01"), "set_drag_horizontal_offset", "get_drag_horizontal_offset");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "drag_vertical_offset", PROPERTY_HINT_RANGE, "-1,1,0.01"), "set_drag_vertical_offset", "get_drag_vertical_offset");
+	ADD_SUBGROUP("Rotation Smoothing", "cam2d_rotation_smoothing_");
+
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam2d_rotation_smoothing_enabled"), "set_rotation_smoothing_enabled", "is_rotation_smoothing_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cam2d_rotation_smoothing_speed"), "set_rotation_smoothing_speed", "get_rotation_smoothing_speed");
+
+	ADD_SUBGROUP("Drag", "cam2d_drag_");
+
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam2d_drag_horizontal_enabled"), "set_drag_horizontal_enabled", "is_drag_horizontal_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam2d_drag_vertical_enabled"), "set_drag_vertical_enabled", "is_drag_vertical_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cam2d_drag_horizontal_offset", PROPERTY_HINT_RANGE, "-1,1,0.01"), "set_drag_horizontal_offset", "get_drag_horizontal_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cam2d_drag_vertical_offset", PROPERTY_HINT_RANGE, "-1,1,0.01"), "set_drag_vertical_offset", "get_drag_vertical_offset");
 	
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "drag_left_margin", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_drag_margin_left", "get_drag_margin_left");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "drag_top_margin", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_drag_margin_top", "get_drag_margin_top");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "drag_right_margin", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_drag_margin_right", "get_drag_margin_right");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "drag_bottom_margin", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_drag_margin_bottom", "get_drag_margin_bottom");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cam2d_drag_left_margin", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_drag_margin_left", "get_drag_margin_left");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cam2d_drag_top_margin", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_drag_margin_top", "get_drag_margin_top");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cam2d_drag_right_margin", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_drag_margin_right", "get_drag_margin_right");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cam2d_drag_bottom_margin", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_drag_margin_bottom", "get_drag_margin_bottom");
 
-	ADD_SUBGROUP("Editor", "editor_");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "editor_draw_screen"), "set_screen_drawing_enabled", "is_screen_drawing_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "editor_draw_limits"), "set_limit_drawing_enabled", "is_limit_drawing_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "editor_draw_drag_margin"), "set_margin_drawing_enabled", "is_margin_drawing_enabled");
+	ADD_SUBGROUP("Editor", "cam2d_editor_");
+
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam2d_editor_draw_screen"), "set_screen_drawing_enabled", "is_screen_drawing_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam2d_editor_draw_limits"), "set_limit_drawing_enabled", "is_limit_drawing_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam2d_editor_draw_drag_margin"), "set_margin_drawing_enabled", "is_margin_drawing_enabled");
 
 	BIND_ENUM_CONSTANT(Camera2D::AnchorMode::ANCHOR_MODE_FIXED_TOP_LEFT);
 	BIND_ENUM_CONSTANT(Camera2D::AnchorMode::ANCHOR_MODE_DRAG_CENTER);
@@ -176,12 +180,12 @@ void VirtualCam2D::_bind_methods()
 
 void VirtualCam2D::_validate_property(PropertyInfo& p_property) const 
 {
-	if (!position_smoothing_enabled && p_property.name == StringName("position_smoothing_speed")) 
+	if (!position_smoothing_enabled && p_property.name == StringName("cam2d_position_smoothing_speed")) 
 	{
 		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
 	}
 
-	if (!rotation_smoothing_enabled && p_property.name == StringName("rotation_smoothing_speed"))
+	if (!rotation_smoothing_enabled && p_property.name == StringName("cam2d_rotation_smoothing_speed"))
 	{
 		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
 	}
@@ -398,8 +402,6 @@ Camera2D::Camera2DProcessCallback VirtualCam2D::get_process_callback() const
 void VirtualCam2D::set_limit_smoothing_enabled(bool enable)
 {
 	limit_smoothing_enabled = enable;
-	PropertyInfo info = PropertyInfo(Variant::BOOL, "position_smoothing_enabled");
-	_validate_property(info);
 	notify_property_list_changed();
 }
 
@@ -413,8 +415,6 @@ bool VirtualCam2D::is_limit_smoothing_enabled() const
 void VirtualCam2D::set_position_smoothing_enabled(bool p_enabled)
 {
 	position_smoothing_enabled = p_enabled;
-	PropertyInfo info = PropertyInfo(Variant::BOOL, "position_smoothing_enabled");
-	_validate_property(info);
 	notify_property_list_changed();
 }
 
@@ -452,6 +452,7 @@ real_t VirtualCam2D::get_rotation_smoothing_speed() const
 void VirtualCam2D::set_rotation_smoothing_enabled(bool p_enabled)
 {
 	rotation_smoothing_enabled = p_enabled;
+	notify_property_list_changed();
 }
 
 

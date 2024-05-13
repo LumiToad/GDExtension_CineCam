@@ -31,6 +31,7 @@ CineCam2D::CineCam2D()
 	current_sequence = nullptr;
 	highest_prio_vcam = nullptr;
 	follow_target = nullptr;
+	blend_duration = -1.0;
 	initialize_internal();
 }
 
@@ -73,7 +74,9 @@ void CineCam2D::_bind_methods()
 	ADD_METHOD_ARGS_BINDING(_calc_blend_duration_by_speed, CineCam2D, VA_LIST("current_pos", "target_pos", "speed"));
 	ADD_METHOD_ARGS_BINDING(find_vcam_by_id, CineCam2D, "id");
 
-	ADD_METHOD_ARGS_BINDING(_register_vcam_internal, CineCam2D, VA_LIST("p_vcam"));
+	ADD_METHOD_ARGS_BINDING(_register_vcam_internal, CineCam2D, VA_LIST("vcam2d"));
+
+	ADD_METHOD_ARGS_BINDING(apply_vcam2d_data, CineCam2D, "vcam2d");
 
 	ADD_GETSET_HINT_BINDING(get_follow_mode, set_follow_mode, follow_mode, mode, CineCam2D, INT, PROPERTY_HINT_ENUM, TARGET_MODE_HINTS);
 
@@ -100,6 +103,8 @@ void CineCam2D::_bind_methods()
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_rotation, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 
 	ADD_METHOD_ARGS_BINDING(blend_to, CineCam2D, VA_LIST("vcam2d", "blend_data"));
+
+	ADD_METHOD_BINDING(full_blend_duration, CineCam2D);
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_STARTED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_ENDED));
@@ -212,6 +217,8 @@ void CineCam2D::_on_blend_completed_internal()
 	is_blend_not_stopped = false;
 	blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
 
+	blend_duration = -1.0;
+
 	cycle_sequence_internal();
 }
 
@@ -274,6 +281,7 @@ void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend)
 	}
 
 	blend_position_tween->play();
+	blend_duration = calc_duration;
 	_on_blend_started_internal();
 }
 
@@ -954,6 +962,36 @@ Vector2 CineCam2D::_get_shake_zoom_intensity() const
 }
 
 
+String CineCam2D::apply_vcam2d_data(VirtualCam2D* p_vcam)
+{
+	String ret_val = "Applied properties:\n";
+
+	TypedArray<Dictionary> properties = p_vcam->get_property_list();
+	for (int i = 0; i < properties.size(); i++)
+	{
+		Dictionary prop = properties[i];
+		StringName prop_name = prop["name"];
+		if (prop_name.contains("cam2d_"))
+		{
+			StringName short_name = prop_name.replace("cam2d_", "");
+			Variant prop_from_cam = p_vcam->get(prop_name);
+			if (get(short_name) != prop_from_cam)
+			{
+				ret_val += short_name;
+				ret_val += " from: ";
+				ret_val += get(short_name);
+				ret_val += " to: ";
+				ret_val += prop_from_cam;
+				ret_val += "\n";
+				set(short_name, prop_from_cam);
+			}
+		}
+	}
+
+	return ret_val;
+}
+
+
 void CineCam2D::_set_shake_zoom_intensity(const Vector2 &intensity)
 {
 	shake_zoom_intensity = intensity;
@@ -1118,4 +1156,9 @@ bool CineCam2D::_is_follow_prio_paused() const
 {
 	if (Engine::get_singleton()->is_editor_hint()) return false;
 	return is_follow_prio_paused;
+}
+
+double CineCam2D::full_blend_duration() const
+{
+	return blend_duration;
 }

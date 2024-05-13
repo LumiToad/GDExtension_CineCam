@@ -89,6 +89,8 @@ namespace godot
 		bool sequence_playmode = false;
 		bool is_blend_not_stopped = false;
 
+		double blend_duration;
+
 		void initialize_internal();
 		void init_tweens();
 		void init_default_blend_data();
@@ -173,6 +175,8 @@ namespace godot
 			const double& p_duration,
 			Tween::EaseType p_ease = DEFAULT_EASE,
 			Tween::TransitionType p_trans = DEFAULT_TRANS);
+
+		String apply_vcam2d_data(VirtualCam2D* p_vcam);
 		
 		void _register_vcam_internal(VirtualCam2D* p_vcam);
 		void _remove_vcam_internal(VirtualCam2D* p_vcam);
@@ -226,6 +230,8 @@ namespace godot
 
 		void _set_follow_prio_paused(bool paused);
 		bool _is_follow_prio_paused() const;
+
+		double full_blend_duration() const;
 
 	protected:
 	};
