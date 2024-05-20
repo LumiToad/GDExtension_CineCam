@@ -57,61 +57,76 @@ void CineCam3D::_bind_methods()
 	ADD_METHOD_BINDING(seq_resume, CineCam3D);
 	ADD_METHOD_BINDING(seq_pause, CineCam3D);
 	ADD_METHOD_BINDING(seq_stop, CineCam3D);
-
 	ADD_METHOD_ARGS_BINDING(reposition_to_vcam, CineCam3D, "vcam");
-
 	ADD_METHOD_BINDING(prioritized_vcam, CineCam3D);
 	ADD_METHOD_BINDING(_on_vcam_priority_changed, CineCam3D);
 	ADD_METHOD_BINDING(_move_by_priority_mode, CineCam3D);
 	ADD_METHOD_BINDING(_move_by_follow_mode, CineCam3D);
-
 	ADD_METHOD_BINDING(blend_resume, CineCam3D);
 	ADD_METHOD_BINDING(blend_pause, CineCam3D);
 	ADD_METHOD_BINDING(blend_toggle, CineCam3D);
-
 	ADD_METHOD_BINDING(follow_target_pause, CineCam3D);
 	ADD_METHOD_BINDING(follow_target_resume, CineCam3D);
 	ADD_METHOD_BINDING(follow_target_toggle, CineCam3D);
-
 	ADD_METHOD_BINDING(follow_prio_pause, CineCam3D);
 	ADD_METHOD_BINDING(follow_prio_resume, CineCam3D);
 	ADD_METHOD_BINDING(follow_prio_toggle, CineCam3D);
-
 	ADD_METHOD_ARGS_BINDING(apply_vcam3d_data, CineCam3D, "vcam3d");
-
 	ADD_METHOD_ARGS_BINDING(_calc_blend_duration_by_speed, CineCam3D, VA_LIST("current_pos", "target_pos", "speed"));
 	ADD_METHOD_ARGS_BINDING(find_vcam_by_id, CineCam3D, "id");
-
 	ADD_METHOD_ARGS_BINDING(_register_vcam_internal, CineCam3D, VA_LIST("p_vcam"));
-
-	ADD_GETSET_HINT_BINDING(get_follow_mode, set_follow_mode, follow_mode, mode, CineCam3D, INT, PROPERTY_HINT_ENUM, TARGET_MODE_HINTS);
-
-	ADD_GETSET_HINT_BINDING(_get_blend_data, _set_blend_data, blend_data, blend_data, CineCam3D, OBJECT, PROPERTY_HINT_RESOURCE_TYPE, "BlendData3D");
-	ADD_GETSET_HINT_BINDING(get_current_sequence, set_current_sequence, current_sequence, p_sequence, CineCam3D, OBJECT, PROPERTY_HINT_NODE_TYPE, "CamSequence3D");
-	ADD_GETSET_HINT_BINDING(get_target, set_target, target, p_target, CineCam3D, Variant::OBJECT, PROPERTY_HINT_NODE_TYPE, "CamTarget3D");
-	ADD_GETSET_HINT_BINDING(get_look_at_target, set_look_at_target, look_at_target, p_target, CineCam3D, Variant::OBJECT, PROPERTY_HINT_NODE_TYPE, "CamTarget3D");
-
-	ADD_GETSET_BINDING(_get_shake_offset_intensity, _set_shake_offset_intensity, shake_offset_intensity, intensity, CineCam3D, VECTOR2);
-	ADD_GETSET_BINDING(_get_shake_offset_duration, _set_shake_offset_duration, shake_offset_duration, duration, CineCam3D, FLOAT);
-
-	ADD_GETSET_BINDING(_get_shake_fov_intensity, _set_shake_fov_intensity, shake_fov_intensity, intensity, CineCam3D, FLOAT);
-	ADD_GETSET_BINDING(_get_shake_fov_duration, _set_shake_fov_duration, shake_fov_duration, duration, CineCam3D, FLOAT);
-
-	ADD_GETSET_BINDING(_get_shake_rotation_intensity, _set_shake_rotation_intensity, shake_rotation_intensity, intensity, CineCam3D, VECTOR3);
-	ADD_GETSET_BINDING(_get_shake_rotation_duration, _set_shake_rotation_duration, shake_rotation_duration, duration, CineCam3D, FLOAT);
-
-	ADD_GETSET_BINDING(_is_seq_paused, _set_seq_paused, sequence_paused, paused, CineCam3D, BOOL);
-	ADD_GETSET_BINDING(_is_blend_paused, _set_blend_paused, blend_paused, paused, CineCam3D, BOOL);
-	ADD_GETSET_BINDING(_is_follow_target_paused, _set_follow_target_paused, follow_target_paused, paused, CineCam3D, BOOL);
-	ADD_GETSET_BINDING(_is_follow_prio_paused, _set_follow_prio_paused, follow_prio_paused, paused, CineCam3D, BOOL);
-
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_offset, CineCam3D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_fov, CineCam3D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_rotation, CineCam3D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
-
 	ADD_METHOD_ARGS_BINDING(blend_to, CineCam3D, VA_LIST("vcam2d", "blend_data"));
-
 	ADD_METHOD_BINDING(full_blend_duration, CineCam3D);
+
+	ADD_METHOD_BINDING(get_follow_mode, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(set_follow_mode, CineCam3D, "mode");
+	ADD_METHOD_BINDING(_get_blend_data, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(_set_blend_data, CineCam3D, "blend_data");
+	ADD_METHOD_BINDING(get_current_sequence, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(set_current_sequence, CineCam3D, "p_sequence");
+	ADD_METHOD_BINDING(get_target, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(set_target, CineCam3D, "p_target");
+	ADD_METHOD_BINDING(get_look_at_target, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(set_look_at_target, CineCam3D, "p_target");
+	ADD_METHOD_BINDING(_get_shake_offset_intensity, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(_set_shake_offset_intensity, CineCam3D, "intensity");
+	ADD_METHOD_BINDING(_get_shake_offset_duration, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(_set_shake_offset_duration, CineCam3D, "duration");
+	ADD_METHOD_BINDING(_get_shake_fov_intensity, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(_set_shake_fov_intensity, CineCam3D, "intensity");
+	ADD_METHOD_BINDING(_get_shake_fov_duration, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(_set_shake_fov_duration, CineCam3D, "duration");
+	ADD_METHOD_BINDING(_get_shake_rotation_intensity, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(_set_shake_rotation_intensity, CineCam3D, "intensity");
+	ADD_METHOD_BINDING(_get_shake_rotation_duration, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(_set_shake_rotation_duration, CineCam3D, "duration");
+	ADD_METHOD_BINDING(_is_seq_paused, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(_set_seq_paused, CineCam3D, "paused");
+	ADD_METHOD_BINDING(_is_blend_paused, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(_set_blend_paused, CineCam3D, "paused");
+	ADD_METHOD_BINDING(_is_follow_target_paused, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(_set_follow_target_paused, CineCam3D, "paused");
+	ADD_METHOD_BINDING(_is_follow_prio_paused, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(_set_follow_prio_paused, CineCam3D, "paused");
+
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "follow_mode", PROPERTY_HINT_ENUM, "OFF,PRIO,PRIO_ONESHOT,PRIO_BLEND,TARGET,TARGET_BLEND"), "set_follow_mode", "get_follow_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "blend_data", PROPERTY_HINT_RESOURCE_TYPE, "BlendData3D"), "_set_blend_data", "_get_blend_data");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "current_sequence", PROPERTY_HINT_NODE_TYPE, "CamSequence3D"), "set_current_sequence", "get_current_sequence");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::OBJECT, "target", PROPERTY_HINT_NODE_TYPE, "CamTarget3D"), "set_target", "get_target");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::OBJECT, "look_at_target", PROPERTY_HINT_NODE_TYPE, "CamTarget3D"), "set_look_at_target", "get_look_at_target");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_offset_intensity"), "_set_shake_offset_intensity", "_get_shake_offset_intensity");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "shake_offset_duration"), "_set_shake_offset_duration", "_get_shake_offset_duration");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "shake_fov_intensity"), "_set_shake_fov_intensity", "_get_shake_fov_intensity");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "shake_fov_duration"), "_set_shake_fov_duration", "_get_shake_fov_duration");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "shake_rotation_intensity"), "_set_shake_rotation_intensity", "_get_shake_rotation_intensity");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "shake_rotation_duration"), "_set_shake_rotation_duration", "_get_shake_rotation_duration");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "sequence_paused"), "_set_seq_paused", "_is_seq_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "blend_paused"), "_set_blend_paused", "_is_blend_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_target_paused"), "_set_follow_target_paused", "_is_follow_target_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_prio_paused"), "_set_follow_prio_paused", "_is_follow_prio_paused");
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_STARTED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_ENDED));

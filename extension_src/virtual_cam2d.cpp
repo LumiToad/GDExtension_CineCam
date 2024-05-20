@@ -40,89 +40,69 @@ VirtualCam2D::~VirtualCam2D()
 
 void VirtualCam2D::_bind_methods()
 {
-	ADD_GETSET_BINDING(get_vcam_id, set_vcam_id, vcam_id, id, VirtualCam2D, Variant::STRING);
-	ADD_GETSET_BINDING(get_priority, set_priority, priority, priority, VirtualCam2D, Variant::INT);
-	ADD_GETSET_HINT_BINDING(_get_blend_data, _set_blend_data, blend_data, p_default_blend, VirtualCam2D, OBJECT, PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D");
-
+	ADD_METHOD_BINDING(get_vcam_id, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_vcam_id, VirtualCam2D, "id");
+	ADD_METHOD_BINDING(get_priority, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_priority, VirtualCam2D, "priority");
+	ADD_METHOD_BINDING(_get_blend_data, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(_set_blend_data, VirtualCam2D, "p_default_blend");
 	ADD_METHOD_BINDING(_register_to_cinecam2d, VirtualCam2D);
+	ADD_METHOD_BINDING(get_offset, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_offset, VirtualCam2D, "offset");
+	ADD_METHOD_BINDING(get_anchor_mode, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_anchor_mode, VirtualCam2D, "anchor_mode");
+	ADD_METHOD_BINDING(is_ignoring_rotation, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_ignore_rotation, VirtualCam2D, "ignore");
+	ADD_METHOD_BINDING(get_process_callback, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_process_callback, VirtualCam2D, "mode");
+	ADD_METHOD_BINDING(is_enabled, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_enabled, VirtualCam2D, "enabled");
+	ADD_METHOD_BINDING(get_limit_left, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_limit_left, VirtualCam2D, "limit");
+	ADD_METHOD_BINDING(get_limit_top, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_limit_top, VirtualCam2D, "limit");
+	ADD_METHOD_BINDING(get_limit_right, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_limit_right, VirtualCam2D, "limit");
+	ADD_METHOD_BINDING(get_limit_bottom, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_limit_bottom, VirtualCam2D, "limit");
+	ADD_METHOD_BINDING(is_limit_smoothing_enabled, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_limit_smoothing_enabled, VirtualCam2D, "limit_smoothing_enabled");
+	ADD_METHOD_BINDING(is_drag_vertical_enabled, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_drag_vertical_enabled, VirtualCam2D, "enabled");
+	ADD_METHOD_BINDING(is_drag_horizontal_enabled, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_drag_horizontal_enabled, VirtualCam2D, "enabled");
+	ADD_METHOD_BINDING(get_drag_vertical_offset, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_drag_vertical_offset, VirtualCam2D, "offset");
+	ADD_METHOD_BINDING(get_drag_horizontal_offset, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_drag_horizontal_offset, VirtualCam2D, "offset");
+	ADD_METHOD_BINDING(get_drag_margin_left, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_drag_margin_left, VirtualCam2D, "drag_margin");
+	ADD_METHOD_BINDING(get_drag_margin_top, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_drag_margin_top, VirtualCam2D, "drag_margin");
+	ADD_METHOD_BINDING(get_drag_margin_right, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_drag_margin_right, VirtualCam2D, "drag_margin");
+	ADD_METHOD_BINDING(get_drag_margin_bottom, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_drag_margin_bottom, VirtualCam2D, "drag_margin");
+	ADD_METHOD_BINDING(get_zoom, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_zoom, VirtualCam2D, "zoom");
+	ADD_METHOD_BINDING(get_position_smoothing_speed, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_position_smoothing_speed, VirtualCam2D, "position_smoothing_speed");
+	ADD_METHOD_BINDING(is_position_smoothing_enabled, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_position_smoothing_enabled, VirtualCam2D, "enabled");
+	ADD_METHOD_BINDING(is_rotation_smoothing_enabled, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_rotation_smoothing_enabled, VirtualCam2D, "enabled");
+	ADD_METHOD_BINDING(get_rotation_smoothing_speed, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_rotation_smoothing_speed, VirtualCam2D, "speed");
+	ADD_METHOD_BINDING(is_screen_drawing_enabled, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_screen_drawing_enabled, VirtualCam2D, "screen_drawing_enabled");
+	ADD_METHOD_BINDING(is_limit_drawing_enabled, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_limit_drawing_enabled, VirtualCam2D, "limit_drawing_enabled");
+	ADD_METHOD_BINDING(is_margin_drawing_enabled, VirtualCam2D);
+	ADD_METHOD_ARGS_BINDING(set_margin_drawing_enabled, VirtualCam2D, "margin_drawing_enabled");
 
-	ClassDB::bind_method(D_METHOD("set_offset", "offset"), &VirtualCam2D::set_offset);
-	ClassDB::bind_method(D_METHOD("get_offset"), &VirtualCam2D::get_offset);
-
-	ClassDB::bind_method(D_METHOD("set_anchor_mode", "anchor_mode"), &VirtualCam2D::set_anchor_mode);
-	ClassDB::bind_method(D_METHOD("get_anchor_mode"), &VirtualCam2D::get_anchor_mode);
-
-	ClassDB::bind_method(D_METHOD("set_ignore_rotation", "ignore"), &VirtualCam2D::set_ignore_rotation);
-	ClassDB::bind_method(D_METHOD("is_ignoring_rotation"), &VirtualCam2D::is_ignoring_rotation);
-
-	ClassDB::bind_method(D_METHOD("set_process_callback", "mode"), &VirtualCam2D::set_process_callback);
-	ClassDB::bind_method(D_METHOD("get_process_callback"), &VirtualCam2D::get_process_callback);
-
-	ClassDB::bind_method(D_METHOD("set_enabled", "enabled"), &VirtualCam2D::set_enabled);
-	ClassDB::bind_method(D_METHOD("is_enabled"), &VirtualCam2D::is_enabled);
-	
-	ClassDB::bind_method(D_METHOD("set_limit_left", "limit"), &VirtualCam2D::set_limit_left);
-	ClassDB::bind_method(D_METHOD("get_limit_left"), &VirtualCam2D::get_limit_left);
-
-	ClassDB::bind_method(D_METHOD("set_limit_top", "limit"), &VirtualCam2D::set_limit_top);
-	ClassDB::bind_method(D_METHOD("get_limit_top"), &VirtualCam2D::get_limit_top);
-
-	ClassDB::bind_method(D_METHOD("set_limit_right", "limit"), &VirtualCam2D::set_limit_right);
-	ClassDB::bind_method(D_METHOD("get_limit_right"), &VirtualCam2D::get_limit_right);
-
-	ClassDB::bind_method(D_METHOD("set_limit_bottom", "limit"), &VirtualCam2D::set_limit_bottom);
-	ClassDB::bind_method(D_METHOD("get_limit_bottom"), &VirtualCam2D::get_limit_bottom);
-	
-	ClassDB::bind_method(D_METHOD("set_limit_smoothing_enabled", "limit_smoothing_enabled"), &VirtualCam2D::set_limit_smoothing_enabled);
-	ClassDB::bind_method(D_METHOD("is_limit_smoothing_enabled"), &VirtualCam2D::is_limit_smoothing_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_drag_vertical_enabled", "enabled"), &VirtualCam2D::set_drag_vertical_enabled);
-	ClassDB::bind_method(D_METHOD("is_drag_vertical_enabled"), &VirtualCam2D::is_drag_vertical_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_drag_horizontal_enabled", "enabled"), &VirtualCam2D::set_drag_horizontal_enabled);
-	ClassDB::bind_method(D_METHOD("is_drag_horizontal_enabled"), &VirtualCam2D::is_drag_horizontal_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_drag_vertical_offset", "offset"), &VirtualCam2D::set_drag_vertical_offset);
-	ClassDB::bind_method(D_METHOD("get_drag_vertical_offset"), &VirtualCam2D::get_drag_vertical_offset);
-
-	ClassDB::bind_method(D_METHOD("set_drag_horizontal_offset", "offset"), &VirtualCam2D::set_drag_horizontal_offset);
-	ClassDB::bind_method(D_METHOD("get_drag_horizontal_offset"), &VirtualCam2D::get_drag_horizontal_offset);
-
-	ClassDB::bind_method(D_METHOD("set_drag_margin_left", "drag_margin"), &VirtualCam2D::set_drag_margin_left);
-	ClassDB::bind_method(D_METHOD("get_drag_margin_left"), &VirtualCam2D::get_drag_margin_left);
-
-	ClassDB::bind_method(D_METHOD("set_drag_margin_top", "drag_margin"), &VirtualCam2D::set_drag_margin_top);
-	ClassDB::bind_method(D_METHOD("get_drag_margin_top"), &VirtualCam2D::get_drag_margin_top);
-
-	ClassDB::bind_method(D_METHOD("set_drag_margin_right", "drag_margin"), &VirtualCam2D::set_drag_margin_right);
-	ClassDB::bind_method(D_METHOD("get_drag_margin_right"), &VirtualCam2D::get_drag_margin_right);
-
-	ClassDB::bind_method(D_METHOD("set_drag_margin_bottom", "drag_margin"), &VirtualCam2D::set_drag_margin_bottom);
-	ClassDB::bind_method(D_METHOD("get_drag_margin_bottom"), &VirtualCam2D::get_drag_margin_bottom);
-
-	ClassDB::bind_method(D_METHOD("set_zoom", "zoom"), &VirtualCam2D::set_zoom);
-	ClassDB::bind_method(D_METHOD("get_zoom"), &VirtualCam2D::get_zoom);
-
-	ClassDB::bind_method(D_METHOD("set_position_smoothing_speed", "position_smoothing_speed"), &VirtualCam2D::set_position_smoothing_speed);
-	ClassDB::bind_method(D_METHOD("get_position_smoothing_speed"), &VirtualCam2D::get_position_smoothing_speed);
-
-	ClassDB::bind_method(D_METHOD("set_position_smoothing_enabled", "position_smoothing_speed"), &VirtualCam2D::set_position_smoothing_enabled);
-	ClassDB::bind_method(D_METHOD("is_position_smoothing_enabled"), &VirtualCam2D::is_position_smoothing_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_rotation_smoothing_enabled", "enabled"), &VirtualCam2D::set_rotation_smoothing_enabled);
-	ClassDB::bind_method(D_METHOD("is_rotation_smoothing_enabled"), &VirtualCam2D::is_rotation_smoothing_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_rotation_smoothing_speed", "speed"), &VirtualCam2D::set_rotation_smoothing_speed);
-	ClassDB::bind_method(D_METHOD("get_rotation_smoothing_speed"), &VirtualCam2D::get_rotation_smoothing_speed);
-
-	ClassDB::bind_method(D_METHOD("set_screen_drawing_enabled", "screen_drawing_enabled"), &VirtualCam2D::set_screen_drawing_enabled);
-	ClassDB::bind_method(D_METHOD("is_screen_drawing_enabled"), &VirtualCam2D::is_screen_drawing_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_limit_drawing_enabled", "limit_drawing_enabled"), &VirtualCam2D::set_limit_drawing_enabled);
-	ClassDB::bind_method(D_METHOD("is_limit_drawing_enabled"), &VirtualCam2D::is_limit_drawing_enabled);
-
-	ClassDB::bind_method(D_METHOD("set_margin_drawing_enabled", "margin_drawing_enabled"), &VirtualCam2D::set_margin_drawing_enabled);
-	ClassDB::bind_method(D_METHOD("is_margin_drawing_enabled"), &VirtualCam2D::is_margin_drawing_enabled);
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::STRING, "vcam_id"), "set_vcam_id", "get_vcam_id");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::INT, "priority"), "set_priority", "get_priority");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "blend_data", PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D"), "_set_blend_data", "_get_blend_data");
 
 	ADD_GROUP("Camera2D", "cam2d_");
 
@@ -169,12 +149,12 @@ void VirtualCam2D::_bind_methods()
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam2d_editor_draw_limits"), "set_limit_drawing_enabled", "is_limit_drawing_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "cam2d_editor_draw_drag_margin"), "set_margin_drawing_enabled", "is_margin_drawing_enabled");
 
+	ADD_SIGNAL(MethodInfo(SIGNAL_PRIORITY_CHANGED, PropertyInfo(Variant::OBJECT, "vcam2d"), PropertyInfo(Variant::INT, "priority")));
+
 	BIND_ENUM_CONSTANT(Camera2D::AnchorMode::ANCHOR_MODE_FIXED_TOP_LEFT);
 	BIND_ENUM_CONSTANT(Camera2D::AnchorMode::ANCHOR_MODE_DRAG_CENTER);
 	BIND_ENUM_CONSTANT(Camera2D::Camera2DProcessCallback::CAMERA2D_PROCESS_PHYSICS);
 	BIND_ENUM_CONSTANT(Camera2D::Camera2DProcessCallback::CAMERA2D_PROCESS_IDLE);
-
-	ADD_SIGNAL(MethodInfo(SIGNAL_PRIORITY_CHANGED, PropertyInfo(Variant::OBJECT, "vcam2d"), PropertyInfo(Variant::INT, "priority")));
 }
 
 
