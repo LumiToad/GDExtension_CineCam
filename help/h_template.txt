@@ -1,0 +1,126 @@
+### H_Template
+> Inherits: Node < Object
+
+#### Description
+
+This help document refers to [Template] class! \
+Description 1. line \
+Description 2. line \
+Description 3. line \
+Description 4. line \
+Description 5. line 
+ 
+#### Links
+[Link1](https://lnk.bio/LumiToad) \
+[Link2](https://www.linkedin.com/in/LumiToad/) \
+[Link3](https://github.com/LumiToad)
+
+#### Properties
+
+| Type | Property | Hint | 
+| :-- | :-- | :-- | 
+| _float_ | [property_a](#property_a) | - |
+| _float_ | [property_b](#property_b) | - |
+
+#### Methods
+
+| Return | Method | 
+| :-- | :-- |
+| _void_ | [function_a()](#function_a) |
+| _void_ | [function_b(value_a : String, value_b : float)](#function_b) |
+| _Variant_ | [function_c(value_a : int)](#function_c) |
+
+#### Signals
+> * _signal_ signal_a()\
+\
+> The description of a signal. \
+> Second Line. \
+> Third Line. \
+> Fourth Line
+
+> * _signal_ signal_b()\
+\
+> The description of a signal. \
+> Second Line. \
+> Third Line. \
+> Fourth Line
+
+
+
+#### Enumerations
+
+> * _enum_ Enum_A: \
+> \
+> Description of the entire enum. \
+> Description of the entire enum. \
+> Description of the entire enum. \
+> Description of the entire enum. \
+> Description of the entire enum. \
+> \
+\
+> ' ONE = 1, \
+> Entry Description A.ONE \
+> second line\
+> ' TWO = 2, \
+> Entry Description A.TWO\
+> ' THREE = 3, \
+> Entry Description A.THREE\
+> ' FOUR = 4 \
+> Entry Description A.FOUR
+
+> * _enum_ Enum_B: \
+> \
+> Description of the entire enum.> \
+\
+> ' ONE = 1, \
+> Entry Description A.ONE\
+> ' TWO = 2, \
+> Entry Description A.TWO
+
+#### Constants
+
+> * CONST_A = 0.0 \
+\
+> Test 1 \
+> Test 2
+
+> * CONST_B = 10.0 \
+\
+> Test 1
+
+
+#### Property Description
+
+> * _float_ <a id="property_a">property_a<a/> \
+> [SET] _set_property_a(value) \
+> [GET] _get_property_a() \
+\
+> property_a description 
+
+> * _float_ <a id="property_b">property_b<a/> \
+> [SET] _set_property_b(value) \
+> [GET] _get_property_b() \
+\
+> property_b description \
+> second line 
+
+
+
+#### Method Descriptions
+
+> * _void_ <a id="function_a">function_a()</a>\
+\
+> function_a description \
+> second line> [codeblock]> var kekse = 5> return kekse> [/codeblock]
+
+> * _void_ <a id="function_b">function_b(value_a : String, value_b : float)</a>\
+\
+> function_b description \
+> second line \
+> third line
+
+> * _Variant_ <a id="function_c">function_c(value_a : int)</a>\
+\
+> function_c description \
+> second line
+

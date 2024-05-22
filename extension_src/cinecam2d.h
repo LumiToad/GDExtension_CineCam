@@ -139,8 +139,8 @@ namespace godot
 
 	public:
 		void blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend_data);
-		void blend_pause();
-		void blend_resume();
+		void pause_blend();
+		void resume_blend();
 
 		void start_sequence(const bool& backwards);
 		void start_sequence_at(const int& idx = 0, const bool& backwards = false);
@@ -151,13 +151,13 @@ namespace godot
 		void seq_pause();
 		void seq_stop();
 
-		void follow_target_pause();
-		void follow_target_resume();
-		void follow_target_toggle();
+		void pause_follow_target();
+		void resume_follow_target();
+		void toggle_follow_target();
 
-		void follow_prio_pause();
-		void follow_prio_resume();
-		void follow_prio_toggle();
+		void pause_follow_prio();
+		void resume_follow_prio();
+		void toggle_follow_prio();
 
 		void reposition_to_vcam(VirtualCam2D* p_vcam);
 

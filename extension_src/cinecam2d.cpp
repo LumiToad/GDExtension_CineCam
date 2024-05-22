@@ -55,13 +55,13 @@ void CineCam2D::_bind_methods()
 	ADD_METHOD_BINDING(seq_pause, CineCam2D);
 	ADD_METHOD_BINDING(seq_stop, CineCam2D);
 
-	ADD_METHOD_BINDING(follow_target_pause, CineCam2D);
-	ADD_METHOD_BINDING(follow_target_resume, CineCam2D);
-	ADD_METHOD_BINDING(follow_target_toggle, CineCam2D);
+	ADD_METHOD_BINDING(pause_follow_target, CineCam2D);
+	ADD_METHOD_BINDING(resume_follow_target, CineCam2D);
+	ADD_METHOD_BINDING(toggle_follow_target, CineCam2D);
 
-	ADD_METHOD_BINDING(follow_prio_pause, CineCam2D);
-	ADD_METHOD_BINDING(follow_prio_resume, CineCam2D);
-	ADD_METHOD_BINDING(follow_prio_toggle, CineCam2D);
+	ADD_METHOD_BINDING(pause_follow_prio, CineCam2D);
+	ADD_METHOD_BINDING(resume_follow_prio, CineCam2D);
+	ADD_METHOD_BINDING(toggle_follow_prio, CineCam2D);
 
 	ADD_METHOD_ARGS_BINDING(reposition_to_vcam, CineCam2D, "vcam");
 
@@ -69,8 +69,8 @@ void CineCam2D::_bind_methods()
 	ADD_METHOD_BINDING(_on_vcam_priority_changed, CineCam2D);
 	ADD_METHOD_BINDING(_move_by_priority_mode, CineCam2D);
 	ADD_METHOD_BINDING(_move_by_follow_mode, CineCam2D);
-	ADD_METHOD_BINDING(blend_resume, CineCam2D);
-	ADD_METHOD_BINDING(blend_pause, CineCam2D);
+	ADD_METHOD_BINDING(resume_blend, CineCam2D);
+	ADD_METHOD_BINDING(pause_blend, CineCam2D);
 	ADD_METHOD_ARGS_BINDING(_calc_blend_duration_by_speed, CineCam2D, VA_LIST("current_pos", "target_pos", "speed"));
 	ADD_METHOD_ARGS_BINDING(find_vcam_by_id, CineCam2D, "id");
 
@@ -93,10 +93,10 @@ void CineCam2D::_bind_methods()
 	ADD_GETSET_BINDING(_get_shake_rotation_intensity, _set_shake_rotation_intensity, shake_rotation_intensity, intensity, CineCam2D, FLOAT);
 	ADD_GETSET_BINDING(_get_shake_rotation_duration, _set_shake_rotation_duration, shake_rotation_duration, duration, CineCam2D, FLOAT);
 
-	ADD_GETSET_BINDING(_is_seq_paused, _set_seq_paused, sequence_paused, paused, CineCam2D, BOOL);
-	ADD_GETSET_BINDING(_is_blend_paused, _set_blend_paused, blend_paused, paused, CineCam2D, BOOL);
-	ADD_GETSET_BINDING(_is_follow_target_paused, _set_follow_target_paused, follow_target_paused, paused, CineCam2D, BOOL);
-	ADD_GETSET_BINDING(_is_follow_prio_paused, _set_follow_prio_paused, follow_prio_paused, paused, CineCam2D, BOOL);
+	ADD_GETSET_BINDING(_is_seq_paused, _set_seq_paused, sequence_pause, paused, CineCam2D, BOOL);
+	ADD_GETSET_BINDING(_is_blend_paused, _set_blend_paused, blend_pause, paused, CineCam2D, BOOL);
+	ADD_GETSET_BINDING(_is_follow_target_paused, _set_follow_target_paused, follow_target_pause, paused, CineCam2D, BOOL);
+	ADD_GETSET_BINDING(_is_follow_prio_paused, _set_follow_prio_paused, follow_prio_pause, paused, CineCam2D, BOOL);
 
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_offset, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_zoom, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
@@ -304,7 +304,7 @@ void CineCam2D::seq_blend_prev()
 }
 
 
-void CineCam2D::blend_resume()
+void CineCam2D::resume_blend()
 {
 	_set_blend_paused(false);
 }
@@ -366,37 +366,37 @@ void CineCam2D::seq_stop()
 }
 
 
-void CineCam2D::follow_target_pause()
+void CineCam2D::pause_follow_target()
 {
 	_set_follow_target_paused(true);
 }
 
 
-void CineCam2D::follow_target_resume()
+void CineCam2D::resume_follow_target()
 {
 	_set_follow_target_paused(false);
 }
 
 
-void CineCam2D::follow_target_toggle()
+void CineCam2D::toggle_follow_target()
 {
 	is_follow_target_paused = !is_follow_target_paused;
 }
 
 
-void CineCam2D::follow_prio_pause()
+void CineCam2D::pause_follow_prio()
 {
 	_set_follow_prio_paused(true);
 }
 
 
-void CineCam2D::follow_prio_resume()
+void CineCam2D::resume_follow_prio()
 {
 	_set_follow_prio_paused(false);
 }
 
 
-void CineCam2D::follow_prio_toggle()
+void CineCam2D::toggle_follow_prio()
 {
 	_set_follow_prio_paused(!is_follow_prio_paused);
 }
@@ -550,7 +550,7 @@ void CineCam2D::start_sequence(const bool& backwards)
 }
 
 
-void CineCam2D::blend_pause()
+void CineCam2D::pause_blend()
 {
 	_set_blend_paused(true);
 }

@@ -1,0 +1,311 @@
+### H_CineCam2D
+> Inherits: Camera2D < Node2D < CanvasItem < Node < Object
+
+#### Description
+
+This help document refers to [CineCam2D] class! \
+Main Camera for the [CineCam2D]. \
+Features include camera shaking, camera blending to [H_VirtualCam2D], targeting [H_CamTarget2D] and more. 
+ 
+#### Links
+[Link1](https://lnk.bio/LumiToad) \
+[Link2](https://www.linkedin.com/in/LumiToad/) \
+[Link3](https://github.com/LumiToad)
+
+#### Properties
+
+| Type | Property | Hint | 
+| :-- | :-- | :-- | 
+| _BlendData2D_ | [blend_data](#blend_data) | - |
+| _bool=false_ | [blend_pause](#blend_pause) | - |
+| _CamSequence2D_ | [current_sequence](#current_sequence) | - |
+| _FollowMode_ | [follow_mode](#follow_mode) | - |
+| _bool_ | [follow_prio_pause](#follow_prio_pause) | - |
+| _bool_ | [follow_target_pause](#follow_target_pause) | - |
+| _bool_ | [sequence_pause](#sequence_pause) | - |
+| _float_ | [shake_offset_duration](#shake_offset_duration) | - |
+| _Vector2_ | [shake_offset_intensity](#shake_offset_intensity) | - |
+| _float_ | [shake_rotation_duration](#shake_rotation_duration) | - |
+| _float_ | [shake_rotation_intensity](#shake_rotation_intensity) | - |
+| _float_ | [shake_zoom_duration](#shake_zoom_duration) | - |
+| _Vector2_ | [shake_zoom_intensity](#shake_zoom_intensity) | - |
+| _CamTarget2D_ | [target](#target) | - |
+
+#### Methods
+
+| Return | Method | 
+| :-- | :-- |
+| _void_ | [shake_offset(strength : float, duration : float, ease : Tween.EaseType, trans : Tween.TransitionType)](#shake_offset) |
+| _void_ | [shake_zoom(strength : float, duration : float, ease : Tween.EaseType, trans : Tween.TransitionType)](#shake_zoom) |
+| _CamSequence2D_ | [get_current_sequence()](#get_current_sequence) |
+| _void_ | [set_current_sequence(value : CamSequence2D)](#set_current_sequence) |
+| _FollowMode_ | [get_follow_mode()](#get_follow_mode) |
+| _void_ | [set_follow_mode(value : FollowMode)](#set_follow_mode) |
+| _bool_ | [is_follow_prio_paused()](#is_follow_prio_paused) |
+| _void_ | [set_follow_prio_paused(value : bool)](#set_follow_prio_paused) |
+| _bool_ | [is_follow_target_paused()](#is_follow_target_paused) |
+| _void_ | [set_follow_target_paused(value : bool)](#set_follow_target_paused) |
+| _CamTarget2D_ | [get_target()](#get_target) |
+| _void_ | [set_target(value : CamTarget2D)](#set_target) |
+
+#### Signals
+> * _signal_ blend_completed()\
+\
+> Emitted when a blend is completed. \
+> Will not be emitted for [enum H_CineCam2D.FollowMode] [constant H_CineCam2D.TARGET_BLEND]
+
+> * _signal_ blend_paused()\
+\
+> Emitted when a blend is paused. \
+> Will not be emitted for [enum H_CineCam2D.FollowMode] [constant H_CineCam2D.TARGET_BLEND]
+
+> * _signal_ blend_resumed()\
+\
+> Emitted when a blend is resumed. \
+> Will not be emitted for [enum H_CineCam2D.FollowMode] [constant H_CineCam2D.TARGET_BLEND]
+
+> * _signal_ blend_started()\
+\
+> Emitted when a blend is completed. \
+> Will not be emitted for [enum H_CineCam2D.FollowMode] [constant H_CineCam2D.TARGET_BLEND].
+
+> * _signal_ prioritized_vcam2d_changed(vcam2d: Object, priority: int)()\
+\
+> Emitted when any registered [H_VirtualCam2D] priority became higher than the previously highest priority [H_VirtualCam2D]. \
+ > Returns the [H_VirtualCam2D] with the now highest priority as an integer. \
+> See [member H_VirtualCam2D.priority]. \
+> \
+> It doesn't matter, if this [CineCam2D] acts on it.
+
+> * _signal_ sequence_completed()\
+\
+> Emitted when a sequence of blends, using [CamSequence2D] was completed. \
+
+
+> * _signal_ sequence_paused()\
+\
+> Emitted when a sequence of blends, using [CamSequence2D] was paused. \
+> See [method H_CineCam2D.seq_pause]
+
+> * _signal_ sequence_resumed()\
+\
+> Emitted when a sequence of blends, using [CamSequence2D] was resumed. \
+> See [method H_CineCam2D.seq_resume]
+
+> * _signal_ sequence_started()\
+\
+> Emitted when a sequence of blends, using [CamSequence2D] was started. See: \
+> - [method H_CineCam2D.start_sequence] \
+> - [method H_CineCam2D.start_sequence_at] \
+> - [method H_CineCam2D.seq_blend_to] \
+> - [method H_CineCam2D.seq_blend_prev] \
+> - [method H_CineCam2D.seq_blend_prev
+
+> * _signal_ sequence_stopped()\
+\
+> Emitted when a sequence of blends, using [CamSequence2D] was stopped. \
+> See [method H_CineCam2D.seq_stop]
+
+> * _signal_ shake_offset_ended()\
+\
+> Emitted when the camera shake, using its offset, has ended. \
+> See [method H_CineCam2D.shake_offset]
+
+> * _signal_ shake_offset_started()\
+\
+> Emitted when the camera shake, using its offset, is started. \
+> See [method H_CineCam2D.shake_offset]
+
+> * _signal_ shake_rotation_ended()\
+\
+> Emitted when the camera shake, using its rotation, has ended. \
+> See [method H_CineCam2D.shake_rotation]
+
+> * _signal_ shake_rotation_started()\
+\
+> Emitted when the camera shake, using its rotation, has started. \
+> See [method H_CineCam2D.shake_rotation]
+
+> * _signal_ shake_zoom_ended()\
+\
+> Emitted when the camera shake, using its zoom, has ended. \
+> See [method H_CineCam2D.shake_zoom]
+
+> * _signal_ shake_zoom_started()\
+\
+> Emitted when the camera shake, using its zoom, has started. \
+> See [method H_CineCam2D.shake_zoom]
+
+
+
+#### Enumerations
+
+> * _enum_  FollowMode: \
+> \
+> Setings for [member H_CineCam2D.follow_mode]. \
+> PRIO refers to the [H_VirtualCam2D] with the highest priority in the [SceneTree] only! \
+> TARGET is for [H_CamTarget2D] if it is set in [member H_CineCam2D.target]! \
+> \
+\
+> ' OFF = 0, \
+\
+> ' PRIO = 1, \
+> Will constantly follow the it. \
+\
+> ' PRIO_ONESHOT = 2, \
+> Will follow it once. \
+\
+> ' PRIO_BLEND = 3, \
+> Will blend towards it once, using the data from [member H_VirtualCam2D.blend_data]. \
+> If none are given, [member H_CineCam2D.blend_data] will be used. \
+\
+> ' TARGET = 4, \
+> Will constantly follow the target. \
+\
+> ' TARGET_BLEND = 5 \
+> Will constantly blend towards the target. \
+
+
+
+#### Property Description
+
+> * _BlendData2D_ <a id="blend_data">blend_data<a/> \
+> [SET] _set_blend_data(value) \
+> [GET] _get_blend_data() \
+\
+ 
+
+> * _bool=false_ <a id="blend_pause">blend_pause<a/> \
+> [SET] _set_blend_paused(value) \
+> [GET] _is_blend_paused() \
+\
+ 
+
+> * _CamSequence2D_ <a id="current_sequence">current_sequence<a/> \
+> [SET] set_current_sequence(value) \
+> [GET] get_current_sequence() \
+\
+ 
+
+> * _FollowMode_ <a id="follow_mode">follow_mode<a/> \
+> [SET] set_follow_mode(value) \
+> [GET] get_follow_mode() \
+\
+ 
+
+> * _bool_ <a id="follow_prio_pause">follow_prio_pause<a/> \
+> [SET] set_follow_prio_paused(value) \
+> [GET] is_follow_prio_paused() \
+\
+ 
+
+> * _bool_ <a id="follow_target_pause">follow_target_pause<a/> \
+> [SET] set_follow_target_paused(value) \
+> [GET] is_follow_target_paused() \
+\
+ 
+
+> * _bool_ <a id="sequence_pause">sequence_pause<a/> \
+> [SET] _set_seq_paused(value) \
+> [GET] _is_seq_paused() \
+\
+ 
+
+> * _float_ <a id="shake_offset_duration">shake_offset_duration<a/> \
+> [SET] _set_shake_offset_duration(value) \
+> [GET] _get_shake_offset_duration() \
+\
+ 
+
+> * _Vector2_ <a id="shake_offset_intensity">shake_offset_intensity<a/> \
+> [SET] _set_shake_offset_intensity(value) \
+> [GET] _get_shake_offset_intensity() \
+\
+ 
+
+> * _float_ <a id="shake_rotation_duration">shake_rotation_duration<a/> \
+> [SET] _set_shake_rotation_duration(value) \
+> [GET] _get_shake_rotation_duration() \
+\
+ 
+
+> * _float_ <a id="shake_rotation_intensity">shake_rotation_intensity<a/> \
+> [SET] _set_shake_rotation_intensity(value) \
+> [GET] _get_shake_rotation_intensity() \
+\
+ 
+
+> * _float_ <a id="shake_zoom_duration">shake_zoom_duration<a/> \
+> [SET] _set_shake_zoom_duration(value) \
+> [GET] _get_shake_zoom_duration() \
+\
+ 
+
+> * _Vector2_ <a id="shake_zoom_intensity">shake_zoom_intensity<a/> \
+> [SET] _set_shake_zoom_intensity(value) \
+> [GET] _get_shake_zoom_intensity() \
+\
+ 
+
+> * _CamTarget2D_ <a id="target">target<a/> \
+> [SET] set_target(value) \
+> [GET] get_target() \
+\
+ 
+
+
+
+#### Method Descriptions
+
+> * _void_ <a id="shake_offset">shake_offset(strength : float, duration : float, ease : Tween.EaseType, trans : Tween.TransitionType)</a>\
+\
+> Shakes the cam. \
+> Takes a strength and a duration in seconds. \
+
+
+> * _void_ <a id="shake_zoom">shake_zoom(strength : float, duration : float, ease : Tween.EaseType, trans : Tween.TransitionType)</a>\
+\
+> Shakes the cam zoom. \
+> \
+
+
+> * _CamSequence2D_ <a id="get_current_sequence">get_current_sequence()</a>\
+\
+
+
+> * _void_ <a id="set_current_sequence">set_current_sequence(value : CamSequence2D)</a>\
+\
+
+
+> * _FollowMode_ <a id="get_follow_mode">get_follow_mode()</a>\
+\
+
+
+> * _void_ <a id="set_follow_mode">set_follow_mode(value : FollowMode)</a>\
+\
+
+
+> * _bool_ <a id="is_follow_prio_paused">is_follow_prio_paused()</a>\
+\
+
+
+> * _void_ <a id="set_follow_prio_paused">set_follow_prio_paused(value : bool)</a>\
+\
+
+
+> * _bool_ <a id="is_follow_target_paused">is_follow_target_paused()</a>\
+\
+
+
+> * _void_ <a id="set_follow_target_paused">set_follow_target_paused(value : bool)</a>\
+\
+
+
+> * _CamTarget2D_ <a id="get_target">get_target()</a>\
+\
+
+
+> * _void_ <a id="set_target">set_target(value : CamTarget2D)</a>\
+\
+
+

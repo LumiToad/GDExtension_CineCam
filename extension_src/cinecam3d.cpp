@@ -62,15 +62,15 @@ void CineCam3D::_bind_methods()
 	ADD_METHOD_BINDING(_on_vcam_priority_changed, CineCam3D);
 	ADD_METHOD_BINDING(_move_by_priority_mode, CineCam3D);
 	ADD_METHOD_BINDING(_move_by_follow_mode, CineCam3D);
-	ADD_METHOD_BINDING(blend_resume, CineCam3D);
-	ADD_METHOD_BINDING(blend_pause, CineCam3D);
-	ADD_METHOD_BINDING(blend_toggle, CineCam3D);
-	ADD_METHOD_BINDING(follow_target_pause, CineCam3D);
-	ADD_METHOD_BINDING(follow_target_resume, CineCam3D);
-	ADD_METHOD_BINDING(follow_target_toggle, CineCam3D);
-	ADD_METHOD_BINDING(follow_prio_pause, CineCam3D);
-	ADD_METHOD_BINDING(follow_prio_resume, CineCam3D);
-	ADD_METHOD_BINDING(follow_prio_toggle, CineCam3D);
+	ADD_METHOD_BINDING(resume_blend, CineCam3D);
+	ADD_METHOD_BINDING(pause_blend, CineCam3D);
+	ADD_METHOD_BINDING(toggle_blend, CineCam3D);
+	ADD_METHOD_BINDING(pause_follow_target, CineCam3D);
+	ADD_METHOD_BINDING(resume_follow_target, CineCam3D);
+	ADD_METHOD_BINDING(toggle_follow_target, CineCam3D);
+	ADD_METHOD_BINDING(pause_follow_prio, CineCam3D);
+	ADD_METHOD_BINDING(pause_follow_prio, CineCam3D);
+	ADD_METHOD_BINDING(toggle_follow_prio, CineCam3D);
 	ADD_METHOD_ARGS_BINDING(apply_vcam3d_data, CineCam3D, "vcam3d");
 	ADD_METHOD_ARGS_BINDING(_calc_blend_duration_by_speed, CineCam3D, VA_LIST("current_pos", "target_pos", "speed"));
 	ADD_METHOD_ARGS_BINDING(find_vcam_by_id, CineCam3D, "id");
@@ -123,10 +123,10 @@ void CineCam3D::_bind_methods()
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "shake_fov_duration"), "_set_shake_fov_duration", "_get_shake_fov_duration");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "shake_rotation_intensity"), "_set_shake_rotation_intensity", "_get_shake_rotation_intensity");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "shake_rotation_duration"), "_set_shake_rotation_duration", "_get_shake_rotation_duration");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "sequence_paused"), "_set_seq_paused", "_is_seq_paused");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "blend_paused"), "_set_blend_paused", "_is_blend_paused");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_target_paused"), "_set_follow_target_paused", "_is_follow_target_paused");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_prio_paused"), "_set_follow_prio_paused", "_is_follow_prio_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "sequence_pause"), "_set_seq_paused", "_is_seq_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "blend_pause"), "_set_blend_paused", "_is_blend_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_target_pause"), "_set_follow_target_paused", "_is_follow_target_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_prio_pause"), "_set_follow_prio_paused", "_is_follow_prio_paused");
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_STARTED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_ENDED));
@@ -341,13 +341,13 @@ void CineCam3D::seq_blend_prev()
 }
 
 
-void CineCam3D::blend_resume()
+void CineCam3D::resume_blend()
 {
 	_set_blend_paused(false);
 }
 
 
-void CineCam3D::blend_toggle()
+void CineCam3D::toggle_blend()
 {
 	_set_blend_paused(!_is_blend_paused());
 }
@@ -409,37 +409,37 @@ void CineCam3D::seq_stop()
 }
 
 
-void CineCam3D::follow_target_pause()
+void CineCam3D::pause_follow_target()
 {
 	_set_follow_target_paused(true);
 }
 
 
-void CineCam3D::follow_target_resume()
+void CineCam3D::resume_follow_target()
 {
 	_set_follow_target_paused(false);
 }
 
 
-void CineCam3D::follow_target_toggle()
+void CineCam3D::toggle_follow_target()
 {
 	is_follow_target_paused = !is_follow_target_paused;
 }
 
 
-void CineCam3D::follow_prio_pause()
+void CineCam3D::pause_follow_prio()
 {
 	_set_follow_prio_paused(true);
 }
 
 
-void CineCam3D::follow_prio_resume()
+void CineCam3D::resume_follow_prio()
 {
 	_set_follow_prio_paused(false);
 }
 
 
-void CineCam3D::follow_prio_toggle()
+void CineCam3D::toggle_follow_prio()
 {
 	_set_follow_prio_paused(!is_follow_prio_paused);
 }
@@ -622,7 +622,7 @@ void CineCam3D::start_sequence(const bool& backwards)
 }
 
 
-void CineCam3D::blend_pause()
+void CineCam3D::pause_blend()
 {
 	_set_blend_paused(true);
 }
