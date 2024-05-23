@@ -1,0 +1,2 @@
+class_name H_VirtualCam2D
+extends Node2D

@@ -1,0 +1,2 @@
+class_name H_CamTarget2D
+extends Node2D

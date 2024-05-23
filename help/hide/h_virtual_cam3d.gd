@@ -1,0 +1,2 @@
+class_name H_VirtualCam3D
+extends Node3D

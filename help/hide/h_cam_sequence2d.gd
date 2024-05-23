@@ -1,0 +1,2 @@
+class_name H_CamSequence2D
+extends Node2D

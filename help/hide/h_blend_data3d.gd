@@ -1,0 +1,2 @@
+class_name H_BlendData3D
+extends Resource

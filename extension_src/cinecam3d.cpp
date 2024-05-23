@@ -69,7 +69,7 @@ void CineCam3D::_bind_methods()
 	ADD_METHOD_BINDING(resume_follow_target, CineCam3D);
 	ADD_METHOD_BINDING(toggle_follow_target, CineCam3D);
 	ADD_METHOD_BINDING(pause_follow_prio, CineCam3D);
-	ADD_METHOD_BINDING(pause_follow_prio, CineCam3D);
+	ADD_METHOD_BINDING(resume_follow_prio, CineCam3D);
 	ADD_METHOD_BINDING(toggle_follow_prio, CineCam3D);
 	ADD_METHOD_ARGS_BINDING(apply_vcam3d_data, CineCam3D, "vcam3d");
 	ADD_METHOD_ARGS_BINDING(_calc_blend_duration_by_speed, CineCam3D, VA_LIST("current_pos", "target_pos", "speed"));
