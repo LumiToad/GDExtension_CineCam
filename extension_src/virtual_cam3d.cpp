@@ -140,8 +140,8 @@ void VirtualCam3D::init_default_blend_data()
 	blend_data->set_ease(Tween::EASE_IN_OUT);
 	blend_data->set_trans(Tween::TRANS_CUBIC);
 	blend_data->set_blend_rotation(true);
-	blend_data->_set_callable_on_start(false);
-	blend_data->_set_callable_on_complete(false);
+	blend_data->set_callable_on_start(false);
+	blend_data->set_callable_on_complete(false);
 }
 
 

@@ -53,10 +53,12 @@ void BlendData2D::_bind_methods()
 	ClassDB::bind_method(D_METHOD("set_trans", "p_trans"), &BlendData2D::set_trans);
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "trans", PROPERTY_HINT_ENUM, TRANS_HINTS), "set_trans", "get_trans");
 
-	ADD_GETSET_BINDING(get_callable, set_callable, callable, p_callable, BlendData2D, CALLABLE);
+	ClassDB::bind_method(D_METHOD("get_callable"), &BlendData2D::get_callable);
+	ClassDB::bind_method(D_METHOD("set_callable", "p_callable"), &BlendData2D::set_callable);
+	ClassDB::add_property("BlendData2D", PropertyInfo(Variant::CALLABLE, "callable", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_callable", "get_callable");
 	ADD_GETSET_BINDING(is_blend_rotation, set_blend_rotation, blend_rotation, rotation, BlendData2D, BOOL);
-	ADD_GETSET_BINDING(_get_callable_on_start, _set_callable_on_start, _on_start, enable, BlendData2D, BOOL);
-	ADD_GETSET_BINDING(_get_callable_on_complete, _set_callable_on_complete, _on_complete, enable, BlendData2D, BOOL);
+	ADD_GETSET_BINDING(get_callable_on_start, set_callable_on_start, on_start, enable, BlendData2D, BOOL);
+	ADD_GETSET_BINDING(get_callable_on_complete, set_callable_on_complete, on_complete, enable, BlendData2D, BOOL);
 }
 
 
@@ -170,25 +172,25 @@ bool BlendData2D::is_blend_rotation() const
 }
 
 
-void BlendData2D::_set_callable_on_start(bool enable)
+void BlendData2D::set_callable_on_start(bool enable)
 {
 	callable_on_start = enable;
 }
 
 
-bool BlendData2D::_get_callable_on_start() const
+bool BlendData2D::get_callable_on_start() const
 {
 	return callable_on_start;
 }
 
 
-void BlendData2D::_set_callable_on_complete(bool enable)
+void BlendData2D::set_callable_on_complete(bool enable)
 {
 	callable_on_complete = enable;
 }
 
 
-bool BlendData2D::_get_callable_on_complete() const
+bool BlendData2D::get_callable_on_complete() const
 {
 	return callable_on_complete;
 }

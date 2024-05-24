@@ -211,8 +211,8 @@ void CineCam3D::init_default_blend_data()
 	blend_data->set_ease(Tween::EASE_IN_OUT);
 	blend_data->set_trans(Tween::TRANS_CUBIC);
 	blend_data->set_blend_rotation(true);
-	blend_data->_set_callable_on_start(false);
-	blend_data->_set_callable_on_complete(false);
+	blend_data->set_callable_on_start(false);
+	blend_data->set_callable_on_complete(false);
 }
 
 
@@ -221,7 +221,7 @@ void CineCam3D::_on_blend_started_internal()
 	emit_signal(SIGNAL_BLEND_STARTED);
 	is_blend_not_stopped = true;
 
-	if (active_blend->_get_callable_on_start())
+	if (active_blend->get_callable_on_start())
 	{
 		active_blend->get_callable().call();
 	}
@@ -232,7 +232,7 @@ void CineCam3D::_on_blend_completed_internal()
 {
 	emit_signal(SIGNAL_BLEND_COMPLETED);
 
-	if (active_blend->_get_callable_on_complete())
+	if (active_blend->get_callable_on_complete())
 	{
 		active_blend->get_callable().call();
 	}

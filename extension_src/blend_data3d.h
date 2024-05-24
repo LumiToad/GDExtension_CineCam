@@ -82,11 +82,11 @@ namespace godot
 		void set_blend_rotation(bool rotation);
 		bool is_blend_rotation() const;
 
-		void _set_callable_on_start(bool enable);
-		bool _get_callable_on_start() const;
+		void set_callable_on_start(bool enable);
+		bool get_callable_on_start() const;
 
-		void _set_callable_on_complete(bool enable);
-		bool _get_callable_on_complete() const;
+		void set_callable_on_complete(bool enable);
+		bool get_callable_on_complete() const;
 	};
 }
 VARIANT_ENUM_CAST(BlendData3D::BlendByType);
