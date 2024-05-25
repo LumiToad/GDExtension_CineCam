@@ -1,5 +1,6 @@
 class_name H_VirtualCam3D
-#Inherits: Node3D < CanvasItem < Node < Object
+extends Node3D
+#Inherits: Node3D < Node < Object
 #MAIN_DESCRIPTION
 ## This help document refers to [VirtualCam3D] class! [br]
 ## 

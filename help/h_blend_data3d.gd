@@ -1,4 +1,5 @@
 class_name H_BlendData3D
+extends Resource
 #Inherits: Resource < RefCounted < Object
 #MAIN_DESCRIPTION
 ## This help document refers to [BlendData3D] class! [br]

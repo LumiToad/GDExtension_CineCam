@@ -1,5 +1,6 @@
 class_name H_CamTarget3D
-#Inherits: Node3D < CanvasItem < Node < Object
+extends Node3D
+#Inherits: Node3D < Node < Object
 #MAIN_DESCRIPTION
 ## This help document refers to [CamTarget3D] class! [br]
 ## 

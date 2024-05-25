@@ -1,4 +1,5 @@
 class_name H_CamSequence3D
+extends Node3D
 #Inherits: Node3D < Node < Object
 #MAIN_DESCRIPTION
 ## This help document refers to [CamSequence3D] class! [br]

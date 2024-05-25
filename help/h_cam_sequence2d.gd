@@ -1,4 +1,5 @@
 class_name H_CamSequence2D
+extends Node2D
 #Inherits: Node2D < CanvasItem < Node < Object
 #MAIN_DESCRIPTION
 ## This help document refers to [CamSequence2D] class! [br]

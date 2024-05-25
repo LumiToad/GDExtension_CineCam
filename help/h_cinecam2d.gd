@@ -1,4 +1,5 @@
 class_name H_CineCam2D
+extends Camera2D
 #Inherits: Camera2D < Node2D < CanvasItem < Node < Object
 #MAIN_DESCRIPTION
 ## This help document refers to [CineCam2D] class! [br]

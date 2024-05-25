@@ -1,4 +1,5 @@
 class_name H_VirtualCam2D
+extends Node2D
 #Inherits: Node2D < CanvasItem < Node < Object
 #MAIN_DESCRIPTION
 ## This help document refers to [VirtualCam2D] class! [br]

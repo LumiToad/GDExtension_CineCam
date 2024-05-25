@@ -1,5 +1,6 @@
 class_name H_CineCam3D
-#Inherits: Camera3D < Node3D < CanvasItem < Node < Object
+extends Camera3D
+#Inherits: Camera3D < Node3D < Node < Object
 #MAIN_DESCRIPTION
 ## This help document refers to [CineCam3D] class! [br]
 ## 
