@@ -1,0 +1,105 @@
+### H_VirtualCam3D
+> Inherits: Node3D < CanvasItem < Node < Object
+
+#### Description
+
+This help document refers to [VirtualCam3D] class! \
+Virtual camera for the [H_CineCam3D]. \
+Imagine these nodes as dummy cameras for the [H_CineCam3D]. \
+\
+These dummy cameras will automatically register to the first found [H_CineCam3D]. \
+Be careful! At least one virtual camera has to be above a [H_CineCam3D] in the hierarchy! \
+Otherwise the game will crash! \
+You can setup blends, a camera priority and an ID to find a virtual camera node. \
+See [H_CineCam3D] for all the things, that you can do with a [H_VirtualCam3D] node! \
+\
+They also contain all the properties of a [Camera3D] as dummy values without any use. \
+Using [method H_CineCam3D.apply_vcam3d_data], you can copy the data to your currently runing [H_CineCam3D]. 
+ 
+#### Links
+[Link1](https://lnk.bio/LumiToad) \
+[Link2](https://www.linkedin.com/in/LumiToad/) \
+[Link3](https://github.com/LumiToad)
+
+#### Properties
+
+| Type | Property | Hint | 
+| :-- | :-- | :-- | 
+| _String_ | [vcam_id](#vcam_id) | - |
+| _int=0_ | [priority](#priority) | - |
+| _H_BlendData3D_ | [blend_data](#blend_data) | - |
+
+#### Methods
+
+| Return | Method | 
+| :-- | :-- |
+| _String_ | [get_vcam_id()](#get_vcam_id) |
+| _void_ | [set_vcam_id(value : String)](#set_vcam_id) |
+| _int_ | [get_priority()](#get_priority) |
+| _void_ | [set_priority(value : int)](#set_priority) |
+
+#### Signals
+> * _signal_ priority_changed(vcam3d: Object, priority: int)()\
+\
+> Emitted, when the [member H_VirtualCam3D.priority] has changed
+
+
+
+
+#### Property Description
+
+> * _String_ <a id="vcam_id">vcam_id<a/> \
+> [SET] set_vcam_id(value) \
+> [GET] get_vcam_id() \
+\
+> Getter / Setter for the vcam_id property. \
+> This [String] is just a name, which you can search, using [method H_CineCam3D.find_vcam_by_id]. \
+ 
+
+> * _int=0_ <a id="priority">priority<a/> \
+> [SET] set_priority(value) \
+> [GET] get_priority() \
+\
+> Getter / Setter for the priority of this virtual camera. \
+> A [H_CineCam3D] will always know the virtual camera with the highest priority. \
+> See [enum H_CineCam3D.FollowMode] for this. \
+> The [H_CineCam3D] will register the priority, either when: \
+> - [H_VirtualCam3D] nodes are changed (instanced for example) in the scene tree. \
+> - If their priority changes. \
+> This also happens, when loading the scene! \
+> If two or more virtual cameras have the same priority, a [H_CineCam3D] will register the latest registered as the new "highest priority virtual camera". \
+ 
+
+> * _H_BlendData3D_ <a id="blend_data">blend_data<a/> \
+> [SET] _set_blend_data(value) \
+> [GET] _get_blend_data() \
+\
+> The default blending data for this virtual camera. \
+> Will be used, when a [H_CineCam3D] blends to this virtual camera. \
+> If this is empty, [member H_CineCam3D.blend_data] will be used as a default blend. \
+ 
+
+
+
+#### Method Descriptions
+
+> * _String_ <a id="get_vcam_id">get_vcam_id()</a>\
+\
+> Getter for vcam_id. \
+
+
+> * _void_ <a id="set_vcam_id">set_vcam_id(value : String)</a>\
+\
+> Setter for vcam_id. \
+
+
+> * _int_ <a id="get_priority">get_priority()</a>\
+\
+> Getter for priority. \
+
+
+> * _void_ <a id="set_priority">set_priority(value : int)</a>\
+\
+> Setter for priority. \
+
+

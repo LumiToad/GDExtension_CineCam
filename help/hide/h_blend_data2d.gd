@@ -1,2 +1,0 @@
-class_name H_BlendData2D
-extends Resource

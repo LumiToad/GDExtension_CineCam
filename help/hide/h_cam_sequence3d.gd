@@ -1,2 +1,0 @@
-class_name H_CamSequence3D
-extends Node3D

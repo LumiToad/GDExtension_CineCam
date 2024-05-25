@@ -1,5 +1,4 @@
 class_name H_CineCam3D
-extends  Node3D
 #Inherits: Camera3D < Node3D < CanvasItem < Node < Object
 #MAIN_DESCRIPTION
 ## This help document refers to [CineCam3D] class! [br]
@@ -38,7 +37,7 @@ signal blend_started
 ## See [member H_VirtualCam3D.priority]. [br]
 ## [br]
 ## It doesn't matter, if this [H_CineCam3D] acts on it. [br] 
-signal prioritized_vcam3D_changed(vcam3D: Object, priority: int)
+signal prioritized_vcam3d_changed(vcam3d: Object, priority: int)
 
 
 ## Emitted when a sequence of blends, using [CamSequence3D] was completed. [br]
@@ -223,13 +222,13 @@ var target : CamTarget3D :
 
 
 ## Applies all data from the given [H_VirtualCam3D] under Camera3D Section to this [H_CineCam3D]. [br]
-func apply_vcam3D_data(vcam3D: VirtualCam3D) -> String :
+func apply_vcam3d_data(vcam3d: VirtualCam3D) -> String :
 	return ""
 
 
 ## Blends towards the given [H_VirtualCam3D], using the given [H_BlendData3D]. [br]
 ## You can use [member H_CineCam3D.blend_data], [member H_VirtualCam3D.blend_data] or data from any other source. [br]
-func blend_to(vcam3D : VirtualCam3D, blend_data : BlendData3D):
+func blend_to(vcam3d : VirtualCam3D, blend_data : BlendData3D):
 	pass
 
 

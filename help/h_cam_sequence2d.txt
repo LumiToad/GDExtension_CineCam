@@ -1,0 +1,82 @@
+### H_CamSequence2D
+> Inherits: Node2D < CanvasItem < Node < Object
+
+#### Description
+
+This help document refers to [CamSequence2D] class! \
+This node is only useful in combination with [H_VirtualCam2D] and [H_CineCam2D]. \
+Attach [H_VirtualCam2D] nodes to this sequence. Then a [H_CineCam2D] can access it using various methods. \
+Will automatically reload the internal array of virtual cameras on [constant Node.NOTIFICATION_CHILD_ORDER_CHANGED]. 
+ 
+#### Links
+[Link1](https://lnk.bio/LumiToad) \
+[Link2](https://www.linkedin.com/in/LumiToad/) \
+[Link3](https://github.com/LumiToad)
+
+#### Properties
+
+| Type | Property | Hint | 
+| :-- | :-- | :-- | 
+| _int_ | [current_idx](#current_idx) | - |
+
+#### Methods
+
+| Return | Method | 
+| :-- | :-- |
+| _VirtualCam2D_ | [current_vcam()](#current_vcam) |
+| _Array[VirtualCam2D]_ | [get_vcam2d_array()](#get_vcam2d_array) |
+| _VirtualCam2D_ | [vcam2d_at(index: int)](#vcam2d_at) |
+| _int_ | [get_current_idx()](#get_current_idx) |
+| _void_ | [set_current_idx(value : int)](#set_current_idx) |
+
+#### Signals
+> * _signal_ index_changed(vcam2d : Object, index : int)()\
+\
+> Will be emitted, when the index of the currently selected virtual camera has changed. \
+> Returns [H_VirtualCam2D] and the current index
+
+
+
+
+#### Property Description
+
+> * _int_ <a id="current_idx">current_idx<a/> \
+> [SET] set_current_idx(value) \
+> [GET] get_current_idx() \
+\
+> Getter / Setter for the current index of the sequence. \
+ 
+
+
+
+#### Method Descriptions
+
+> * _VirtualCam2D_ <a id="current_vcam">current_vcam()</a>\
+\
+> Returns the currently selected [H_VirtualCam2D]. \
+> That means, that if the sequence is running, the target for the currently running blend is returned. \
+
+
+> * _Array[VirtualCam2D]_ <a id="get_vcam2d_array">get_vcam2d_array()</a>\
+\
+> Returns all [H_VirtualCam2D] that are registred to this node. \
+> This is basically the [H_VirtualCam2D] children of this node. \
+> When virtual cams are added, removed or changed in order, the internal array will changed automatically. \
+> You can use this method after such a change to get the new array. \
+
+
+> * _VirtualCam2D_ <a id="vcam2d_at">vcam2d_at(index: int)</a>\
+\
+> Returns the [H_VirtualCam2D] at given index of the internal array. \
+
+
+> * _int_ <a id="get_current_idx">get_current_idx()</a>\
+\
+> Getter for current_idx. \
+
+
+> * _void_ <a id="set_current_idx">set_current_idx(value : int)</a>\
+\
+> Setter for current_idx. \
+
+

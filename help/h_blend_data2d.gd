@@ -1,5 +1,4 @@
 class_name H_BlendData2D
-extends Resource
 #Inherits: Resource < RefCounted < Object
 #MAIN_DESCRIPTION
 ## This help document refers to [BlendData2D] class! [br]

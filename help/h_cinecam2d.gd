@@ -1,5 +1,4 @@
 class_name H_CineCam2D
-extends  Node2D
 #Inherits: Camera2D < Node2D < CanvasItem < Node < Object
 #MAIN_DESCRIPTION
 ## This help document refers to [CineCam2D] class! [br]
@@ -38,7 +37,7 @@ signal blend_started
 ## See [member H_VirtualCam2D.priority]. [br]
 ## [br]
 ## It doesn't matter, if this [H_CineCam2D] acts on it. [br] 
-signal prioritized_vcam2D_changed(vcam2D: Object, priority: int)
+signal prioritized_vcam2d_changed(vcam2d: Object, priority: int)
 
 
 ## Emitted when a sequence of blends, using [CamSequence2D] was completed. [br]
@@ -215,13 +214,13 @@ var target : H_CamTarget2D :
 
 
 ## Applies all data from the given [H_VirtualCam2D] under Camera2D Section to this [H_CineCam2D]. [br]
-func apply_vcam2D_data(vcam2D: H_VirtualCam2D) -> String :
+func apply_vcam2d_data(vcam2d: H_VirtualCam2D) -> String :
 	return ""
 
 
 ## Blends towards the given [H_VirtualCam2D], using the given [H_BlendData2D]. [br]
 ## You can use [member H_CineCam2D.blend_data], [member H_VirtualCam2D.blend_data] or data from any other source. [br]
-func blend_to(vcam2D : H_VirtualCam2D, blend_data : H_BlendData2D):
+func blend_to(vcam2d : H_VirtualCam2D, blend_data : H_BlendData2D):
 	pass
 
 
