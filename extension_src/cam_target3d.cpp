@@ -48,9 +48,10 @@ void CamTarget3D::_bind_methods()
 	ADD_METHOD_BINDING(get_trans, CamTarget3D);
 	ADD_METHOD_ARGS_BINDING(set_trans, CamTarget3D, "trans");
 
-	ADD_PROPERTY(PropertyInfo(Variant::Variant::VECTOR2, "offset"), "set_target_offset", "get_target_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::VECTOR3, "offset"), "set_target_offset", "get_target_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::Variant::FLOAT, "speed_x", PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%"), "set_speed_x", "get_speed_x");
 	ADD_PROPERTY(PropertyInfo(Variant::Variant::FLOAT, "speed_y", PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%"), "set_speed_y", "get_speed_y");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::FLOAT, "speed_z", PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%"), "set_speed_z", "get_speed_z");
 	ADD_PROPERTY(PropertyInfo(Variant::Variant::INT, "ease", PROPERTY_HINT_ENUM, EASE_HINTS), "set_ease", "get_ease");
 	ADD_PROPERTY(PropertyInfo(Variant::Variant::INT, "trans", PROPERTY_HINT_ENUM, TRANS_HINTS), "set_trans", "get_trans");
 }
