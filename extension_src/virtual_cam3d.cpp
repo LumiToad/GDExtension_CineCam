@@ -48,11 +48,19 @@ VirtualCam3D::~VirtualCam3D()
 
 void VirtualCam3D::_bind_methods()
 {
-	ADD_GETSET_BINDING(get_vcam_id, set_vcam_id, vcam_id, id, VirtualCam3D, Variant::STRING);
-	ADD_GETSET_BINDING(get_priority, set_priority, priority, priority, VirtualCam3D, Variant::INT);
-	ADD_GETSET_HINT_BINDING(_get_blend_data, _set_blend_data, blend_data, p_default_blend, VirtualCam3D, OBJECT, PROPERTY_HINT_RESOURCE_TYPE, "BlendData3D");
-
 	ADD_METHOD_BINDING(_register_to_cinecam3d, VirtualCam3D);
+
+	ADD_METHOD_BINDING(get_vcam_id, VirtualCam3D);
+	ADD_METHOD_ARGS_BINDING(set_vcam_id, VirtualCam3D, "id");
+	ADD_METHOD_BINDING(get_priority, VirtualCam3D);
+	ADD_METHOD_ARGS_BINDING(set_priority, VirtualCam3D, "priority");
+	ADD_METHOD_BINDING(_get_blend_data, VirtualCam3D);
+	ADD_METHOD_ARGS_BINDING(_set_blend_data, VirtualCam3D, "p_default_blend");
+
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::STRING, "vcam_id"), "set_vcam_id", "get_vcam_id");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::INT, "priority"), "set_priority", "get_priority");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "blend_data", PROPERTY_HINT_RESOURCE_TYPE, "BlendData3D"), "_set_blend_data", "_get_blend_data");
+
 	ADD_METHOD_ARGS_BINDING(is_position_behind, VirtualCam3D, "world_point");
 	ADD_METHOD_ARGS_BINDING(set_perspective, VirtualCam3D, VA_LIST("fov", "z_near", "z_far"));
 	ADD_METHOD_ARGS_BINDING(set_orthogonal, VirtualCam3D, VA_LIST("size", "z_near", "z_far"));

@@ -40,13 +40,19 @@ VirtualCam2D::~VirtualCam2D()
 
 void VirtualCam2D::_bind_methods()
 {
+	ADD_METHOD_BINDING(_register_to_cinecam2d, VirtualCam2D);
+
 	ADD_METHOD_BINDING(get_vcam_id, VirtualCam2D);
 	ADD_METHOD_ARGS_BINDING(set_vcam_id, VirtualCam2D, "id");
 	ADD_METHOD_BINDING(get_priority, VirtualCam2D);
 	ADD_METHOD_ARGS_BINDING(set_priority, VirtualCam2D, "priority");
 	ADD_METHOD_BINDING(_get_blend_data, VirtualCam2D);
 	ADD_METHOD_ARGS_BINDING(_set_blend_data, VirtualCam2D, "p_default_blend");
-	ADD_METHOD_BINDING(_register_to_cinecam2d, VirtualCam2D);
+
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::STRING, "vcam_id"), "set_vcam_id", "get_vcam_id");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::INT, "priority"), "set_priority", "get_priority");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "blend_data", PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D"), "_set_blend_data", "_get_blend_data");
+
 	ADD_METHOD_BINDING(get_offset, VirtualCam2D);
 	ADD_METHOD_ARGS_BINDING(set_offset, VirtualCam2D, "offset");
 	ADD_METHOD_BINDING(get_anchor_mode, VirtualCam2D);
@@ -99,10 +105,6 @@ void VirtualCam2D::_bind_methods()
 	ADD_METHOD_ARGS_BINDING(set_limit_drawing_enabled, VirtualCam2D, "limit_drawing_enabled");
 	ADD_METHOD_BINDING(is_margin_drawing_enabled, VirtualCam2D);
 	ADD_METHOD_ARGS_BINDING(set_margin_drawing_enabled, VirtualCam2D, "margin_drawing_enabled");
-
-	ADD_PROPERTY(PropertyInfo(Variant::Variant::STRING, "vcam_id"), "set_vcam_id", "get_vcam_id");
-	ADD_PROPERTY(PropertyInfo(Variant::Variant::INT, "priority"), "set_priority", "get_priority");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "blend_data", PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D"), "_set_blend_data", "_get_blend_data");
 
 	ADD_GROUP("Camera2D", "cam2d_");
 

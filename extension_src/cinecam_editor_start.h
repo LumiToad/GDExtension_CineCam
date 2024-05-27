@@ -19,7 +19,7 @@ namespace godot
 
 	private:
 		String CINECAM_VERSION = "v1.0";
-		String CINECAM_URL = "https://www.github.com/lumitoad/";
+		String CINECAM_URL = "https://github.com/LumiToad/GDExtension_CineCam/";
 
 
 	public:

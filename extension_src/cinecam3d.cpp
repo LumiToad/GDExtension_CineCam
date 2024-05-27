@@ -47,8 +47,8 @@ CineCam3D::~CineCam3D()
 
 void CineCam3D::_bind_methods()
 {
+	ADD_METHOD_BINDING(_on_blend_completed_internal, CineCam3D);
 	ADD_METHOD_BINDING(init_default_blend_data, CineCam3D);
-
 	ADD_METHOD_BINDING(seq_blend_next, CineCam3D);
 	ADD_METHOD_BINDING(seq_blend_prev, CineCam3D);
 	ADD_METHOD_ARGS_BINDING(seq_blend_to, CineCam3D, VA_LIST("idx"));
@@ -151,8 +151,6 @@ void CineCam3D::_bind_methods()
 	BIND_ENUM_CONSTANT(PRIO_BLEND);
 	BIND_ENUM_CONSTANT(TARGET);
 	BIND_ENUM_CONSTANT(TARGET_BLEND);
-
-	ClassDB::bind_method(D_METHOD("_on_blend_completed_internal"), &CineCam3D::_on_blend_completed_internal);
 }
 
 

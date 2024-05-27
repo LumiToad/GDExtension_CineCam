@@ -155,7 +155,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bind_utils.cpp" />
     <ClCompile Include="blend_data2d.cpp" />
     <ClCompile Include="blend_data3d.cpp" />
     <ClCompile Include="cam_sequence2d.cpp" />
@@ -166,7 +165,6 @@
     <ClCompile Include="cinecam3d.cpp" />
     <ClCompile Include="print_utils.cpp" />
     <ClCompile Include="gdclass_metadata.cpp" />
-    <ClCompile Include="gdexample.cpp" />
     <ClCompile Include="register_types.cpp" />
     <ClCompile Include="template_node.cpp" />
     <ClCompile Include="template_resource.cpp" />

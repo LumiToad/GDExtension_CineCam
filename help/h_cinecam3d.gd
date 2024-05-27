@@ -61,7 +61,7 @@ signal sequence_resumed
 ## - [method H_CineCam3D.start_sequence_at] [br]
 ## - [method H_CineCam3D.seq_blend_to] [br]
 ## - [method H_CineCam3D.seq_blend_prev] [br]
-## - [method H_CineCam3D.seq_blend_prev] [br]
+## - [method H_CineCam3D.seq_blend_next] [br]
 signal sequence_started
 
 
@@ -153,7 +153,7 @@ var follow_prio_pause : bool = false :
 
 
 ## Getter / Setter for pausing the follow target feature. [br]
-## See [constant H_CineCam3D.TARGET], [constant H_CineCam3D.TARGET] and [method H_CineCam3D.pause_follow_target]. [br]
+## See [constant H_CineCam3D.TARGET], [constant H_CineCam3D.TARGET_BLEND] and [method H_CineCam3D.pause_follow_target]. [br]
 var follow_target_pause : bool = false :
 	get: return is_follow_target_paused()
 	set(value): set_follow_target_paused(value)

@@ -59,10 +59,10 @@ var speed_z : float = 0.0:
 	set(value): set_speed_z(value)
 
 
-## Returns speed_x and speed_y as a Vector2, but scaled down to represent the actual blending speed. [br]
+## Returns speed_x, speed_y and speed_z as a Vector3, but scaled down to represent the actual blending speed. [br]
 ## From 0.00 to 1.00
-func scaled_speed() -> Vector2:
-	return Vector2()
+func scaled_speed() -> Vector3:
+	return Vector3()
 
 
 ## Getter for ease. [br]

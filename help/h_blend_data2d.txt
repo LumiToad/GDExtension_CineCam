@@ -1,10 +1,10 @@
-### H_BlendData2D
-> Inherits: Resource < RefCounted < Object
+### BlendData2D
+> Inherits: [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html) < [RefCounted](https://docs.godotengine.org/en/stable/classes/class_refcounted.html) < [Object](https://docs.godotengine.org/en/stable/classes/class_object.html)
 
 #### Description
 
-This help document refers to [BlendData2D] class! \
-Blending data for the [H_CineCam2D] / [H_VirtualCam2D]. 
+This help document refers to [BlendData2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/BlendData2D-class-reference-%E2%80%90-CineCam-wiki/) class! \
+Blending data for the [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/) / [VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki). 
  
 #### Links
 [Link1](https://lnk.bio/LumiToad/) \
@@ -15,21 +15,21 @@ Blending data for the [H_CineCam2D] / [H_VirtualCam2D].
 
 | Type | Property | Hint | 
 | :-- | :-- | :-- | 
-| _BlendByType=BlendByType.DURATION_ | [blend_by](#blend_by) | - |
-| _float=0.0_ | [blend_by_value](#blend_by_value) | - |
+| _[BlendByType](#BlendByType)_ | [blend_by](#blend_by) | - |
+| _float_ | [blend_by_value](#blend_by_value) | - |
 | _String_ | [blend_name](#blend_name) | - |
-| _bool=true_ | [blend_rotation](#blend_rotation) | - |
-| _Callable_ | [callable](#callable) | - |
-| _Tween.EaseType_ | [ease](#ease) | - |
-| _Tween.TransitionType_ | [trans](#trans) | - |
-| _bool=false_ | [on_start](#on_start) | - |
-| _bool=false_ | [on_complete](#on_complete) | - |
+| _bool_ | [blend_rotation](#blend_rotation) | - |
+| _[Callable](https://docs.godotengine.org/en/stable/classes/class_callable.html)_ | [callable](#callable) | - |
+| _[Tween.EaseType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ | [ease](#ease) | - |
+| _[Tween.TransitionType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ | [trans](#trans) | - |
+| _bool_ | [on_start](#on_start) | - |
+| _bool_ | [on_complete](#on_complete) | - |
 
 #### Methods
 
-| Return | Method | 
+| Return | | 
 | :-- | :-- |
-| _BlendByType_ | [get_blend_by()](#get_blend_by) |
+| _[BlendByType](#BlendByType)_ | [get_blend_by()](#get_blend_by) |
 | _void_ | [set_blend_by(blend_by : BlendByType)](#set_blend_by) |
 | _float_ | [get_blend_by_value()](#get_blend_by_value) |
 | _void_ | [set_blend_by_value(value : float)](#set_blend_by_value) |
@@ -37,11 +37,11 @@ Blending data for the [H_CineCam2D] / [H_VirtualCam2D].
 | _void_ | [set_blend_name(name : String)](#set_blend_name) |
 | _bool_ | [is_blend_rotation()](#is_blend_rotation) |
 | _void_ | [set_blend_rotation(value : bool)](#set_blend_rotation) |
-| _Callable_ | [get_callable()](#get_callable) |
+| _[Callable](https://docs.godotengine.org/en/stable/classes/class_callable.html)_ | [get_callable](#get_callable) |
 | _void_ | [set_callable(callable : Callable)](#set_callable) |
-| _Tween.EaseType_ | [get_ease()](#get_ease) |
+| _[Tween.EaseType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ | [get_ease()](#get_ease) |
 | _void_ | [set_ease(ease : Tween.EaseType)](#set_ease) |
-| _Tween.TransitionType_ | [get_trans()](#get_trans) |
+| _[Tween.TransitionType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ | [get_trans()](#get_trans) |
 | _void_ | [set_trans(trans : Tween.TransitionType)](#set_trans) |
 | _bool_ | [get_callable_on_start()](#get_callable_on_start) |
 | _void_ | [set_callable_on_start(value : bool)](#set_callable_on_start) |
@@ -49,43 +49,42 @@ Blending data for the [H_CineCam2D] / [H_VirtualCam2D].
 | _void_ | [set_callable_on_complete(value : bool)](#set_callable_on_complete) |
 
 
-
 #### Enumerations
 
-> * _enum_ BlendByType: \
+> * _enum_ <a id="BlendByType">BlendByType</a>: \
 > \
-> Controls how the [member H_BlendData2D.blend_by_value] is being used. \
-> You can retrieve the full duration of the blend with [method H_CineCam2D.full_blend_duration]. \
+> Controls how the [BlendData2D.blend_by_value](#blend_by_value) is being used. \
+> You can retrieve the full duration of the blend with [CineCam2D.full_blend_duration](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/#full_blend_duration). \
 > \
 \
-> ' DURATION = 0, \
+> ' <a id="DURATION">DURATION</a> = 0, \
 > The value will be used as time in seconds. \
 \
-> ' SPEED = 1 \
+> ' <a id="SPEED">SPEED</a> = 1 \
 > The value will be a relative speed value. \
-> The time in seconds will be calculated. \
+> The time in seconds will be calculated. 
 
 
 
 #### Property Description
 
-> * _BlendByType=BlendByType.DURATION_ <a id="blend_by">blend_by<a/> \
+> * _[BlendByType](#BlendByType)_ <a id="blend_by">blend_by<a/> \
 > [SET] set_blend_by(value) \
 > [GET] get_blend_by() \
 \
 > Getter / Setter for the current blend_by property. \
-> See [enum H_BlendData2D.BlendByType] \
+> See [BlendData2D.BlendByType](#BlendByType)
  
 
-> * _float=0.0_ <a id="blend_by_value">blend_by_value<a/> \
+> * _float_ <a id="blend_by_value">blend_by_value<a/> \
 > [SET] set_blend_by_value(value) \
 > [GET] get_blend_by_value() \
 \
 > Getter / Setter for the blend by value. \
-> This if [member H_BlendData2D.blend_by] is set to [constant H_BlendData2D.DURATION], this will be used as seconds. \
-> If set to [constant H_BlendData2D.SPEED], it will be used as a relative speed value. \
-> See [enum H_BlendData2D.BlendByType] for more information. \
-> In both cases, these values will be used by an internal tween, so there is no need to delta time them. \
+> This if [BlendData2D.blend_by](#blend_by) is set to [BlendData2D.DURATION](#DURATION), this will be used as seconds. \
+> If set to [BlendData2D.SPEED](#SPEED), it will be used as a relative speed value. \
+> See [BlendData2D.BlendByType](#BlendByType) for more information. \
+> In both cases, these values will be used by an internal tween, so there is no need to delta time them.
  
 
 > * _String_ <a id="blend_name">blend_name<a/> \
@@ -93,150 +92,150 @@ Blending data for the [H_CineCam2D] / [H_VirtualCam2D].
 > [GET] get_blend_name() \
 \
 > Getter / Setter for the name of the blend. \
-> This is used as an ID for [method H_CineCam2D.find_vcam_by_id]. \
+> This is used as an ID for [CineCam2D.find_vcam_by_id](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/#find_vcam_by_id).
  
 
-> * _bool=true_ <a id="blend_rotation">blend_rotation<a/> \
+> * _bool_ <a id="blend_rotation">blend_rotation<a/> \
 > [SET] set_blend_rotation(value) \
 > [GET] is_blend_rotation() \
 \
 > Getter / Setter for blend rotation property. \
-> If set to true, the blend will also rotate the [H_CineCam2D] to match the rotation of the given [H_VirtualCam2D]. \
+> If set to true, the blend will also rotate the [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/) to match the rotation of the given [VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki).
  
 
-> * _Callable_ <a id="callable">callable<a/> \
+> * _[Callable](https://docs.godotengine.org/en/stable/classes/class_callable.html)_ <a id="callable">callable<a/> \
 > [SET] set_callable(value) \
 > [GET] get_callable() \
 \
-> Getter / Setter for the optional callable. \
-> You can add a [Callable] to the blend_data, which will be called by the [H_CineCam2D], \
+> Getter / Setter for the optional [Callable](https://docs.godotengine.org/en/stable/classes/class_callable.html). \
+> You can add a [Callable](https://docs.godotengine.org/en/stable/classes/class_callable.html) to the blend data, which will be called by the [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/), \
 > either on the start of the blend of when its complete. \
-> See [member H_BlendData2D.on_start] / [member H_BlendData2D.on_complete] for this. \
+> See [BlendData2D.on_start](#on_start) / [BlendData2D.on_complete](#on_complete) for this.
  
 
-> * _Tween.EaseType_ <a id="ease">ease<a/> \
+> * _[Tween.EaseType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ <a id="ease">ease<a/> \
 > [SET] set_ease(value) \
 > [GET] get_ease() \
 \
 > Getter / Setter for the ease type of the blend. \
-> See [enum Tween.EaseType] for more info. \
+> See [Tween.EaseType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations) for more info.
  
 
-> * _Tween.TransitionType_ <a id="trans">trans<a/> \
+> * _[Tween.TransitionType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ <a id="trans">trans<a/> \
 > [SET] set_trans(value) \
 > [GET] get_trans() \
 \
 > Getter / Setter for the transition type of the blend. \
-> See [enum Tween.TransitionType] for more info. \
+> See [Tween.TransitionType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations) for more info.
  
 
-> * _bool=false_ <a id="on_start">on_start<a/> \
+> * _bool_ <a id="on_start">on_start<a/> \
 > [SET] set_callable_on_start(value) \
 > [GET] get_callable_on_start() \
 \
 > Getter / Setter for the on start property. \
-> If this is set to true, [member H_BlendData2D.callable] will be called on the start of the blend. \
+> If this is set to true, [BlendData2D.callable](#callable) will be called on the start of the blend.
  
 
-> * _bool=false_ <a id="on_complete">on_complete<a/> \
+> * _bool_ <a id="on_complete">on_complete<a/> \
 > [SET] set_callable_on_complete(value) \
 > [GET] get_callable_on_complete() \
 \
 > Getter / Setter for the on complete property. \
-> If this is set to true, [member H_BlendData2D.callable] will be called when the blend is complete. \
+> If this is set to true, [BlendData2D.callable](#callable) will be called when the blend is complete.
  
 
 
 
-#### Method Descriptions
+#### Descriptions
 
-> * _BlendByType_ <a id="get_blend_by">get_blend_by()</a>\
+> * _[BlendByType](#BlendByType)_ <a id="get_blend_by">get_blend_by()</a>\
 \
-> Getter for blend_by. \
+> Getter for blend_by.
 
 
 > * _void_ <a id="set_blend_by">set_blend_by(blend_by : BlendByType)</a>\
 \
-> Setter for blend_by. \
+> Setter for blend_by.
 
 
 > * _float_ <a id="get_blend_by_value">get_blend_by_value()</a>\
 \
-> Getter for blend_by_value. \
+> Getter for blend_by_value.
 
 
 > * _void_ <a id="set_blend_by_value">set_blend_by_value(value : float)</a>\
 \
-> Setter for blend_by_value. \
+> Setter for blend_by_value.
 
 
 > * _String_ <a id="get_blend_name">get_blend_name()</a>\
 \
-> Getter for blend_name. \
+> Getter for blend_name.
 
 
 > * _void_ <a id="set_blend_name">set_blend_name(name : String)</a>\
 \
-> Setter for blend_name. \
+> Setter for blend_name.
 
 
 > * _bool_ <a id="is_blend_rotation">is_blend_rotation()</a>\
 \
-> Getter for blend_rotation. \
+> Getter for blend_rotation.
 
 
 > * _void_ <a id="set_blend_rotation">set_blend_rotation(value : bool)</a>\
 \
-> Setter for blend_rotation. \
+> Setter for blend_rotation.
 
 
-> * _Callable_ <a id="get_callable">get_callable()</a>\
-\
-> Getter for callable. \
+> * _[Callable](https://docs.godotengine.org/en/stable/classes/class_callable.html)_ <a id="get_callable">get_callable()</a> \
+ \
+> Getter for [Callable](https://docs.godotengine.org/en/stable/classes/class_callable.html).
 
 
 > * _void_ <a id="set_callable">set_callable(callable : Callable)</a>\
 \
-> Setter for callable. \
+> Setter for [Callable](https://docs.godotengine.org/en/stable/classes/class_callable.html).
 
 
-> * _Tween.EaseType_ <a id="get_ease">get_ease()</a>\
+> * _[Tween.EaseType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ <a id="get_ease">get_ease()</a>\
 \
-> Getter for ease. \
+> Getter for ease.
 
 
-> * _void_ <a id="set_ease">set_ease(ease : Tween.EaseType)</a>\
+> * _void_ <a id="set_ease">set_ease(ease : [Tween.EaseType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations))</a>\
 \
-> Setter for ease. \
+> Setter for ease.
 
 
-> * _Tween.TransitionType_ <a id="get_trans">get_trans()</a>\
+> * _[Tween.TransitionType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ <a id="get_trans">get_trans()</a>\
 \
-> Getter for trans. \
+> Getter for trans.
 
 
-> * _void_ <a id="set_trans">set_trans(trans : Tween.TransitionType)</a>\
+> * _void_ <a id="set_trans">set_trans(trans : [Tween.TransitionType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations))</a>\
 \
-> Setter for trans. \
+> Setter for trans.
 
 
 > * _bool_ <a id="get_callable_on_start">get_callable_on_start()</a>\
 \
-> Getter for on_start. \
+> Getter for on_start.
 
 
 > * _void_ <a id="set_callable_on_start">set_callable_on_start(value : bool)</a>\
 \
-> Setter for on_start. \
+> Setter for on_start.
 
 
 > * _bool_ <a id="get_callable_on_complete">get_callable_on_complete()</a>\
 \
-> Getter for on_complete. \
+> Getter for on_complete.
 
 
 > * _void_ <a id="set_callable_on_complete">set_callable_on_complete(value : bool)</a>\
 \
-> Setter for on_complete. \
+> Setter for on_complete.
 
 

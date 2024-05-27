@@ -18,13 +18,7 @@
     <ClCompile Include="register_types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gdexample.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cinecam2d.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bind_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gdclass_metadata.cpp">

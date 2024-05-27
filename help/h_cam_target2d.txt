@@ -1,12 +1,12 @@
 ### CamTarget2D
-> Inherits: Node2D < CanvasItem < Node < Object
+> Inherits: < [Node2D](https://docs.godotengine.org/en/stable/classes/class_node2d.html) < [CanvasItem](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html) < [Node](https://docs.godotengine.org/en/stable/classes/class_node.html) < [Object](https://docs.godotengine.org/en/stable/classes/class_object.html)
 
 #### Description
 
-This help document refers to [CamTarget2D] class! \
-A Target for the [H_CineCam2D]. \
-This node is used as a "carrot on a stick" for a [H_CineCam2D]. \
-See [member H_CineCam2D.target] and [enum H_CineCam2D.FollowMode] for more infos.
+This help document refers to [CamTarget2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamTarget2D-class-reference-%E2%80%90-CineCam-wiki/) class! \
+A Target for the [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/). \
+This node is used as a "carrot on a stick" for a [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/). \
+See [CineCam2D.target](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/#target) and [CineCam2D.FollowMode](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/#FollowMode) for more infos.
  
 #### Links
 [Link1](https://lnk.bio/LumiToad) \
@@ -17,20 +17,20 @@ See [member H_CineCam2D.target] and [enum H_CineCam2D.FollowMode] for more infos
 
 | Type | Property | Hint | 
 | :-- | :-- | :-- | 
-| _Tween.EaseType_ | [ease](#ease) | - |
-| _Tween.TransitionType_ | [trans](#trans) | - |
+| _[Tween.EaseType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ | [ease](#ease) | - |
+| _[Tween.TransitionType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ | [trans](#trans) | - |
 | _Vector2_ | [offset](#offset) | default: Vector2(0.0, 0.0) |
 | _float_ | [speed_x](#speed_x) | default: 0.0 |
 | _float_ | [speed_y](#speed_y) | default: 0.0 |
 
 #### Methods
 
-| Return | Method | 
+| Return | | 
 | :-- | :-- |
 | _Vector2_ | [scaled_speed()](#scaled_speed) |
-| _Tween.EaseType_ | [get_ease()](#get_ease) |
+| _[Tween.EaseType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ | [get_ease()](#get_ease) |
 | _void_ | [set_ease(ease : Tween.EaseType)](#set_ease) |
-| _Tween.TransitionType_ | [get_trans()](#get_trans) |
+| _[Tween.TransitionType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ | [get_trans()](#get_trans) |
 | _void_ | [set_trans(trans : Tween.TransitionType)](#set_trans) |
 | _Vector2_ | [get_target_offset()](#get_target_offset) |
 | _void_ | [set_target_offset(value : Vector2)](#set_target_offset) |
@@ -44,20 +44,20 @@ See [member H_CineCam2D.target] and [enum H_CineCam2D.FollowMode] for more infos
 
 #### Property Description
 
-> * _Tween.EaseType_ <a id="ease">ease<a/> \
+> * _[Tween.EaseType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ <a id="ease">ease<a/> \
 > [SET] set_ease(value) \
 > [GET] get_ease() \
 \
 > Getter / Setter for the ease type of the blend. \
-> See [enum Tween.EaseType] for more info.
+> See [Tween.EaseType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations) for more info.
  
 
-> * _Tween.TransitionType_ <a id="trans">trans<a/> \
+> * _[Tween.TransitionType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ <a id="trans">trans<a/> \
 > [SET] set_trans(value) \
 > [GET] get_trans() \
 \
 > Getter / Setter for the transition type of the blend. \
-> See [enum Tween.TransitionType] for more info.
+> See [Tween.TransitionType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations) for more info.
  
 
 > * _Vector2_ <a id="offset">offset<a/> \
@@ -65,7 +65,7 @@ See [member H_CineCam2D.target] and [enum H_CineCam2D.FollowMode] for more infos
 > [GET] get_target_offset() \
 \
 > Getter / Setter for the target offset. \
-> If a [H_CineCam2D] is following this target, it will add this offest to the equation. \
+> If a [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/) is following this target, it will add this offest to the equation. \
 > Example: Useful if you want to pan the camera upwards, when a character looks up or down, like in some platformers.
  
 
@@ -74,7 +74,7 @@ See [member H_CineCam2D.target] and [enum H_CineCam2D.FollowMode] for more infos
 > [GET] get_speed_x() \
 \
 > Getter / setter for the horizontal follow speed. \
-> Horizontal blend speed, if a [H_CineCam2D] is following this target, using [constant H_CineCam2D.TARGET_BLEND]. \
+> Horizontal blend speed, if a [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/) is following this target, using [CineCam2D.TARGET_BLEND](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/#TARGET_BLEND). \
 > This is set in percentage from 0.0% to 100.0%. Cannot exceed this limit!
  
 
@@ -83,20 +83,20 @@ See [member H_CineCam2D.target] and [enum H_CineCam2D.FollowMode] for more infos
 > [GET] get_speed_y() \
 \
 > Getter / setter for the vertical follow speed. \
-> Vertical blend speed, if a [H_CineCam2D] is following this target, using [constant H_CineCam2D.TARGET_BLEND]. \
+> Vertical blend speed, if a [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/) is following this target, using [CineCam2D.TARGET_BLEND](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/#TARGET_BLEND). \
 > This is set in percentage from 0.0% to 100.0%. Cannot exceed this limit!
  
 
 
 
-#### Method Descriptions
+#### Descriptions
 
 > * _Vector2_ <a id="scaled_speed">scaled_speed()</a>\
 \
 > Returns speed_x and speed_y as a Vector2, but scaled down to represent the actual blending speed. \
 > From 0.00 to 1.00
 
-> * _Tween.EaseType_ <a id="get_ease">get_ease()</a>\
+> * _[Tween.EaseType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ <a id="get_ease">get_ease()</a>\
 \
 > Getter for ease.
 
@@ -106,7 +106,7 @@ See [member H_CineCam2D.target] and [enum H_CineCam2D.FollowMode] for more infos
 > Setter for ease.
 
 
-> * _Tween.TransitionType_ <a id="get_trans">get_trans()</a>\
+> * _[Tween.TransitionType](https://docs.godotengine.org/en/stable/classes/class_tween.html#enumerations)_ <a id="get_trans">get_trans()</a>\
 \
 > Getter for trans.
 

@@ -32,33 +32,37 @@ BlendData2D::~BlendData2D()
 
 void BlendData2D::_bind_methods()
 {
-	ADD_GETSET_BINDING(get_blend_name, set_blend_name, blend_name, p_name, BlendData2D, STRING);
+	ADD_METHOD_BINDING(get_blend_name, BlendData2D);
+	ADD_METHOD_ARGS_BINDING(set_blend_name, BlendData2D, "p_name");
+	ADD_METHOD_BINDING(get_blend_by, BlendData2D);
+	ADD_METHOD_ARGS_BINDING(set_blend_by, BlendData2D, "p_by");
+	ADD_METHOD_BINDING(get_blend_by_value, BlendData2D);
+	ADD_METHOD_ARGS_BINDING(set_blend_by_value, BlendData2D, "value");
+	ADD_METHOD_BINDING(get_ease, BlendData2D);
+	ADD_METHOD_ARGS_BINDING(set_ease, BlendData2D, "p_ease");
+	ADD_METHOD_BINDING(get_trans, BlendData2D);
+	ADD_METHOD_ARGS_BINDING(set_trans, BlendData2D, "p_trans");
+	ADD_METHOD_BINDING(get_callable, BlendData2D);
+	ADD_METHOD_ARGS_BINDING(set_callable, BlendData2D, "p_callable");
+	ADD_METHOD_BINDING(is_blend_rotation, BlendData2D);
+	ADD_METHOD_ARGS_BINDING(set_blend_rotation, BlendData2D, "rotation");
+	ADD_METHOD_BINDING(get_callable_on_start, BlendData2D);
+	ADD_METHOD_ARGS_BINDING(set_callable_on_start, BlendData2D, "enable");
+	ADD_METHOD_BINDING(get_callable_on_complete, BlendData2D);
+	ADD_METHOD_ARGS_BINDING(set_callable_on_complete, BlendData2D, "enable");
 
-	ClassDB::bind_method(D_METHOD("get_blend_by"), &BlendData2D::get_blend_by);
-	ClassDB::bind_method(D_METHOD("set_blend_by", "p_by"), &BlendData2D::set_blend_by);
+	ADD_PROPERTY(PropertyInfo(Variant::STRING, "blend_name"), "set_blend_name", "get_blend_name");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "blend_by", PROPERTY_HINT_ENUM, BLEND_BY_HINTS), "set_blend_by", "get_blend_by");
-
-	ADD_GETSET_BINDING(get_blend_by_value, set_blend_by_value, blend_by_value, value, BlendData2D, FLOAT);
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "blend_by_value"), "set_blend_by_value", "get_blend_by_value");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "ease", PROPERTY_HINT_ENUM, EASE_HINTS), "set_ease", "get_ease");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "trans", PROPERTY_HINT_ENUM, TRANS_HINTS), "set_trans", "get_trans");
+	ADD_PROPERTY(PropertyInfo(Variant::CALLABLE, "callable", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_callable", "get_callable");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "blend_rotation"), "set_blend_rotation", "is_blend_rotation");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "on_start"), "set_callable_on_start", "get_callable_on_start");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "on_complete"), "set_callable_on_complete", "get_callable_on_complete");
 
 	BIND_ENUM_CONSTANT(SPEED)
 	BIND_ENUM_CONSTANT(DURATION)
-
-	
-
-	ClassDB::bind_method(D_METHOD("get_ease"), &BlendData2D::get_ease);
-	ClassDB::bind_method(D_METHOD("set_ease", "p_ease"), &BlendData2D::set_ease);
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "ease", PROPERTY_HINT_ENUM, EASE_HINTS), "set_ease", "get_ease");
-
-	ClassDB::bind_method(D_METHOD("get_trans"), &BlendData2D::get_trans);
-	ClassDB::bind_method(D_METHOD("set_trans", "p_trans"), &BlendData2D::set_trans);
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "trans", PROPERTY_HINT_ENUM, TRANS_HINTS), "set_trans", "get_trans");
-
-	ClassDB::bind_method(D_METHOD("get_callable"), &BlendData2D::get_callable);
-	ClassDB::bind_method(D_METHOD("set_callable", "p_callable"), &BlendData2D::set_callable);
-	ClassDB::add_property("BlendData2D", PropertyInfo(Variant::CALLABLE, "callable", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_callable", "get_callable");
-	ADD_GETSET_BINDING(is_blend_rotation, set_blend_rotation, blend_rotation, rotation, BlendData2D, BOOL);
-	ADD_GETSET_BINDING(get_callable_on_start, set_callable_on_start, on_start, enable, BlendData2D, BOOL);
-	ADD_GETSET_BINDING(get_callable_on_complete, set_callable_on_complete, on_complete, enable, BlendData2D, BOOL);
 }
 
 

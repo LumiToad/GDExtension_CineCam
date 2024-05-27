@@ -1,12 +1,12 @@
-### H_CamSequence3D
-> Inherits: Node3D < Node < Object
+### CamSequence3D
+> Inherits: < [Node3D](https://docs.godotengine.org/en/stable/classes/class_node3D.html) < [CanvasItem](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html) < [Node](https://docs.godotengine.org/en/stable/classes/class_node.html) < [Object](https://docs.godotengine.org/en/stable/classes/class_object.html)
 
 #### Description
 
-This help document refers to [CamSequence3D] class! \
-This node is only useful in combination with [H_VirtualCam3D] and [H_CineCam3D]. \
-Attach [H_VirtualCam3D] nodes to this sequence. Then a [H_CineCam3D] can access it using various methods. \
-Will automatically reload the internal array of virtual cameras on [constant Node.NOTIFICATION_CHILD_ORDER_CHANGED]. 
+This help document refers to [CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki/) class! \
+This node is only useful in combination with [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) and [CineCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam3D-class-reference-%E2%80%90-CineCam-wiki). \
+Attach [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) nodes to this sequence. Then a [CineCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam3D-class-reference-%E2%80%90-CineCam-wiki) can access it using various methods. \
+Will automatically reload the internal array of virtual cameras on [Node.NOTIFICATION_CHILD_ORDER_CHANGED](https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-constant-notification-child-order-changed). 
  
 #### Links
 [Link1](https://lnk.bio/LumiToad) \
@@ -17,23 +17,23 @@ Will automatically reload the internal array of virtual cameras on [constant Nod
 
 | Type | Property | Hint | 
 | :-- | :-- | :-- | 
-| _int_ | [current_idx](#current_idx) | - |
+| _int_ | [current_idx](#current_idx) | default: 0 |
 
 #### Methods
 
-| Return | Method | 
+| Return | | 
 | :-- | :-- |
-| _VirtualCam3D_ | [current_vcam()](#current_vcam) |
-| _Array[VirtualCam3D]_ | [get_vcam3D_array()](#get_vcam3D_array) |
-| _VirtualCam3D_ | [vcam3D_at(index: int)](#vcam3D_at) |
+| _[VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki)_ | [current_vcam()](#current_vcam) |
+| _[Array](https://docs.godotengine.org/en/stable/classes/class_array.html)[[VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki)]_ | [get_vcam3D_array()](#get_vcam3D_array) |
+| _[VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki)_ | [vcam3D_at(index: int)](#vcam3D_at) |
 | _int_ | [get_current_idx()](#get_current_idx) |
 | _void_ | [set_current_idx(value : int)](#set_current_idx) |
 
 #### Signals
-> * _signal_ index_changed(vcam3D : Object, index : int)()\
+> * _signal_ index_changed(vcam3D : Object, index : int)\
 \
 > Will be emitted, when the index of the currently selected virtual camera has changed. \
-> Returns [H_VirtualCam3D] and the current index
+> Returns [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) and the current index
 
 
 
@@ -44,39 +44,39 @@ Will automatically reload the internal array of virtual cameras on [constant Nod
 > [SET] set_current_idx(value) \
 > [GET] get_current_idx() \
 \
-> Getter / Setter for the current index of the sequence. \
+> Getter / Setter for the current index of the sequence. 
  
 
 
 
-#### Method Descriptions
+#### Descriptions
 
-> * _VirtualCam3D_ <a id="current_vcam">current_vcam()</a>\
+> * _[VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki)_ <a id="current_vcam">current_vcam()</a>\
 \
-> Returns the currently selected [H_VirtualCam3D]. \
-> That means, that if the sequence is running, the target for the currently running blend is returned. \
+> Returns the currently selected [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki). \
+> That means, that if the sequence is running, the target for the currently running blend is returned. 
 
 
-> * _Array[VirtualCam3D]_ <a id="get_vcam3D_array">get_vcam3D_array()</a>\
+> * _[Array](https://docs.godotengine.org/en/stable/classes/class_array.html)[[VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki)]_ <a id="get_vcam3D_array">get_vcam3D_array()</a>\
 \
-> Returns all [H_VirtualCam3D] that are registred to this node. \
-> This is basically the [H_VirtualCam3D] children of this node. \
+> Returns all [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) that are registred to this node. \
+> This is basically the [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) children of this node. \
 > When virtual cams are added, removed or changed in order, the internal array will changed automatically. \
-> You can use this method after such a change to get the new array. \
+> You can use this after such a change to get the new array. 
 
 
-> * _VirtualCam3D_ <a id="vcam3D_at">vcam3D_at(index: int)</a>\
+> * _[VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki)_ <a id="vcam3D_at">vcam3D_at(index: int)</a>\
 \
-> Returns the [H_VirtualCam3D] at given index of the internal array. \
+> Returns the [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) at given index of the internal array. 
 
 
 > * _int_ <a id="get_current_idx">get_current_idx()</a>\
 \
-> Getter for current_idx. \
+> Getter for current_idx. 
 
 
 > * _void_ <a id="set_current_idx">set_current_idx(value : int)</a>\
 \
-> Setter for current_idx. \
+> Setter for current_idx. 
 
 

@@ -39,13 +39,20 @@ void CamSequence2D::_bind_methods()
 	ADD_METHOD_BINDING(get_vcam2d_array, CamSequence2D);
 	ADD_METHOD_BINDING(current_vcam, CamSequence2D);
 	ADD_METHOD_ARGS_BINDING(vcam2d_at, CamSequence2D, "index");
+	ADD_METHOD_BINDING(get_current_idx, CamSequence2D);
+	ADD_METHOD_ARGS_BINDING(set_current_idx, CamSequence2D, "idx");
+	ADD_METHOD_BINDING(get_is_draw_debug_lines, CamSequence2D);
+	ADD_METHOD_ARGS_BINDING(set_is_draw_debug_lines, CamSequence2D, "draw");
+	ADD_METHOD_BINDING(get_debug_lines_color, CamSequence2D);
+	ADD_METHOD_ARGS_BINDING(set_debug_lines_color, CamSequence2D, "color");
+	ADD_METHOD_BINDING(get_debug_lines_width, CamSequence2D);
+	ADD_METHOD_ARGS_BINDING(set_debug_lines_width, CamSequence2D, "width");
 
-	ADD_GETSET_BINDING(get_current_idx, set_current_idx, current_idx, idx, CamSequence2D, Variant::INT);
-	ADD_GETSET_BINDING(get_is_draw_debug_lines, set_is_draw_debug_lines, _draw_debug_lines, draw, CamSequence2D, Variant::BOOL);
-	ADD_GETSET_BINDING(get_debug_lines_color, set_debug_lines_color, _debug_lines_color, color, CamSequence2D, Variant::COLOR);
-	ADD_GETSET_BINDING(get_debug_lines_width, set_debug_lines_width, _debug_lines_width, width, CamSequence2D, Variant::FLOAT);
-
-
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::INT, "current_idx"), "set_current_idx", "get_current_idx");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::BOOL, "_draw_debug_lines"), "set_is_draw_debug_lines", "get_is_draw_debug_lines");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::COLOR, "_debug_lines_color"), "set_debug_lines_color", "get_debug_lines_color");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::FLOAT, "_debug_lines_width"), "set_debug_lines_width", "get_debug_lines_width");
+	// ADD_PROPERTY(PropertyInfo(Variant::INT, "follow_mode", PROPERTY_HINT_ENUM, "OFF,PRIO,PRIO_ONESHOT,PRIO_BLEND,TARGET,TARGET_BLEND"), "set_follow_mode", "get_follow_mode");
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_VCAM_INDEX_CHANGED, PropertyInfo(Variant::OBJECT, "vcam2d"), PropertyInfo(Variant::INT, "index")));
 }

@@ -40,13 +40,23 @@ void CamSequence3D::_bind_methods()
 	ADD_METHOD_BINDING(get_vcam3d_array, CamSequence3D);
 	ADD_METHOD_BINDING(current_vcam, CamSequence3D);
 	ADD_METHOD_ARGS_BINDING(vcam3d_at, CamSequence3D, "index");
+	ADD_METHOD_BINDING(get_current_idx, CamSequence3D);
+	ADD_METHOD_ARGS_BINDING(set_current_idx, CamSequence3D, "idx");
 
-	ADD_GETSET_BINDING(get_current_idx, set_current_idx, current_idx, idx, CamSequence3D, Variant::INT);
-	ADD_GETSET_BINDING(get_is_draw_debug_gizmos, set_is_draw_debug_gizmos, _draw_debug_gizmos, draw, CamSequence3D, Variant::BOOL);
-	ADD_GETSET_BINDING(get_debug_gizmos_color, set_debug_gizmos_color, _debug_gizmos_color, color, CamSequence3D, Variant::COLOR);
-	ADD_GETSET_BINDING(get_debug_gizmos_width, set_debug_gizmos_width, _debug_gizmos_width, width, CamSequence3D, Variant::FLOAT);
+	/*
+	ClassDB::bind_method(D_METHOD("get_is_draw_debug_gizmos"), &CamSequence3D::get_is_draw_debug_gizmos);
+	ClassDB::bind_method(D_METHOD("set_is_draw_debug_gizmos", "draw"), &CamSequence3D::set_is_draw_debug_gizmos);
+	ClassDB::bind_method(D_METHOD("get_debug_gizmos_color"), &CamSequence3D::get_debug_gizmos_color);
+	ClassDB::bind_method(D_METHOD("set_debug_gizmos_color", "color"), &CamSequence3D::set_debug_gizmos_color);
+	ClassDB::bind_method(D_METHOD("get_debug_gizmos_width"), &CamSequence3D::get_debug_gizmos_width);
+	ClassDB::bind_method(D_METHOD("set_debug_gizmos_width", "width"), &CamSequence3D::set_debug_gizmos_width);
+	
+	//ADD_PROPERTY(PropertyInfo(Variant::Variant::BOOL, "_draw_debug_gizmos"), "set_is_draw_debug_gizmos", "get_is_draw_debug_gizmos");
+	//ADD_PROPERTY(PropertyInfo(Variant::Variant::COLOR, "_debug_gizmos_color"), "set_debug_gizmos_color", "get_debug_gizmos_color");
+	//ADD_PROPERTY(PropertyInfo(Variant::Variant::FLOAT, "_debug_gizmos_width"), "set_debug_gizmos_width", "get_debug_gizmos_width");
+	*/
 
-
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::INT, "current_idx"), "set_current_idx", "get_current_idx");
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_VCAM_INDEX_CHANGED, PropertyInfo(Variant::OBJECT, "vcam3d"), PropertyInfo(Variant::INT, "index")));
 }

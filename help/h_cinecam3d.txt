@@ -1,11 +1,11 @@
-### H_CineCam3D
-> Inherits: Camera3D < Node3D < CanvasItem < Node < Object
+### CineCam3D
+> Inherits: [Camera3D](https://docs.godotengine.org/en/stable/classes/class_camera3d.html) < [Node3D](https://docs.godotengine.org/en/stable/classes/class_node3d.html) < [Node](https://docs.godotengine.org/en/stable/classes/class_node.html) < [Object](https://docs.godotengine.org/en/stable/classes/class_object.html)
 
 #### Description
 
-This help document refers to [CineCam3D] class! \
-Main Camera for the [CineCam3D]. \
-Features include camera shaking, camera blending to [H_VirtualCam3D], targeting [H_CamTarget3D] and more. 
+This help document refers to [CineCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam3D-class-reference-%E2%80%90-CineCam-wiki/) class! \
+Main Camera for the [CineCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam3D-class-reference-%E2%80%90-CineCam-wiki/). \
+Features include camera shaking, camera blending to [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki), targeting [CamTarget3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamTarget3D-class-reference-%E2%80%90-CineCam-wiki) and more. 
  
 #### Links
 [Link1](https://lnk.bio/LumiToad) \
@@ -16,29 +16,29 @@ Features include camera shaking, camera blending to [H_VirtualCam3D], targeting 
 
 | Type | Property | Hint | 
 | :-- | :-- | :-- | 
-| _BlendData3D_ | [blend_data](#blend_data) | - |
-| _bool=false_ | [blend_pause](#blend_pause) | - |
-| _CamSequence3D_ | [current_sequence](#current_sequence) | - |
-| _FollowMode=0_ | [follow_mode](#follow_mode) | - |
-| _bool=false_ | [follow_prio_pause](#follow_prio_pause) | - |
-| _bool=false_ | [follow_target_pause](#follow_target_pause) | - |
-| _CamTarget3D_ | [look_at_target](#look_at_target) | - |
-| _bool=false_ | [sequence_pause](#sequence_pause) | - |
-| _float=0.0_ | [shake_offset_duration](#shake_offset_duration) | - |
-| _Vector3=Vector3()_ | [shake_offset_intensity](#shake_offset_intensity) | - |
-| _float=0.0_ | [shake_rotation_duration](#shake_rotation_duration) | - |
-| _float=0.0_ | [shake_rotation_intensity](#shake_rotation_intensity) | - |
-| _float=0.0_ | [shake_fov_duration](#shake_fov_duration) | - |
-| _Vector3=Vector3()_ | [shake_fov_intensity](#shake_fov_intensity) | - |
-| _CamTarget3D_ | [target](#target) | - |
+| _[BlendData3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/BlendData3D-class-reference-%E2%80%90-CineCam-wiki)_ | [blend_data](#blend_data) | - |
+| _bool_ | [blend_pause](#blend_pause) | default: false |
+| _[CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki)_ | [current_sequence](#current_sequence) | - |
+| _[FollowMode](#FollowMode)_ | [follow_mode](#follow_mode) | default: 0 |
+| _bool_ | [follow_prio_pause](#follow_prio_pause) | default: false |
+| _bool_ | [follow_target_pause](#follow_target_pause) | - |
+| _[CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki)_ | [look_at_target](#look_at_target) | default: false |
+| _bool_ | [sequence_pause](#sequence_pause) | default: false |
+| _float_ | [shake_offset_duration](#shake_offset_duration) | default: 0.0 |
+| _Vector3_ | [shake_offset_intensity](#shake_offset_intensity) | default: Vector3(0, 0, 0) |
+| _float_ | [shake_rotation_duration](#shake_rotation_duration) | default: 0.0 |
+| _float_ | [shake_rotation_intensity](#shake_rotation_intensity) | default: 0.0 |
+| _float_ | [shake_fov_duration](#shake_fov_duration) | default: 0.0 |
+| _Vector3_ | [shake_fov_intensity](#shake_fov_intensity) | default: Vector3(0, 0, 0) |
+| _[CamTarget3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamTarget3D-class-reference-%E2%80%90-CineCam-wiki)_ | [target](#target) | - |
 
 #### Methods
 
-| Return | Method | 
+| Return | Method |
 | :-- | :-- |
-| _String _ | [apply_vcam3D_data(vcam3D: VirtualCam3D)](#apply_vcam3D_data) |
+| _String_ | [apply_vcam3D_data(vcam3D: VirtualCam3D)](#apply_vcam3D_data) |
 | _void_ | [blend_to(vcam3D : VirtualCam3D, blend_data : BlendData3D)](#blend_to) |
-| _VirtualCam3D_ | [find_vcam_by_id(id : String)](#find_vcam_by_id) |
+| _[VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki)_ | [find_vcam_by_id(id : String)](#find_vcam_by_id) |
 | _float_ | [full_blend_duration()](#full_blend_duration) |
 | _void_ | [init_default_blend_data()](#init_default_blend_data) |
 | _void_ | [pause_blend()](#pause_blend) |
@@ -62,468 +62,455 @@ Features include camera shaking, camera blending to [H_VirtualCam3D], targeting 
 | _void_ | [start_sequence_at(backwards : bool = false, index : int = 0)](#start_sequence_at) |
 | _void_ | [toggle_follow_prio()](#toggle_follow_prio) |
 | _void_ | [toggle_follow_target()](#toggle_follow_target) |
-| _CamSequence3D_ | [get_current_sequence()](#get_current_sequence) |
+| _[CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki)_ | [get_current_sequence()](#get_current_sequence) |
 | _void_ | [set_current_sequence(value : CamSequence3D)](#set_current_sequence) |
-| _FollowMode_ | [get_follow_mode()](#get_follow_mode) |
+| _[FollowMode](#FollowMode)_ | [get_follow_mode()](#get_follow_mode) |
 | _void_ | [set_follow_mode(value : FollowMode)](#set_follow_mode) |
 | _bool_ | [is_follow_prio_paused()](#is_follow_prio_paused) |
 | _void_ | [set_follow_prio_paused(value : bool)](#set_follow_prio_paused) |
 | _bool_ | [is_follow_target_paused()](#is_follow_target_paused) |
 | _void_ | [set_follow_target_paused(value : bool)](#set_follow_target_paused) |
-| _CamTarget3D_ | [get_target()](#get_target) |
+| _[CamTarget3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamTarget3D-class-reference-%E2%80%90-CineCam-wiki)_ | [get_target()](#get_target) |
 | _void_ | [set_target(value : CamTarget3D)](#set_target) |
-| _CamTarget3D _ | [get_look_at_target()](#get_look_at_target) |
-| _void_ | [set_look_at_target(value : CamTarget3D)](#set_look_at_target) |
 
 #### Signals
 > * _signal_ blend_completed()\
 \
 > Emitted when a blend is completed. \
-> Will not be emitted for [enum H_CineCam3D.FollowMode] [constant H_CineCam3D.TARGET_BLEND]
+> Will not be emitted for [CineCam3D.FollowMode](#FollowMode) [CineCam3D.TARGET_BLEND](#TARGET_BLEND).
 
 > * _signal_ blend_paused()\
 \
 > Emitted when a blend is paused. \
-> Will not be emitted for [enum H_CineCam3D.FollowMode] [constant H_CineCam3D.TARGET_BLEND]
+> Will not be emitted for [CineCam3D.FollowMode](#FollowMode) [CineCam3D.TARGET_BLEND](#TARGET_BLEND).
 
 > * _signal_ blend_resumed()\
 \
 > Emitted when a blend is resumed. \
-> Will not be emitted for [enum H_CineCam3D.FollowMode] [constant H_CineCam3D.TARGET_BLEND]
+> Will not be emitted for [CineCam3D.FollowMode](#FollowMode) [CineCam3D.TARGET_BLEND](#TARGET_BLEND).
 
 > * _signal_ blend_started()\
 \
 > Emitted when a blend is completed. \
-> Will not be emitted for [enum H_CineCam3D.FollowMode] [constant H_CineCam3D.TARGET_BLEND].
+> Will not be emitted for [CineCam3D.FollowMode](#FollowMode) [CineCam3D.TARGET_BLEND](#TARGET_BLEND).
 
-> * _signal_ prioritized_vcam3D_changed(vcam3D: Object, priority: int)()\
+> * _signal_ prioritized_vcam3D_changed(vcam3D: Object, priority: int)\
 \
-> Emitted when any registered [H_VirtualCam3D] priority became higher than the previously highest priority [H_VirtualCam3D]. \
- > Returns the [H_VirtualCam3D] with the now highest priority as an integer. \
-> See [member H_VirtualCam3D.priority]. \
+> Emitted when any registered [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) priority became higher than the previously highest priority [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki). \
+ > Returns the [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) with the now highest priority as an integer. \
+> See [VirtualCam3D.priority](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki/#priority). \
 > \
-> It doesn't matter, if this [H_CineCam3D] acts on it.
+> It doesn't matter, if this [CineCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam3D-class-reference-%E2%80%90-CineCam-wiki/) acts on it.
 
 > * _signal_ sequence_completed()\
 \
-> Emitted when a sequence of blends, using [CamSequence3D] was completed. \
+> Emitted when a sequence of blends, using [CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki) was completed.
 
 
 > * _signal_ sequence_paused()\
 \
-> Emitted when a sequence of blends, using [CamSequence3D] was paused. \
-> See [method H_CineCam3D.seq_pause]
+> Emitted when a sequence of blends, using [CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki) was paused. \
+> See [CineCam3D.seq_pause](#seq_pause)
 
 > * _signal_ sequence_resumed()\
 \
-> Emitted when a sequence of blends, using [CamSequence3D] was resumed. \
-> See [method H_CineCam3D.seq_resume]
+> Emitted when a sequence of blends, using [CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki) was resumed. \
+> See [CineCam3D.seq_resume](#seq_resume)
 
 > * _signal_ sequence_started()\
 \
-> Emitted when a sequence of blends, using [CamSequence3D] was started. See: \
-> - [method H_CineCam3D.start_sequence] \
-> - [method H_CineCam3D.start_sequence_at] \
-> - [method H_CineCam3D.seq_blend_to] \
-> - [method H_CineCam3D.seq_blend_prev] \
-> - [method H_CineCam3D.seq_blend_prev
+> Emitted when a sequence of blends, using [CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki) was started. See: \
+> ' [CineCam3D.start_sequence](#start_sequence) \
+> ' [CineCam3D.start_sequence_at](#start_sequence_at) \
+> ' [CineCam3D.seq_blend_to](#blend_to) \
+> ' [CineCam3D.seq_blend_prev](#seq_blend_prev) \
+> ' [CineCam3D.seq_blend_next](#seq_blend_next)
 
 > * _signal_ sequence_stopped()\
 \
-> Emitted when a sequence of blends, using [CamSequence3D] was stopped. \
-> See [method H_CineCam3D.seq_stop]
+> Emitted when a sequence of blends, using [CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki) was stopped. \
+> See [CineCam3D.seq_stop](#seq_stop)
 
 > * _signal_ shake_offset_ended()\
 \
 > Emitted when the camera shake, using its offset, has ended. \
-> See [method H_CineCam3D.shake_offset]
+> See [CineCam3D.shake_offset](#shake_offset)
 
 > * _signal_ shake_offset_started()\
 \
 > Emitted when the camera shake, using its offset, is started. \
-> See [method H_CineCam3D.shake_offset]
+> See [CineCam3D.shake_offset](#shake_offset)
 
 > * _signal_ shake_rotation_ended()\
 \
 > Emitted when the camera shake, using its rotation, has ended. \
-> See [method H_CineCam3D.shake_rotation]
+> See [CineCam3D.shake_rotation](#shake_rotation)
 
 > * _signal_ shake_rotation_started()\
 \
 > Emitted when the camera shake, using its rotation, has started. \
-> See [method H_CineCam3D.shake_rotation]
+> See [CineCam3D.shake_rotation](#shake_rotation)
 
 > * _signal_ shake_fov_ended()\
 \
 > Emitted when the camera shake, using its fov, has ended. \
-> See [method H_CineCam3D.shake_fov]
+> See [CineCam3D.shake_fov](#shake_fov)
 
 > * _signal_ shake_fov_started()\
 \
 > Emitted when the camera shake, using its fov, has started. \
-> See [method H_CineCam3D.shake_fov]
+> See [CineCam3D.shake_fov](#shake_fov)
 
 
 
 #### Enumerations
 
-> * _enum_  FollowMode: \
+> * _enum_  <a id="FollowMode">FollowMode</a>: \
 > \
-> Setings for [member H_CineCam3D.follow_mode]. \
-> PRIO refers to the [H_VirtualCam3D] with the highest priority in the [SceneTree] only! \
-> TARGET is for [H_CamTarget3D] if it is set in [member H_CineCam3D.target]! \
+> Setings for [CineCam3D.follow_mode](#follow_mode). \
+> PRIO refers to the [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) with the highest priority in the [SceneTree] only! \
+> TARGET is for [CamTarget3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamTarget3D-class-reference-%E2%80%90-CineCam-wiki) if it is set in [CineCam3D.target](#target)! \
 > \
 \
-> ' OFF = 0, \
+> ' <a id="OFF">OFF</a> = 0, \
 > Won't Follow anything. \
 \
-> ' PRIO = 1, \
+> ' <a id="PRIO">PRIO</a> = 1, \
 > Will constantly follow the it. \
 \
-> ' PRIO_ONESHOT = 2, \
+> ' <a id="PRIO_ONESHOT">PRIO_ONESHOT</a> = 2, \
 > Will follow it once. \
 \
-> ' PRIO_BLEND = 3, \
-> Will blend towards it once, using the data from [member H_VirtualCam3D.blend_data]. \
-> If none are given, [member H_CineCam3D.blend_data] will be used. \
+> ' <a id="PRIO_BLEND">PRIO_BLEND</a> = 3, \
+> Will blend towards it once, using the data from [VirtualCam3D.blend_data](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki/#blend_data). \
+> If none are given, [CineCam3D.blend_data](#blend_data) will be used. \
 \
-> ' TARGET = 4, \
+> ' <a id="TARGET">TARGET</a> = 4, \
 > Will constantly follow the target. \
 \
-> ' TARGET_BLEND = 5 \
-> Will constantly blend towards the target. \
+> ' <a id="TARGET_BLEND">TARGET_BLEND</a> = 5 \
+> Will constantly blend towards the target. 
 
 
 
 #### Property Description
 
-> * _BlendData3D_ <a id="blend_data">blend_data<a/> \
+> * _[BlendData3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/BlendData3D-class-reference-%E2%80%90-CineCam-wiki)_ <a id="blend_data">blend_data<a/> \
 > [SET] _set_blend_data(value) \
 > [GET] _get_blend_data() \
 \
 > The default blending data for this CineCam3D. \
-> Only used as default value for blending to [H_VirtualCam3D] and only if it has no [H_BlendData3D] set. \
+> Only used as default value for blending to [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) and only if it has no [BlendData3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/BlendData3D-class-reference-%E2%80%90-CineCam-wiki) set.
  
 
-> * _bool=false_ <a id="blend_pause">blend_pause<a/> \
+> * _bool_ <a id="blend_pause">blend_pause<a/> \
 > [SET] _set_blend_paused(value) \
 > [GET] _is_blend_paused() \
 \
 > Getter / Setter for pausing the tween that is used for camera blends. \
-> See [method H_CineCam3D.pause_blend]. \
+> See [CineCam3D.pause_blend](#pause_blend).
  
 
-> * _CamSequence3D_ <a id="current_sequence">current_sequence<a/> \
+> * _[CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki)_ <a id="current_sequence">current_sequence<a/> \
 > [SET] set_current_sequence(value) \
 > [GET] get_current_sequence() \
 \
-> Getter / Setter for the current [H_CamSequence3D]. \
+> Getter / Setter for the current [CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki).
  
 
-> * _FollowMode=0_ <a id="follow_mode">follow_mode<a/> \
+> * _[FollowMode](#FollowMode)_ <a id="follow_mode">follow_mode<a/> \
 > [SET] set_follow_mode(value) \
 > [GET] get_follow_mode() \
 \
 > Getter / Setter for the current follow mode property. \
-> See [enum H_CineCam3D.FollowMode] \
+> See [CineCam3D.FollowMode](#FollowMode)
  
 
-> * _bool=false_ <a id="follow_prio_pause">follow_prio_pause<a/> \
+> * _bool_ <a id="follow_prio_pause">follow_prio_pause<a/> \
 > [SET] set_follow_prio_paused(value) \
-> [GET] is_follow_prio_paused() \
-\
+> [GET] is_follow_prio_paused()
+
  
 
-> * _bool=false_ <a id="follow_target_pause">follow_target_pause<a/> \
+> * _bool_ <a id="follow_target_pause">follow_target_pause<a/> \
 > [SET] set_follow_target_paused(value) \
 > [GET] is_follow_target_paused() \
 \
 > Getter / Setter for pausing the follow target feature. \
-> See [constant H_CineCam3D.TARGET], [constant H_CineCam3D.TARGET] and [method H_CineCam3D.pause_follow_target]. \
+> See [CineCam3D.TARGET](#TARGET), [CineCam3D.TARGET_BLEND](#TARGET_BLEND) and [CineCam3D.pause_follow_target](#pause_follow_target).
  
 
-> * _CamTarget3D_ <a id="look_at_target">look_at_target<a/> \
-> [SET] set_look_at_target(value) \
-> [GET] get_look_at_target() \
-\
-> Getter / Setter for the look at target feature. \
-> If this is set, the camera will look towards the given [H_CamTarget3D], regardless of other rotations. \
-> Can be used with rotation shaking. \
- 
-
-> * _bool=false_ <a id="sequence_pause">sequence_pause<a/> \
+> * _bool_ <a id="sequence_pause">sequence_pause<a/> \
 > [SET] _set_seq_paused(value) \
 > [GET] _is_seq_paused() \
 \
 > Getter / Setter for pausing the camera sequence feature. \
-> See [H_CamSequence3D] and [method H_CineCam3D.start_sequence]. \
+> See [CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki) and [CineCam3D.start_sequence](#start_sequence).
  
 
-> * _float=0.0_ <a id="shake_offset_duration">shake_offset_duration<a/> \
+> * _float_ <a id="shake_offset_duration">shake_offset_duration<a/> \
 > [SET] _set_shake_offset_duration(value) \
 > [GET] _get_shake_offset_duration() \
 \
 > Getter / Setter for the shake offset duration. \
-> Can be increased during a shake to increase its duration. \
+> Can be increased during a shake to increase its duration.
  
 
-> * _Vector3=Vector3()_ <a id="shake_offset_intensity">shake_offset_intensity<a/> \
+> * _Vector3_ <a id="shake_offset_intensity">shake_offset_intensity<a/> \
 > [SET] _set_shake_offset_intensity(value) \
 > [GET] _get_shake_offset_intensity() \
 \
 > Getter / Setter for the shake offset intensity. \
-> Can be increased during a shake to increase its intensity. \
+> Can be increased during a shake to increase its intensity.
  
 
-> * _float=0.0_ <a id="shake_rotation_duration">shake_rotation_duration<a/> \
+> * _float_ <a id="shake_rotation_duration">shake_rotation_duration<a/> \
 > [SET] _set_shake_rotation_duration(value) \
 > [GET] _get_shake_rotation_duration() \
 \
 > Getter / Setter for the shake rotation duration. \
-> Can be increased during a shake to increase its duration. \
+> Can be increased during a shake to increase its duration.
  
 
-> * _float=0.0_ <a id="shake_rotation_intensity">shake_rotation_intensity<a/> \
+> * _float_ <a id="shake_rotation_intensity">shake_rotation_intensity<a/> \
 > [SET] _set_shake_rotation_intensity(value) \
 > [GET] _get_shake_rotation_intensity() \
 \
 > Getter / Setter for the shake rotation intensity. \
-> Can be increased during a shake to increase its intensity. \
+> Can be increased during a shake to increase its intensity.
  
 
-> * _float=0.0_ <a id="shake_fov_duration">shake_fov_duration<a/> \
+> * _float_ <a id="shake_fov_duration">shake_fov_duration<a/> \
 > [SET] _set_shake_fov_duration(value) \
 > [GET] _get_shake_fov_duration() \
 \
 > Getter / Setter for the shake fov duration. \
-> Can be increased during a shake to increase its duration. \
+> Can be increased during a shake to increase its duration.
  
 
-> * _Vector3=Vector3()_ <a id="shake_fov_intensity">shake_fov_intensity<a/> \
+> * _Vector3_ <a id="shake_fov_intensity">shake_fov_intensity<a/> \
 > [SET] _set_shake_fov_intensity(value) \
 > [GET] _get_shake_fov_intensity() \
 \
 > Getter / Setter for the shake fov intensity. \
-> Can be increased during a shake to increase its intensity. \
+> Can be increased during a shake to increase its intensity.
  
 
-> * _CamTarget3D_ <a id="target">target<a/> \
+> * _[CamTarget3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamTarget3D-class-reference-%E2%80%90-CineCam-wiki)_ <a id="target">target<a/> \
 > [SET] set_target(value) \
 > [GET] get_target() \
 \
-> Getter / Setter for the current [H_CamTarget3D]. \
+> Getter / Setter for the current [CamTarget3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamTarget3D-class-reference-%E2%80%90-CineCam-wiki).
  
 
 
 
-#### Method Descriptions
+#### Descriptions
 
-> * _String _ <a id="apply_vcam3D_data">apply_vcam3D_data(vcam3D: VirtualCam3D)</a>\
+> * _String_ <a id="apply_vcam3D_data">apply_vcam3D_data(vcam3D: VirtualCam3D)</a>\
 \
-> Applies all data from the given [H_VirtualCam3D] under Camera3D Section to this [H_CineCam3D]. \
+> Applies all data from the given [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) under Camera3D Section to this [CineCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam3D-class-reference-%E2%80%90-CineCam-wiki/).
 
 
 > * _void_ <a id="blend_to">blend_to(vcam3D : VirtualCam3D, blend_data : BlendData3D)</a>\
 \
-> Blends towards the given [H_VirtualCam3D], using the given [H_BlendData3D]. \
-> You can use [member H_CineCam3D.blend_data], [member H_VirtualCam3D.blend_data] or data from any other source. \
+> Blends towards the given [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki), using the given [BlendData3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/BlendData3D-class-reference-%E2%80%90-CineCam-wiki). \
+> You can use [CineCam3D.blend_data](#blend_data), [VirtualCam3D.blend_data](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki/#blend_data) or data from any other source.
 
 
-> * _VirtualCam3D_ <a id="find_vcam_by_id">find_vcam_by_id(id : String)</a>\
+> * _[VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki)_ <a id="find_vcam_by_id">find_vcam_by_id(id : String)</a>\
 \
-> Returns the first [H_VirtualCam3D] with the given id. \
-> Will only search registered [H_VirtualCam3D]. \
-> See [member H_VirtualCam3D.vcam_id]. \
+> Returns the first [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) with the given id. \
+> Will only search registered [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki). \
+> See [VirtualCam3D.vcam_id](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki/#vcam_id).
 
 
 > * _float_ <a id="full_blend_duration">full_blend_duration()</a>\
 \
 > Returns the full duration of the current blend. \
-> This is either [member H_BlendData3D.blend_by_value] if [member H_BlendData3D.blend_by] is set to [constant H_BlendData3D.DURATION] \
-> or a calculated duration, if set to [constant H_BlendData3D.SPEED]. \
-> Will return -1 if the blend has not started yet. \
+> This is either [BlendData3D.blend_by_value](https://github.com/LumiToad/GDExtension_CineCam/wiki/BlendData3D-class-reference-%E2%80%90-CineCam-wiki/#blend_by_value) if [BlendData3D.blend_by](https://github.com/LumiToad/GDExtension_CineCam/wiki/BlendData3D-class-reference-%E2%80%90-CineCam-wiki/#blend_by) is set to [BlendData3D.DURATION](https://github.com/LumiToad/GDExtension_CineCam/wiki/BlendData3D-class-reference-%E2%80%90-CineCam-wiki/#DURATION) \
+> or a calculated duration, if set to [BlendData3D.SPEED](https://github.com/LumiToad/GDExtension_CineCam/wiki/BlendData3D-class-reference-%E2%80%90-CineCam-wiki/#SPEED). \
+> Will return -1 if the blend has not started yet.
 
 
 > * _void_ <a id="init_default_blend_data">init_default_blend_data()</a>\
 \
-> Sets [member H_CineCam3D.blend_data] to the default data. \
+> Sets [CineCam3D.blend_data](#blend_data) to the default data.
 
 
 > * _void_ <a id="pause_blend">pause_blend()</a>\
 \
 > This will pause the currently running blend. \
-> Will only affect [method H_CineCam3D.blend_to], [constant H_CineCam3D.PRIO_BLEND] or anything from [H_CamSequence3D]. \
+> Will only affect [CineCam3D.blend_to](#blend_to), [CineCam3D.PRIO_BLEND](#PRIO_BLEND) or anything from [CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki).
  
 
 > * _void_ <a id="pause_follow_prio">pause_follow_prio()</a>\
 \
 > This will pause the follow priority feature. \
-> See [enum H_CineCam3D.FollowMode] [constant H_CineCam3D.PRIO]. \
+> See [CineCam3D.FollowMode](#FollowMode) [CineCam3D.PRIO](#PRIO).
  
 
 > * _void_ <a id="pause_follow_target">pause_follow_target()</a>\
 \
 > This will pause the follow target and target blend feature. \
-> See [enum H_CineCam3D.FollowMode] [constant H_CineCam3D.TARGET] and [constant H_CineCam3D.TARGET_BLEND]. \
+> See [CineCam3D.FollowMode](#FollowMode) [CineCam3D.TARGET](#TARGET) and [CineCam3D.TARGET_BLEND](#TARGET_BLEND).
  
 
 > * _void_ <a id="prioritized_vcam">prioritized_vcam()</a>\
 \
-> Returns the prioritized [H_VirtualCam3D]. \
+> Returns the prioritized [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki).
 
 
 > * _void_ <a id="reposition_to_vcam">reposition_to_vcam(vcam : VirtualCam3D)</a>\
 \
-> Will teleport this Camera instantly to the given [H_VirtualCam3D]. \
+> Will teleport this Camera instantly to the given [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki).
 
 
 > * _void_ <a id="resume_blend">resume_blend()</a>\
 \
 > Resumes the currently running blend, regardless of the current state. \
-> Will only affect [method H_CineCam3D.blend_to], [constant H_CineCam3D.PRIO_BLEND] or anything from [H_CamSequence3D]. \
+> Will only affect [CineCam3D.blend_to](#blend_to), [CineCam3D.PRIO_BLEND](#PRIO_BLEND) or anything from [CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki).
  
 
 > * _void_ <a id="resume_follow_prio">resume_follow_prio()</a>\
 \
 > Resumes the currently running priority blend, regardless of the current state. \
-> See [enum H_CineCam3D.FollowMode], [constant H_CineCam3D.PRIO]. \
+> See [CineCam3D.FollowMode](#FollowMode), [CineCam3D.PRIO](#PRIO).
 
 
 > * _void_ <a id="resume_follow_target">resume_follow_target()</a>\
 \
 > Resumes the currently running target follow, regardless of the current state. \
-> See [enum H_CineCam3D.FollowMode], [constant H_CineCam3D.TARGET] and [constant H_CineCam3D.TARGET_BLEND]. \
+> See [CineCam3D.FollowMode](#FollowMode), [CineCam3D.TARGET](#TARGET) and [CineCam3D.TARGET_BLEND](#TARGET_BLEND).
 
 
 > * _void_ <a id="seq_blend_next">seq_blend_next()</a>\
 \
-> Blends to the next [H_VirtualCam3D] in the current [member H_CineCam3D.current_sequence]. \
+> Blends to the next [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) in the current [CineCam3D.current_sequence](#current_sequence).
 
 
 > * _void_ <a id="seq_blend_prev">seq_blend_prev()</a>\
 \
-> Blends to the previous [H_VirtualCam3D] in the current [member H_CineCam3D.current_sequence]. \
+> Blends to the previous [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) in the current [CineCam3D.current_sequence](#current_sequence).
 
 
 > * _void_ <a id="seq_blend_to">seq_blend_to(idx: int)</a>\
 \
-> Blends to the [H_VirtualCam3D] at the given index, in the current [member H_CineCam3D.current_sequence]. \
+> Blends to the [VirtualCam3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki) at the given index, in the current [CineCam3D.current_sequence](#current_sequence).
 
 
 > * _void_ <a id="seq_pause">seq_pause()</a>\
 \
-> Pauses the current running sequence. Will not pause the blend, just the execution of the sequence. \
+> Pauses the current running sequence. Will not pause the blend, just the execution of the sequence.
 
 
 > * _void_ <a id="seq_resume">seq_resume()</a>\
 \
-> Resumes the current running sequence, regardless of the current state. \
+> Resumes the current running sequence, regardless of the current state.
 
 
 > * _void_ <a id="seq_stop">seq_stop()</a>\
 \
-> Stops the current running sequence and resets its [member H_CamSequence3D.current_idx]. \
+> Stops the current running sequence and resets its [CamSequence3D.current_idx](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki/#current_idx).
 
 
 > * _void_ <a id="shake_offset">shake_offset(intensity : Vector3, duration : float, ease : Tween.EaseType, trans : Tween.TransitionType)</a>\
 \
 > Shakes the cam. \
-> Takes a strength and a duration in seconds. \
+> Takes a strength and a duration in seconds.
 
 
 > * _void_ <a id="shake_rotation">shake_rotation(intensity : float, duration : float, ease : Tween.EaseType, trans : Tween.TransitionType)</a>\
 \
 > Shakes the cam. \
-> Takes a strength and a duration in seconds. \
+> Takes a strength and a duration in seconds.
 
 
 > * _void_ <a id="shake_fov">shake_fov(intensity : Vector3, duration : float, ease : Tween.EaseType, trans : Tween.TransitionType)</a>\
 \
 > Shakes the cam fov. \
-> Takes a strength and a duration in seconds. \
+> Takes a strength and a duration in seconds.
 
 
 > * _void_ <a id="start_sequence">start_sequence(backwards : bool = false)</a>\
 \
-> Starts the sequence in [member H_CineCam3D.current_sequence]. \
-> You can set the optional bool to true, to play the sequence in reverse. \
+> Starts the sequence in [CineCam3D.current_sequence](#current_sequence). \
+> You can set the optional bool to true, to play the sequence in reverse.
 
 
 > * _void_ <a id="start_sequence_at">start_sequence_at(backwards : bool = false, index : int = 0)</a>\
 \
-> Starts the sequence in [member H_CineCam3D.current_sequence] at the given index. \
-> You can set the optional bool to true, to play the sequence in reverse. \
+> Starts the sequence in [CineCam3D.current_sequence](#current_sequence) at the given index. \
+> You can set the optional bool to true, to play the sequence in reverse.
 
 
 > * _void_ <a id="toggle_follow_prio">toggle_follow_prio()</a>\
 \
 > Toggles the currently running priority blend, considering its current state. \
-> See [enum H_CineCam3D.FollowMode], [constant H_CineCam3D.PRIO]. \
+> See [CineCam3D.FollowMode](#FollowMode), [CineCam3D.PRIO](#PRIO).
 
 
 > * _void_ <a id="toggle_follow_target">toggle_follow_target()</a>\
 \
 > Toggles the currently running target follow,  considering its current state. \
-> See [enum H_CineCam3D.FollowMode], [constant H_CineCam3D.TARGET] and [constant H_CineCam3D.TARGET_BLEND]. \
+> See [CineCam3D.FollowMode](#FollowMode), [CineCam3D.TARGET](#TARGET) and [CineCam3D.TARGET_BLEND](#TARGET_BLEND).
 
 
-> * _CamSequence3D_ <a id="get_current_sequence">get_current_sequence()</a>\
+> * _[CamSequence3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki)_ <a id="get_current_sequence">get_current_sequence()</a>\
 \
-> Getter for current_sequence. \
+> Getter for current_sequence.
 
 
 > * _void_ <a id="set_current_sequence">set_current_sequence(value : CamSequence3D)</a>\
 \
-> Setter for current_sequence. \
+> Setter for current_sequence.
 
 
-> * _FollowMode_ <a id="get_follow_mode">get_follow_mode()</a>\
+> * _[FollowMode](#FollowMode)_ <a id="get_follow_mode">get_follow_mode()</a>\
 \
-> Getter for follow_mode. \
+> Getter for follow_mode.
 
 
 > * _void_ <a id="set_follow_mode">set_follow_mode(value : FollowMode)</a>\
 \
-> Setter for follow_mode. \
+> Setter for follow_mode.
 
 
 > * _bool_ <a id="is_follow_prio_paused">is_follow_prio_paused()</a>\
 \
-> Getter for follow_prio_paused. \
+> Getter for follow_prio_paused.
 
 
 > * _void_ <a id="set_follow_prio_paused">set_follow_prio_paused(value : bool)</a>\
 \
-> Setter for follow_prio_paused. \
+> Setter for follow_prio_paused.
 
 
 > * _bool_ <a id="is_follow_target_paused">is_follow_target_paused()</a>\
 \
-> Getter for follow_target_paused. \
+> Getter for follow_target_paused.
 
 
 > * _void_ <a id="set_follow_target_paused">set_follow_target_paused(value : bool)</a>\
 \
-> Setter for follow_target_paused. \
+> Setter for follow_target_paused.
 
 
-> * _CamTarget3D_ <a id="get_target">get_target()</a>\
+> * _[CamTarget3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamTarget3D-class-reference-%E2%80%90-CineCam-wiki)_ <a id="get_target">get_target()</a>\
 \
-> Getter for target. \
+> Getter for target.
 
 
 > * _void_ <a id="set_target">set_target(value : CamTarget3D)</a>\
 \
-> Setter for target. \
+> Setter for target.
 
 
-> * _CamTarget3D _ <a id="get_look_at_target">get_look_at_target()</a>\
+> * _[CamTarget3D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamTarget3D-class-reference-%E2%80%90-CineCam-wiki)_ <a id="get_look_at_target">get_look_at_target()</a>\
 \
-> Getter for look_at_target. \
+> Getter for look_at_target.
 
 
 > * _void_ <a id="set_look_at_target">set_look_at_target(value : CamTarget3D)</a>\
 \
-> Setter for look_at_target. \
-
-
+> Setter for look_at_target.

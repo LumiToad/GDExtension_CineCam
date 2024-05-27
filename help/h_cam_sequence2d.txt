@@ -1,12 +1,12 @@
-### H_CamSequence2D
-> Inherits: Node2D < CanvasItem < Node < Object
+### CamSequence2D
+> Inherits: < [Node2D](https://docs.godotengine.org/en/stable/classes/class_node2d.html) < [CanvasItem](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html) < [Node](https://docs.godotengine.org/en/stable/classes/class_node.html) < [Object](https://docs.godotengine.org/en/stable/classes/class_object.html)
 
 #### Description
 
-This help document refers to [CamSequence2D] class! \
-This node is only useful in combination with [H_VirtualCam2D] and [H_CineCam2D]. \
-Attach [H_VirtualCam2D] nodes to this sequence. Then a [H_CineCam2D] can access it using various methods. \
-Will automatically reload the internal array of virtual cameras on [constant Node.NOTIFICATION_CHILD_ORDER_CHANGED]. 
+This help document refers to [CamSequence2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence2D-class-reference-%E2%80%90-CineCam-wiki/) class! \
+This node is only useful in combination with [VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki) and [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki). \
+Attach [VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki) nodes to this sequence. Then a [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki) can access it using various methods. \
+Will automatically reload the internal array of virtual cameras on [Node.NOTIFICATION_CHILD_ORDER_CHANGED](https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-constant-notification-child-order-changed). 
  
 #### Links
 [Link1](https://lnk.bio/LumiToad) \
@@ -17,23 +17,29 @@ Will automatically reload the internal array of virtual cameras on [constant Nod
 
 | Type | Property | Hint | 
 | :-- | :-- | :-- | 
-| _int_ | [current_idx](#current_idx) | - |
+| _int_ | [current_idx](#current_idx) | default: 0 |
 
 #### Methods
 
-| Return | Method | 
+| Return | | 
 | :-- | :-- |
-| _VirtualCam2D_ | [current_vcam()](#current_vcam) |
-| _Array[VirtualCam2D]_ | [get_vcam2d_array()](#get_vcam2d_array) |
-| _VirtualCam2D_ | [vcam2d_at(index: int)](#vcam2d_at) |
+| _[VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki)_ | [current_vcam()](#current_vcam) |
+| _[Array](https://docs.godotengine.org/en/stable/classes/class_array.html)[[VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki)]_ | [get_vcam2d_array()](#get_vcam2d_array) |
+| _[VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki)_ | [vcam2d_at(index: int)](#vcam2d_at) |
 | _int_ | [get_current_idx()](#get_current_idx) |
 | _void_ | [set_current_idx(value : int)](#set_current_idx) |
+| _bool_ | [get_is_draw_debug_lines()](#get_is_draw_debug_lines) |
+| _void_ | [set_is_draw_debug_lines(value : bool)](#set_is_draw_debug_lines) |
+| _Color_ | [get_debug_lines_color(value : Color)](#get_debug_lines_color) |
+| _void_ | [set_debug_lines_color(value : Color)](#set_debug_lines_color) |
+| _float_ | [get_debug_lines_width()](#get_debug_lines_width) |
+| _void_ | [set_debug_lines_width(value : float)](#set_debug_lines_width) |
 
 #### Signals
-> * _signal_ index_changed(vcam2d : Object, index : int)()\
+> * _signal_ index_changed(vcam2d : Object, index : int)\
 \
 > Will be emitted, when the index of the currently selected virtual camera has changed. \
-> Returns [H_VirtualCam2D] and the current index
+> Returns [VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki) and the current index
 
 
 
@@ -44,39 +50,85 @@ Will automatically reload the internal array of virtual cameras on [constant Nod
 > [SET] set_current_idx(value) \
 > [GET] get_current_idx() \
 \
-> Getter / Setter for the current index of the sequence. \
+> Getter / Setter for the current index of the sequence. 
  
-
-
-
-#### Method Descriptions
-
-> * _VirtualCam2D_ <a id="current_vcam">current_vcam()</a>\
+> * _bool_ <a id="_draw_debug_lines">_draw_debug_lines<a/> \
+> [SET] set_is_draw_debug_lines(value : bool) \
+> [GET] get_is_draw_debug_lines() \
 \
-> Returns the currently selected [H_VirtualCam2D]. \
-> That means, that if the sequence is running, the target for the currently running blend is returned. \
+> Getter / Setter for _draw_debug_lines property. \
+> Will draw debug lines between [H_VirtualCam2D] nodes, in order of sequence execution.
 
-
-> * _Array[VirtualCam2D]_ <a id="get_vcam2d_array">get_vcam2d_array()</a>\
+> * _Color_ <a id="_debug_lines_color">_debug_lines_color<a/> \
+> [SET] set_debug_lines_color(value : Color) \
+> [GET] get_debug_lines_color() \
 \
-> Returns all [H_VirtualCam2D] that are registred to this node. \
-> This is basically the [H_VirtualCam2D] children of this node. \
+> Getter / Setter for _is_draw_debug_color property. \
+> Color for debug lines.
+
+> * _Color_ <a id="_debug_lines_width">_debug_lines_width<a/> \
+> [SET] set_debug_lines_width(value : float) \
+> [GET] get_debug_lines_width() \
+\
+> Getter / Setter for _is_draw_debug_width property. \
+> Width for debug lines.
+
+#### Descriptions
+
+> * _[VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki)_ <a id="current_vcam">current_vcam()</a>\
+\
+> Returns the currently selected [VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki). \
+> That means, that if the sequence is running, the target for the currently running blend is returned. 
+
+
+> * _[Array](https://docs.godotengine.org/en/stable/classes/class_array.html)[[VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki)]_ <a id="get_vcam2d_array">get_vcam2d_array()</a>\
+\
+> Returns all [VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki) that are registred to this node. \
+> This is basically the [VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki) children of this node. \
 > When virtual cams are added, removed or changed in order, the internal array will changed automatically. \
-> You can use this method after such a change to get the new array. \
+> You can use this after such a change to get the new array. 
 
 
-> * _VirtualCam2D_ <a id="vcam2d_at">vcam2d_at(index: int)</a>\
+> * _[VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki)_ <a id="vcam2d_at">vcam2d_at(index: int)</a>\
 \
-> Returns the [H_VirtualCam2D] at given index of the internal array. \
+> Returns the [VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki) at given index of the internal array. 
 
 
 > * _int_ <a id="get_current_idx">get_current_idx()</a>\
 \
-> Getter for current_idx. \
+> Getter for current_idx. 
 
 
 > * _void_ <a id="set_current_idx">set_current_idx(value : int)</a>\
 \
-> Setter for current_idx. \
+> Setter for current_idx. 
 
 
+> * _bool_ <a id="get_is_draw_debug_lines">get_is_draw_debug_lines()</a>\
+\
+> Getter for draw_debug_lines.
+
+
+> * void <a id="get_is_draw_debug_lines">get_is_draw_debug_lines(value : bool)</a>\
+\
+> Setter for draw_debug_lines.
+
+
+> * _Color_ <a id="get_debug_lines_color">get_debug_lines_color()</a>\
+\
+> Getter for debug_lines_color.
+
+
+> * void <a id="set_debug_lines_color">set_debug_lines_color(value : Color)</a>\
+\
+> Setter for debug_lines_color.
+
+
+> * _float_ <a id="get_debug_lines_width">get_debug_lines_width()</a>\
+\
+> Getter for debug_lines_width.
+
+
+> * void <a id="set_debug_lines_width">set_debug_lines_width(value : float)</a>\
+\
+> Setter for debug_lines_width.

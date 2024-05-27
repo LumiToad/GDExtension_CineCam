@@ -1,20 +1,20 @@
-### H_VirtualCam2D
-> Inherits: Node2D < CanvasItem < Node < Object
+### VirtualCam2D
+> Inherits: [Node2D](https://docs.godotengine.org/en/stable/classes/class_node2d.html) < [CanvasItem](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html) < [Node](https://docs.godotengine.org/en/stable/classes/class_node.html) < [Object](https://docs.godotengine.org/en/stable/classes/class_object.html)
 
 #### Description
 
-This help document refers to [VirtualCam2D] class! \
-Virtual camera for the [H_CineCam2D]. \
-Imagine these nodes as dummy cameras for the [H_CineCam2D]. \
+This help document refers to [VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki/) class! \
+Virtual camera for the [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki). \
+Imagine these nodes as dummy cameras for the [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki). \
 \
-These dummy cameras will automatically register to the first found [H_CineCam2D]. \
-Be careful! At least one virtual camera has to be above a [H_CineCam2D] in the hierarchy! \
+These dummy cameras will automatically register to the first found [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki). \
+Be careful! At least one virtual camera has to be above a [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki) in the hierarchy! \
 Otherwise the game will crash! \
 You can setup blends, a camera priority and an ID to find a virtual camera node. \
-See [H_CineCam2D] for all the things, that you can do with a [H_VirtualCam2D] node! \
+See [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki) for all the things, that you can do with a [VirtualCam2D] node! \
 \
 They also contain all the properties of a [Camera2D] as dummy values without any use. \
-Using [method H_CineCam2D.apply_vcam2d_data], you can copy the data to your currently runing [H_CineCam2D]. 
+Using [CineCam2D.apply_vcam2d_data](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/#apply_vcam2d_data), you can copy the data to your currently runing [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki). 
  
 #### Links
 [Link1](https://lnk.bio/LumiToad) \
@@ -26,12 +26,12 @@ Using [method H_CineCam2D.apply_vcam2d_data], you can copy the data to your curr
 | Type | Property | Hint | 
 | :-- | :-- | :-- | 
 | _String_ | [vcam_id](#vcam_id) | - |
-| _int=0_ | [priority](#priority) | - |
-| _H_BlendData2D_ | [blend_data](#blend_data) | - |
+| _int_ | [priority](#priority) | default: 0 |
+| _[BlendData2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/BlendData2D-class-reference-%E2%80%90-CineCam-wiki)_ | [blend_data](#blend_data) | - |
 
 #### Methods
 
-| Return | Method | 
+| Return | | 
 | :-- | :-- |
 | _String_ | [get_vcam_id()](#get_vcam_id) |
 | _void_ | [set_vcam_id(value : String)](#set_vcam_id) |
@@ -39,9 +39,9 @@ Using [method H_CineCam2D.apply_vcam2d_data], you can copy the data to your curr
 | _void_ | [set_priority(value : int)](#set_priority) |
 
 #### Signals
-> * _signal_ priority_changed(vcam2d: Object, priority: int)()\
+> * _signal_ priority_changed(vcam2d: Object, priority: int)\
 \
-> Emitted, when the [member H_VirtualCam2D.priority] has changed
+> Emitted, when the [VirtualCam2D.priority](#priority) has changed
 
 
 
@@ -53,53 +53,53 @@ Using [method H_CineCam2D.apply_vcam2d_data], you can copy the data to your curr
 > [GET] get_vcam_id() \
 \
 > Getter / Setter for the vcam_id property. \
-> This [String] is just a name, which you can search, using [method H_CineCam2D.find_vcam_by_id]. \
+> This [String] is just a name, which you can search, using [CineCam2D.find_vcam_by_id](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/#find_vcam_by_id).
  
 
-> * _int=0_ <a id="priority">priority<a/> \
+> * _int_ <a id="priority">priority<a/> \
 > [SET] set_priority(value) \
 > [GET] get_priority() \
 \
 > Getter / Setter for the priority of this virtual camera. \
-> A [H_CineCam2D] will always know the virtual camera with the highest priority. \
-> See [enum H_CineCam2D.FollowMode] for this. \
-> The [H_CineCam2D] will register the priority, either when: \
-> - [H_VirtualCam2D] nodes are changed (instanced for example) in the scene tree. \
-> - If their priority changes. \
+> A [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki) will always know the virtual camera with the highest priority. \
+> See [CineCam2D.FollowMode](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/#FollowMode) for this. \
+> The [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki) will register the priority, either when: \
+> ' [VirtualCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki/) nodes are changed (instanced for example) in the scene tree. \
+> ' If their priority changes. \
 > This also happens, when loading the scene! \
-> If two or more virtual cameras have the same priority, a [H_CineCam2D] will register the latest registered as the new "highest priority virtual camera". \
+> If two or more virtual cameras have the same priority, a [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki) will register the latest registered as the new "highest priority virtual camera".
  
 
-> * _H_BlendData2D_ <a id="blend_data">blend_data<a/> \
+> * _[BlendData2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/BlendData2D-class-reference-%E2%80%90-CineCam-wiki)_ <a id="blend_data">blend_data<a/> \
 > [SET] _set_blend_data(value) \
 > [GET] _get_blend_data() \
 \
 > The default blending data for this virtual camera. \
-> Will be used, when a [H_CineCam2D] blends to this virtual camera. \
-> If this is empty, [member H_CineCam2D.blend_data] will be used as a default blend. \
+> Will be used, when a [CineCam2D](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki) blends to this virtual camera. \
+> If this is empty, [CineCam2D.blend_data](https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki/#blend_data) will be used as a default blend.
  
 
 
 
-#### Method Descriptions
+#### Descriptions
 
 > * _String_ <a id="get_vcam_id">get_vcam_id()</a>\
 \
-> Getter for vcam_id. \
+> Getter for vcam_id.
 
 
 > * _void_ <a id="set_vcam_id">set_vcam_id(value : String)</a>\
 \
-> Setter for vcam_id. \
+> Setter for vcam_id.
 
 
 > * _int_ <a id="get_priority">get_priority()</a>\
 \
-> Getter for priority. \
+> Getter for priority.
 
 
 > * _void_ <a id="set_priority">set_priority(value : int)</a>\
 \
-> Setter for priority. \
+> Setter for priority.
 
 

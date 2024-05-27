@@ -8,8 +8,8 @@ extends Node2D
 ## Attach [H_VirtualCam2D] nodes to this sequence. Then a [H_CineCam2D] can access it using various methods. [br]
 ## Will automatically reload the internal array of virtual cameras on [constant Node.NOTIFICATION_CHILD_ORDER_CHANGED]. [br]
 ##
-## @tutorial(Link1): https://lnk.bio/LumiToad
-## @tutorial(Link2): https://www.linkedin.com/in/LumiToad/
+## @tutorial(Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki
+## @tutorial(This page in Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence2D-class-reference-%E2%80%90-CineCam-wiki
 ## @tutorial(Link3): https://github.com/LumiToad
 #END_OF_DESCRIPTION
 
@@ -23,6 +23,27 @@ signal index_changed(vcam2d : Object, index : int)
 var current_idx : int = 0 :
 	get: return get_current_idx()
 	set(value): set_current_idx(value)
+
+
+## Getter / Setter for _draw_debug_lines property. [br]
+## Will draw debug lines between [H_VirtualCam2D] nodes, in order of sequence execution. [br]
+var _draw_debug_lines : bool:
+	get: return get_is_draw_debug_lines()
+	set(value): set_is_draw_debug_lines(value)
+
+
+## Getter / Setter for _is_draw_debug_color property. [br]
+## Color for debug lines. [br]
+var _debug_lines_color : Color:
+	get: return get_debug_lines_color()
+	set(value): set_debug_lines_color(value)
+
+
+## Getter / Setter for _is_draw_debug_width property. [br]
+## Width for debug lines. [br]
+var _debug_lines_width : float:
+	get: return get_debug_lines_width()
+	set(value): set_debug_lines_width(value)
 
 
 ## Returns the currently selected [H_VirtualCam2D]. [br]
@@ -51,4 +72,34 @@ func get_current_idx() -> int:
 
 ## Setter for current_idx. [br]
 func set_current_idx(value : int):
+	pass
+
+
+## Getter for is_draw_debug_lines.
+func get_is_draw_debug_lines() -> bool:
+	return false
+
+
+## Setter for is_draw_debug_lines.
+func set_is_draw_debug_lines(value : bool):
+	pass
+
+
+## Getter for _draw_debug_color.
+func get_debug_lines_color() -> Color:
+	return Color()
+
+
+## Setter for _draw_debug_color.
+func set_debug_lines_color(value : Color):
+	pass
+
+
+## Getter for _draw_debug_width.
+func get_debug_lines_width() -> float:
+	return 0.0
+
+
+## Setter for _draw_debug_width.
+func set_debug_lines_width(value : float):
 	pass

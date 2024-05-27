@@ -44,8 +44,8 @@ CineCam2D::~CineCam2D()
 
 void CineCam2D::_bind_methods()
 {
+	ADD_METHOD_BINDING(_on_blend_completed_internal, CineCam2D);
 	ADD_METHOD_BINDING(init_default_blend_data, CineCam2D);
-
 	ADD_METHOD_BINDING(seq_blend_next, CineCam2D);
 	ADD_METHOD_BINDING(seq_blend_prev, CineCam2D);
 	ADD_METHOD_ARGS_BINDING(seq_blend_to, CineCam2D, VA_LIST("idx"));
@@ -54,17 +54,13 @@ void CineCam2D::_bind_methods()
 	ADD_METHOD_BINDING(seq_resume, CineCam2D);
 	ADD_METHOD_BINDING(seq_pause, CineCam2D);
 	ADD_METHOD_BINDING(seq_stop, CineCam2D);
-
 	ADD_METHOD_BINDING(pause_follow_target, CineCam2D);
 	ADD_METHOD_BINDING(resume_follow_target, CineCam2D);
 	ADD_METHOD_BINDING(toggle_follow_target, CineCam2D);
-
 	ADD_METHOD_BINDING(pause_follow_prio, CineCam2D);
 	ADD_METHOD_BINDING(resume_follow_prio, CineCam2D);
 	ADD_METHOD_BINDING(toggle_follow_prio, CineCam2D);
-
 	ADD_METHOD_ARGS_BINDING(reposition_to_vcam, CineCam2D, "vcam");
-
 	ADD_METHOD_BINDING(prioritized_vcam, CineCam2D);
 	ADD_METHOD_BINDING(_on_vcam_priority_changed, CineCam2D);
 	ADD_METHOD_BINDING(_move_by_priority_mode, CineCam2D);
@@ -73,38 +69,57 @@ void CineCam2D::_bind_methods()
 	ADD_METHOD_BINDING(pause_blend, CineCam2D);
 	ADD_METHOD_ARGS_BINDING(_calc_blend_duration_by_speed, CineCam2D, VA_LIST("current_pos", "target_pos", "speed"));
 	ADD_METHOD_ARGS_BINDING(find_vcam_by_id, CineCam2D, "id");
-
 	ADD_METHOD_ARGS_BINDING(_register_vcam_internal, CineCam2D, VA_LIST("vcam2d"));
-
 	ADD_METHOD_ARGS_BINDING(apply_vcam2d_data, CineCam2D, "vcam2d");
-
-	ADD_GETSET_HINT_BINDING(get_follow_mode, set_follow_mode, follow_mode, mode, CineCam2D, INT, PROPERTY_HINT_ENUM, TARGET_MODE_HINTS);
-
-	ADD_GETSET_HINT_BINDING(_get_blend_data, _set_blend_data, blend_data, blend_data, CineCam2D, OBJECT, PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D");
-	ADD_GETSET_HINT_BINDING(get_current_sequence, set_current_sequence, current_sequence, p_sequence, CineCam2D, OBJECT, PROPERTY_HINT_NODE_TYPE, "CamSequence2D");
-	ADD_GETSET_HINT_BINDING(get_target, set_target, target, p_target, CineCam2D, Variant::OBJECT, PROPERTY_HINT_NODE_TYPE, "CamTarget2D");
-
-	ADD_GETSET_BINDING(_get_shake_offset_intensity, _set_shake_offset_intensity, shake_offset_intensity, intensity, CineCam2D, VECTOR2);
-	ADD_GETSET_BINDING(_get_shake_offset_duration, _set_shake_offset_duration, shake_offset_duration, duration, CineCam2D, FLOAT);
-
-	ADD_GETSET_BINDING(_get_shake_zoom_intensity, _set_shake_zoom_intensity, shake_zoom_intensity, intensity, CineCam2D, VECTOR2);
-	ADD_GETSET_BINDING(_get_shake_zoom_duration, _set_shake_zoom_duration, shake_zoom_duration, duration, CineCam2D, FLOAT);
-
-	ADD_GETSET_BINDING(_get_shake_rotation_intensity, _set_shake_rotation_intensity, shake_rotation_intensity, intensity, CineCam2D, FLOAT);
-	ADD_GETSET_BINDING(_get_shake_rotation_duration, _set_shake_rotation_duration, shake_rotation_duration, duration, CineCam2D, FLOAT);
-
-	ADD_GETSET_BINDING(_is_seq_paused, _set_seq_paused, sequence_pause, paused, CineCam2D, BOOL);
-	ADD_GETSET_BINDING(_is_blend_paused, _set_blend_paused, blend_pause, paused, CineCam2D, BOOL);
-	ADD_GETSET_BINDING(_is_follow_target_paused, _set_follow_target_paused, follow_target_pause, paused, CineCam2D, BOOL);
-	ADD_GETSET_BINDING(_is_follow_prio_paused, _set_follow_prio_paused, follow_prio_pause, paused, CineCam2D, BOOL);
-
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_offset, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_zoom, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
 	ADD_METHOD_DEFAULTARGS_BINDING(shake_rotation, CineCam2D, VA_LIST("intensity", "duration", "ease", "trans"), VA_LIST(DEFVAL(DEFAULT_EASE), DEFVAL(DEFAULT_TRANS)));
-
 	ADD_METHOD_ARGS_BINDING(blend_to, CineCam2D, VA_LIST("vcam2d", "blend_data"));
-
 	ADD_METHOD_BINDING(full_blend_duration, CineCam2D);
+
+	ADD_METHOD_BINDING(get_follow_mode, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(set_follow_mode, CineCam2D, "mode");
+	ADD_METHOD_BINDING(_get_blend_data, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(_set_blend_data, CineCam2D, "blend_data");
+	ADD_METHOD_BINDING(get_current_sequence, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(set_current_sequence, CineCam2D, "p_sequence");
+	ADD_METHOD_BINDING(get_target, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(set_target, CineCam2D, "p_target");
+	ADD_METHOD_BINDING(_get_shake_offset_intensity, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(_set_shake_offset_intensity, CineCam2D, "intensity");
+	ADD_METHOD_BINDING(_get_shake_offset_duration, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(_set_shake_offset_duration, CineCam2D, "duration");
+	ADD_METHOD_BINDING(_get_shake_zoom_intensity, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(_set_shake_zoom_intensity, CineCam2D, "intensity");
+	ADD_METHOD_BINDING(_get_shake_zoom_duration, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(_set_shake_zoom_duration, CineCam2D, "duration");
+	ADD_METHOD_BINDING(_get_shake_rotation_intensity, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(_set_shake_rotation_intensity, CineCam2D, "intensity");
+	ADD_METHOD_BINDING(_get_shake_rotation_duration, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(_set_shake_rotation_duration, CineCam2D, "duration");
+	ADD_METHOD_BINDING(_is_seq_paused, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(_set_seq_paused, CineCam2D, "paused");
+	ADD_METHOD_BINDING(_is_blend_paused, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(_set_blend_paused, CineCam2D, "paused");
+	ADD_METHOD_BINDING(_is_follow_target_paused, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(_set_follow_target_paused, CineCam2D, "paused");
+	ADD_METHOD_BINDING(_is_follow_prio_paused, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(_set_follow_prio_paused, CineCam2D, "paused");
+
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "follow_mode", PROPERTY_HINT_ENUM, "OFF,PRIO,PRIO_ONESHOT,PRIO_BLEND,TARGET,TARGET_BLEND"), "set_follow_mode", "get_follow_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "blend_data", PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D"), "_set_blend_data", "_get_blend_data");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "current_sequence", PROPERTY_HINT_NODE_TYPE, "CamSequence2D"), "set_current_sequence", "get_current_sequence");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::OBJECT, "target", PROPERTY_HINT_NODE_TYPE, "CamTarget2D"), "set_target", "get_target");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_offset_intensity"), "_set_shake_offset_intensity", "_get_shake_offset_intensity");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "shake_offset_duration"), "_set_shake_offset_duration", "_get_shake_offset_duration");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_zoom_intensity"), "_set_shake_zoom_intensity", "_get_shake_zoom_intensity");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_zoom_duration"), "_set_shake_zoom_duration", "_get_shake_zoom_duration");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_rotation_intensity"), "_set_shake_rotation_intensity", "_get_shake_rotation_intensity");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_rotation_duration"), "_set_shake_rotation_duration", "_get_shake_rotation_duration");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "sequence_pause"), "_set_seq_paused", "_is_seq_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "blend_pause"), "_set_blend_paused", "_is_blend_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_target_pause"), "_set_follow_target_paused", "_is_follow_target_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_prio_pause"), "_set_follow_prio_paused", "_is_follow_prio_paused");
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_STARTED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_ENDED));
@@ -129,8 +144,6 @@ void CineCam2D::_bind_methods()
 	BIND_ENUM_CONSTANT(PRIO_BLEND);
 	BIND_ENUM_CONSTANT(TARGET);
 	BIND_ENUM_CONSTANT(TARGET_BLEND);
-
-	ClassDB::bind_method(D_METHOD("_on_blend_completed_internal"), &CineCam2D::_on_blend_completed_internal);
 }
 
 

@@ -33,13 +33,23 @@ CamTarget2D::~CamTarget2D()
 
 void CamTarget2D::_bind_methods()
 {
-	ADD_GETSET_BINDING(get_target_offset, set_target_offset, offset, offset, CamTarget2D, Variant::VECTOR2);
-	ADD_GETSET_HINT_BINDING(get_speed_x, set_speed_x, speed_x, speed_x, CamTarget2D, Variant::FLOAT, PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%");
-	ADD_GETSET_HINT_BINDING(get_speed_y, set_speed_y, speed_y, speed_y, CamTarget2D, Variant::FLOAT, PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%");
-	ADD_GETSET_HINT_BINDING(get_ease, set_ease, ease, ease, CamTarget2D, Variant::INT, PROPERTY_HINT_ENUM, EASE_HINTS);
-	ADD_GETSET_HINT_BINDING(get_trans, set_trans, trans, trans, CamTarget2D, Variant::INT, PROPERTY_HINT_ENUM, TRANS_HINTS);
-
 	ADD_METHOD_BINDING(scaled_speed, CamTarget2D);
+	ADD_METHOD_BINDING(get_target_offset, CamTarget2D);
+	ADD_METHOD_ARGS_BINDING(set_target_offset, CamTarget2D, "offset");
+	ADD_METHOD_BINDING(get_speed_x, CamTarget2D);
+	ADD_METHOD_ARGS_BINDING(set_speed_x, CamTarget2D, "speed_x");
+	ADD_METHOD_BINDING(get_speed_y, CamTarget2D);
+	ADD_METHOD_ARGS_BINDING(set_speed_y, CamTarget2D, "speed_y");
+	ADD_METHOD_BINDING(get_ease, CamTarget2D);
+	ADD_METHOD_ARGS_BINDING(set_ease, CamTarget2D, "ease");
+	ADD_METHOD_BINDING(get_trans, CamTarget2D);
+	ADD_METHOD_ARGS_BINDING(set_trans, CamTarget2D, "trans");
+
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::VECTOR2, "offset"), "set_target_offset", "get_target_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::FLOAT, "speed_x", PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%"), "set_speed_x", "get_speed_x");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::FLOAT, "speed_y", PROPERTY_HINT_RANGE, "0.0,100.0,0.001,suffix:%"), "set_speed_y", "get_speed_y");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::INT, "ease", PROPERTY_HINT_ENUM, EASE_HINTS), "set_ease", "get_ease");
+	ADD_PROPERTY(PropertyInfo(Variant::Variant::INT, "trans", PROPERTY_HINT_ENUM, TRANS_HINTS), "set_trans", "get_trans");
 }
 
 
