@@ -10,7 +10,7 @@ extends Node3D
 ##
 ## @tutorial(Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki
 ## @tutorial(This page in Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki
-## @tutorial(Link3): https://github.com/LumiToad
+## @tutorial(CamSequence for a series of blends): https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Using-CamSequence-for-a-series-of-blends
 #END_OF_DESCRIPTION
 
 

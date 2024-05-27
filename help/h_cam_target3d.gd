@@ -10,7 +10,7 @@ extends Node3D
 ##
 ## @tutorial(Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki
 ## @tutorial(This page in Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki/CamTarget3D-class-reference-%E2%80%90-CineCam-wiki
-## @tutorial(Link3): https://github.com/LumiToad
+## @tutorial(Following a target): https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Following-a-target
 #END_OF_DESCRIPTION
 
 ## Getter / Setter for the ease type of the blend. [br]

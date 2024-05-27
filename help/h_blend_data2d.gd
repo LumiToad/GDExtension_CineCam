@@ -8,7 +8,6 @@ extends Resource
 ##
 ## @tutorial(Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki
 ## @tutorial(This page in Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki/BlendData2D-class-reference-%E2%80%90-CineCam-wiki
-## @tutorial(Link3): https://github.com/LumiToad/
 #END_OF_DESCRIPTION
 
 

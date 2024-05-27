@@ -9,7 +9,7 @@ extends Camera2D
 ##
 ## @tutorial(Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki
 ## @tutorial(This page in Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam2D-class-reference-%E2%80%90-CineCam-wiki
-## @tutorial(Link3): https://github.com/LumiToad
+## @tutorial(Camera shaking): https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Easy-camera-shaking-%E2%80%90-CineCam-wiki
 #END_OF_DESCRIPTION
 
 

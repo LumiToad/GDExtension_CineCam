@@ -18,7 +18,10 @@ extends Node2D
 ## 
 ## @tutorial(Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki
 ## @tutorial(This page in Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam2D-class-reference-%E2%80%90-CineCam-wiki
-## @tutorial(Link3): https://github.com/LumiToad
+## @tutorial(Manual camera blending): https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Manual-camera-blending
+## @tutorial(Blending by priority): https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Camera-blending-by-priority-%E2%80%90-CineCam-wiki
+## @tutorial(CamSequence for a series of blends): https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Using-CamSequence-for-a-series-of-blends
+## @tutorial(Setup virtual camera data for later use): https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Setup-virtual-camera-data-for-later-use
 #END_OF_DESCRIPTION
 
 
