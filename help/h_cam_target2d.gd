@@ -8,8 +8,8 @@ extends Node2D
 ## This node is used as a "carrot on a stick" for a [H_CineCam2D]. [br]
 ## See [member H_CineCam2D.target] and [enum H_CineCam2D.FollowMode] for more infos. [br]
 ##
-## @tutorial(Link1): https://lnk.bio/LumiToad
-## @tutorial(Link2): https://www.linkedin.com/in/LumiToad/
+## @tutorial(Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki
+## @tutorial(This page in Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki/CamTarget2D-class-reference-%E2%80%90-CineCam-wiki
 ## @tutorial(Link3): https://github.com/LumiToad
 #END_OF_DESCRIPTION
 

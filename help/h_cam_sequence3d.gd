@@ -8,8 +8,8 @@ extends Node3D
 ## Attach [H_VirtualCam3D] nodes to this sequence. Then a [H_CineCam3D] can access it using various methods. [br]
 ## Will automatically reload the internal array of virtual cameras on [constant Node.NOTIFICATION_CHILD_ORDER_CHANGED]. [br]
 ##
-## @tutorial(Link1): https://lnk.bio/LumiToad
-## @tutorial(Link2): https://www.linkedin.com/in/LumiToad/
+## @tutorial(Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki
+## @tutorial(This page in Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki/CamSequence3D-class-reference-%E2%80%90-CineCam-wiki
 ## @tutorial(Link3): https://github.com/LumiToad
 #END_OF_DESCRIPTION
 

@@ -7,8 +7,8 @@ extends Camera3D
 ## Main Camera for the [CineCam3D]. [br]
 ## Features include camera shaking, camera blending to [H_VirtualCam3D], targeting [H_CamTarget3D] and more. [br]
 ##
-## @tutorial(Link1): https://lnk.bio/LumiToad
-## @tutorial(Link2): https://www.linkedin.com/in/LumiToad/
+## @tutorial(Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki
+## @tutorial(This page in Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki/CineCam3D-class-reference-%E2%80%90-CineCam-wiki
 ## @tutorial(Link3): https://github.com/LumiToad
 #END_OF_DESCRIPTION
 

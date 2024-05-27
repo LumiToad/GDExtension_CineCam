@@ -16,8 +16,8 @@ extends Node3D
 ## They also contain all the properties of a [Camera3D] as dummy values without any use. [br]
 ## Using [method H_CineCam3D.apply_vcam3d_data], you can copy the data to your currently runing [H_CineCam3D]. [br]
 ## 
-## @tutorial(Link1): https://lnk.bio/LumiToad
-## @tutorial(Link2): https://www.linkedin.com/in/LumiToad/
+## @tutorial(Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki
+## @tutorial(This page in Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki/VirtualCam3D-class-reference-%E2%80%90-CineCam-wiki
 ## @tutorial(Link3): https://github.com/LumiToad
 #END_OF_DESCRIPTION
 
