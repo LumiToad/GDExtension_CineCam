@@ -1,0 +1,26 @@
+[configuration]
+entry_symbol = "cinecam_init"
+compatibility_minimum = "4.1"
+
+[libraries]
+windows.debug.x86_32 = "res://addons/cinecam/win32/libcinecam.windows.template_debug.x86_32.dll"
+windows.debug.x86_64 = "res://addons/cinecam/win64/libcinecam.windows.template_debug.x86_64.dll"
+windows.release.x86_32 = "res://addons/cinecam/win32/libcinecam.windows.template_release.x86_32.dll"
+windows.release.x86_64 = "res://addons/cinecam/win64/libcinecam.windows.template_release.x86_64.dll"
+linux.debug.x86_32 = "res://addons/cinecam/linux32/libcinecam.linux.template_debug.x86_32.so"
+linux.debug.x86_64 = "res://addons/cinecam/linux64/libcinecam.linux.template_debug.x86_64.so"
+linux.release.x86_32 = "res://addons/cinecam/linux32/libcinecam.linux.template_release.x86_32.so"
+linux.release.x86_64 = "res://addons/cinecam/linux64/libcinecam.linux.template_release.x86_64.so"
+
+[icons]
+CineCam2D = "res://addons/cinecam/icons/CineCam2D.svg"
+VirtualCam2D = "res://addons/cinecam/icons/VirtualCam2D.svg"
+CamTarget2D = "res://addons/cinecam/icons/CamTarget2D.svg"
+CamSequence2D = "res://addons/cinecam/icons/CamSequence2D.svg"
+BlendData2D = "res://addons/cinecam/icons/BlendData2D.svg"
+
+CineCam3D = "res://addons/cinecam/icons/CineCam3D.svg"
+VirtualCam3D = "res://addons/cinecam/icons/VirtualCam3D.svg"
+CamTarget3D = "res://addons/cinecam/icons/CamTarget3D.svg"
+CamSequence3D = "res://addons/cinecam/icons/CamSequence3D.svg"
+BlendData3D = "res://addons/cinecam/icons/BlendData3D.svg"
