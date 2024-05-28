@@ -53,8 +53,7 @@ void CineCam3D::_bind_methods()
 	ADD_METHOD_BINDING(seq_blend_prev, CineCam3D);
 	ADD_METHOD_ARGS_BINDING(seq_blend_to, CineCam3D, VA_LIST("idx"));
 	ADD_METHOD_DEFAULTARGS_BINDING(start_sequence, CineCam3D, "backwards", DEFVAL(false));
-	ADD_METHOD_DEFAULTARGS_BINDING(start_sequence_at, CineCam3D, VA_LIST("backwards", "index"), VA_LIST(DEFVAL(0), DEFVAL(false)));
-	ADD_METHOD_BINDING(seq_resume, CineCam3D);
+	ADD_METHOD_DEFAULTARGS_BINDING(start_sequence_at, CineCam3D, VA_LIST("index", "backwards"), VA_LIST(DEFVAL(0), DEFVAL(false)));
 	ADD_METHOD_BINDING(seq_pause, CineCam3D);
 	ADD_METHOD_BINDING(seq_stop, CineCam3D);
 	ADD_METHOD_ARGS_BINDING(reposition_to_vcam, CineCam3D, "vcam");
@@ -236,14 +235,16 @@ void CineCam3D::_on_blend_completed_internal()
 	}
 
 	origin_for_look_at = get_look_at_direction();
-
+	
 	blend_position_tween = get_tree()->create_tween();
 	blend_position_tween->stop();
+
 	blend_rotation_tween = get_tree()->create_tween();
 	blend_rotation_tween->stop();
 
-	is_blend_not_stopped = false;
 	blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
+
+	is_blend_not_stopped = false;
 
 	blend_duration = -1.0;
 
@@ -258,16 +259,16 @@ void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend)
 		PrintUtils::blend_before_init(__LINE__, __FILE__);
 		return;
 	}
-
-	if (blend_position_tween->is_running())
+	
+	if (is_blend_not_stopped)
 	{
 		blend_position_tween = get_tree()->create_tween();
 		blend_position_tween->stop();
 		blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
 		is_blend_not_stopped = false;
 	}
-
-	if (blend_rotation_tween->is_running())
+	
+	if (blend_rotation_tween->is_running() || is_blend_not_stopped)
 	{
 		blend_rotation_tween = get_tree()->create_tween();
 		blend_rotation_tween->stop();
@@ -403,6 +404,7 @@ void CineCam3D::seq_pause()
 void CineCam3D::seq_stop()
 {
 	sequence_playmode = false;
+	current_sequence->set_current_idx(0);
 	emit_signal(SIGNAL_SEQUENCE_STOPPED);
 }
 
@@ -616,7 +618,7 @@ String CineCam3D::apply_vcam3d_data(VirtualCam3D* p_vcam)
 void CineCam3D::start_sequence(const bool& backwards)
 {
 	int idx = 0 + (backwards ? current_sequence->get_vcam3d_array().size() - 1 : 0);
-	start_sequence_at(backwards, idx);
+	start_sequence_at(idx, backwards);
 }
 
 
@@ -860,7 +862,7 @@ bool CineCam3D::_try_set_highest_vcam_internal(VirtualCam3D* p_vcam, int vcam_pr
 
 	if (highest_prio_vcam != nullptr)
 	{
-		if (vcam_prio > highest_prio_vcam->get_priority())
+		if (vcam_prio == highest_prio_vcam->get_priority())
 		{
 			highest_prio_vcam = p_vcam;
 			priority_changed = true;
