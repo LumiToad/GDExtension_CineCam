@@ -48,6 +48,7 @@ CineCam3D::~CineCam3D()
 void CineCam3D::_bind_methods()
 {
 	ADD_METHOD_BINDING(_on_blend_completed_internal, CineCam3D);
+	ADD_METHOD_ARGS_BINDING(_remove_vcam_internal, CineCam3D, "p_vcam");
 	ADD_METHOD_BINDING(init_default_blend_data, CineCam3D);
 	ADD_METHOD_BINDING(seq_blend_next, CineCam3D);
 	ADD_METHOD_BINDING(seq_blend_prev, CineCam3D);
@@ -142,7 +143,7 @@ void CineCam3D::_bind_methods()
 	ADD_SIGNAL(MethodInfo(SIGNAL_SEQUENCE_PAUSED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SEQUENCE_RESUMED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SEQUENCE_STOPPED));
-	ADD_SIGNAL(MethodInfo(SIGNAL_PRIORITIZED_VCAM3D_CHANGED, PropertyInfo(Variant::OBJECT, "vcam2d"), PropertyInfo(Variant::INT, "priority")));
+	ADD_SIGNAL(MethodInfo(SIGNAL_PRIORITIZED_VCAM3D_CHANGED, PropertyInfo(Variant::OBJECT, "vcam3d"), PropertyInfo(Variant::INT, "priority")));
 
 	BIND_ENUM_CONSTANT(OFF);
 	BIND_ENUM_CONSTANT(PRIO);
@@ -293,10 +294,9 @@ void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend)
 
 	if (blend->is_blend_rotation())
 	{
-		p_vcam->rotate_y(180.0);
-		Transform3D vcam_transform = p_vcam->get_global_transform();
-		Quaternion final_rotation = vcam_transform.basis.get_rotation_quaternion();
-		p_vcam->rotate_y(180.0);
+		Vector3 rotation = p_vcam->get_global_rotation();
+		rotation.rotate(Vector3(0.0, 1.0, 0.0), 180);
+		Quaternion final_rotation = Quaternion(rotation);
 
 		blend_rotation_tween->tween_method(
 			Callable(this, "set_quaternion"),
@@ -464,7 +464,9 @@ void CineCam3D::shake_offset(const Vector2& p_intensity, const double& p_duratio
 
 	if (shake_offset_duration > 0.0)
 	{
+		shake_offset_intensity_tween = get_tree()->create_tween();
 		shake_offset_intensity_tween->stop();
+		shake_offset_duration_tween = get_tree()->create_tween();
 		shake_offset_duration_tween->stop();
 	}
 
@@ -508,7 +510,9 @@ void CineCam3D::shake_fov(const double& p_intensity, const double& p_duration, T
 
 	if (shake_fov_duration > 0.0)
 	{
+		shake_fov_intensity_tween = get_tree()->create_tween();
 		shake_fov_intensity_tween->stop();
+		shake_fov_duration_tween = get_tree()->create_tween();
 		shake_fov_duration_tween->stop();
 	}
 
@@ -553,7 +557,9 @@ void CineCam3D::shake_rotation(const Vector3& p_intensity, const double& p_durat
 
 	if (shake_rotation_duration > 0.0)
 	{
+		shake_rotation_intensity_tween = get_tree()->create_tween();
 		shake_rotation_intensity_tween->stop();
+		shake_rotation_duration_tween = get_tree()->create_tween();
 		shake_rotation_duration_tween->stop();
 	}
 
@@ -736,6 +742,13 @@ void CineCam3D::_move_by_follow_mode()
 	if (!tweens_ready) return;
 	if (follow_mode != FollowMode::TARGET_BLEND) return;
 
+	if (follow_target == nullptr)
+	{
+		PrintUtils::no_target3d_found(__LINE__, __FILE__, "OFF", "TARGET_BLEND");
+		follow_mode = FollowMode::OFF;
+		return;
+	}
+
 	follow_origin = follow_target->get_global_position();
 
 	follow_tween = get_tree()->create_tween();
@@ -835,7 +848,6 @@ void CineCam3D::_register_vcam_internal(VirtualCam3D* p_vcam)
 	if (!vcams.has(p_vcam))
 	{
 		p_vcam->connect(SIGNAL_PRIORITY_CHANGED, Callable(this, "_on_vcam_priority_changed"));
-		p_vcam->connect("tree_exiting", Callable(this, "_remove_vcam_internal"));
 		vcams.push_back(cast_to<VirtualCam3D>(p_vcam));
 	}
 
@@ -850,7 +862,16 @@ void CineCam3D::_remove_vcam_internal(VirtualCam3D* p_vcam)
 {
 	if (vcams.has(p_vcam))
 	{
+		if (highest_prio_vcam == p_vcam)
+		{
+			highest_prio_vcam = nullptr;
+		}
+
 		vcams.erase(p_vcam);
+		if (_try_set_highest_vcam_internal(nullptr, -1))
+		{
+			_move_by_priority_mode();
+		}
 	}
 }
 
@@ -862,7 +883,9 @@ bool CineCam3D::_try_set_highest_vcam_internal(VirtualCam3D* p_vcam, int vcam_pr
 
 	if (highest_prio_vcam != nullptr)
 	{
-		if (vcam_prio == highest_prio_vcam->get_priority())
+		if (p_vcam == highest_prio_vcam) return false;
+
+		if (vcam_prio >= highest_prio_vcam->get_priority())
 		{
 			highest_prio_vcam = p_vcam;
 			priority_changed = true;
@@ -872,7 +895,6 @@ bool CineCam3D::_try_set_highest_vcam_internal(VirtualCam3D* p_vcam, int vcam_pr
 
 		prio = highest_prio_vcam->get_priority();
 	}
-
 
 	for (int i = 0; i < vcams.size(); i++)
 	{

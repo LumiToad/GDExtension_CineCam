@@ -24,10 +24,12 @@ namespace godot
 	private:
 		godot::String additional_description;
 		GDCLASS_Metadata meta;
+		Camera2D* found_cam;
 
 		void initialize_internal();
 		void init_default_blend_data();
 		void _register_to_cinecam2d();
+		void _remove_from_cinecam2d();
 
 
 	public:

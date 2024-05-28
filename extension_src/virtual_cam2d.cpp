@@ -3,11 +3,12 @@
 
 // virtual_cam2d.cpp
 
+#include "virtual_cam2d.h"
+
 #include "godot_cpp/classes/viewport.hpp"
 #include "godot_cpp/classes/engine.hpp"
-#include "virtual_cam2d.h"
-#include "cinecam2d.h"
 
+#include "cinecam2d.h"
 #include "bind_utils.h"
 
 using namespace godot;
@@ -198,8 +199,16 @@ void VirtualCam2D::_register_to_cinecam2d()
 	Camera2D* camera2d = get_viewport()->get_camera_2d();
 	if (camera2d != nullptr && camera2d->has_method("_register_vcam_internal"))
 	{
-		((CineCam2D*)camera2d)->_register_vcam_internal(this);
+		found_cam = camera2d;
+		((CineCam2D*)found_cam)->_register_vcam_internal(this);
 	}
+}
+
+
+void VirtualCam2D::_remove_from_cinecam2d()
+{
+	if (found_cam == nullptr) return;
+	((CineCam2D*)found_cam)->_remove_vcam_internal(this);
 }
 
 
@@ -215,6 +224,11 @@ void VirtualCam2D::_notification(int p_what)
 		if (!is_in_editor)
 		{
 			_register_to_cinecam2d();
+		}
+	case NOTIFICATION_EXIT_TREE:
+		if (!is_in_editor)
+		{
+			_remove_from_cinecam2d();
 		}
 		break;
 	}

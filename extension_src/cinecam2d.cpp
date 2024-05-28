@@ -45,6 +45,7 @@ CineCam2D::~CineCam2D()
 void CineCam2D::_bind_methods()
 {
 	ADD_METHOD_BINDING(_on_blend_completed_internal, CineCam2D);
+	ADD_METHOD_ARGS_BINDING(_remove_vcam_internal, CineCam2D, "p_vcam");
 	ADD_METHOD_BINDING(init_default_blend_data, CineCam2D);
 	ADD_METHOD_BINDING(seq_blend_next, CineCam2D);
 	ADD_METHOD_BINDING(seq_blend_prev, CineCam2D);
@@ -437,7 +438,9 @@ void CineCam2D::shake_offset(const Vector2 &p_intensity, const double &p_duratio
 
 	if (shake_offset_duration > 0.0)
 	{
+		shake_offset_intensity_tween = get_tree()->create_tween();
 		shake_offset_intensity_tween->stop();
+		shake_offset_duration_tween = get_tree()->create_tween();
 		shake_offset_duration_tween->stop();
 	}
 
@@ -480,7 +483,9 @@ void CineCam2D::shake_zoom(const Vector2& p_intensity, const double& p_duration,
 
 	if (shake_zoom_duration > 0.0)
 	{
+		shake_zoom_intensity_tween = get_tree()->create_tween();
 		shake_zoom_intensity_tween->stop();
+		shake_zoom_duration_tween = get_tree()->create_tween();
 		shake_zoom_duration_tween->stop();
 	}
 
@@ -528,7 +533,9 @@ void CineCam2D::shake_rotation(const double& p_intensity, const double& p_durati
 
 	if (shake_rotation_duration > 0.0)
 	{
+		shake_rotation_intensity_tween = get_tree()->create_tween();
 		shake_rotation_intensity_tween->stop();
+		shake_rotation_duration_tween = get_tree()->create_tween();
 		shake_rotation_duration_tween->stop();
 	}
 
@@ -662,6 +669,13 @@ void CineCam2D::_move_by_follow_mode()
 	if (!tweens_ready) return;
 	if (follow_mode != FollowMode::TARGET_BLEND) return;
 
+	if (follow_target == nullptr)
+	{
+		PrintUtils::no_target2d_found(__LINE__, __FILE__, "OFF", "TARGET_BLEND");
+		follow_mode = FollowMode::OFF;
+		return;
+	}
+
 	follow_origin = follow_target->get_global_position();
 
 	follow_tween = get_tree()->create_tween();
@@ -723,7 +737,6 @@ void CineCam2D::_register_vcam_internal(VirtualCam2D* p_vcam)
 	if (!vcams.has(p_vcam))
 	{
 		p_vcam->connect(SIGNAL_PRIORITY_CHANGED, Callable(this, "_on_vcam_priority_changed"));
-		p_vcam->connect("tree_exiting", Callable(this, "_remove_vcam_internal"));
 		vcams.push_back(cast_to<VirtualCam2D>(p_vcam));
 	}
 
@@ -738,7 +751,16 @@ void CineCam2D::_remove_vcam_internal(VirtualCam2D* p_vcam)
 {
 	if (vcams.has(p_vcam))
 	{
+		if (highest_prio_vcam == p_vcam)
+		{
+			highest_prio_vcam = nullptr;
+		}
+
 		vcams.erase(p_vcam);
+		if (_try_set_highest_vcam_internal(nullptr, -1))
+		{
+			_move_by_priority_mode();
+		}
 	}
 }
 
@@ -750,7 +772,9 @@ bool CineCam2D::_try_set_highest_vcam_internal(VirtualCam2D* p_vcam, int vcam_pr
 
 	if (highest_prio_vcam != nullptr)
 	{
-		if (vcam_prio == highest_prio_vcam->get_priority())
+		if (p_vcam == highest_prio_vcam) return false;
+
+		if (vcam_prio >= highest_prio_vcam->get_priority())
 		{
 			highest_prio_vcam = p_vcam;
 			priority_changed = true;
@@ -761,7 +785,6 @@ bool CineCam2D::_try_set_highest_vcam_internal(VirtualCam2D* p_vcam, int vcam_pr
 		prio = highest_prio_vcam->get_priority();
 	}
 	
-
 	for (int i = 0; i < vcams.size(); i++)
 	{
 		VirtualCam2D* cursor = cast_to<VirtualCam2D>(vcams[i]);

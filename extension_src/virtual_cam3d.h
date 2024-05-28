@@ -7,8 +7,8 @@
 #define VIRTUAL_CAM3D_H
 
 #include "godot_cpp/templates/vector.hpp"
-#include "godot_cpp/classes/camera3d.hpp"
 #include "godot_cpp/classes/camera_attributes.hpp"
+#include "godot_cpp/classes/camera3d.hpp"
 #include "godot_cpp/classes/camera_attributes_physical.hpp"
 #include "godot_cpp/classes/environment.hpp"
 
@@ -32,10 +32,12 @@ namespace godot
 	private:
 		godot::String additional_description;
 		GDCLASS_Metadata meta;
+		Camera3D* found_cam;
 
 		void initialize_internal();
 		void init_default_blend_data();
 		void _register_to_cinecam3d();
+		void _remove_from_cinecam3d();
 
 
 	public:

@@ -3,6 +3,8 @@
 
 // virtual_cam3d.cpp
 
+#include "virtual_cam3d.h"
+
 #include "godot_cpp/classes/viewport.hpp"
 #include "godot_cpp/classes/engine.hpp"
 #include "godot_cpp/classes/collision_object3d.hpp"
@@ -14,9 +16,7 @@
 #include "godot_cpp/classes/physics_server3d.hpp"
 #include "godot_cpp/variant/array.hpp"
 
-#include "virtual_cam3d.h"
 #include "cinecam3d.h"
-
 #include "bind_utils.h"
 #include "print_utils.h"
 
@@ -158,8 +158,15 @@ void VirtualCam3D::_register_to_cinecam3d()
 	Camera3D* camera3d = get_viewport()->get_camera_3d();
 	if (camera3d != nullptr && camera3d->has_method("_register_vcam_internal"))
 	{
-		((CineCam3D*)camera3d)->_register_vcam_internal(this);
+		found_cam = camera3d;
+		((CineCam3D*)found_cam)->_register_vcam_internal(this);
 	}
+}
+
+void VirtualCam3D::_remove_from_cinecam3d()
+{
+	if (found_cam == nullptr) return;
+	((CineCam3D*)found_cam)->_remove_vcam_internal(this);
 }
 
 
@@ -193,6 +200,12 @@ void VirtualCam3D::_notification(int p_what)
 		if (!is_in_editor)
 		{
 			_register_to_cinecam3d();
+		}
+		break;
+	case NOTIFICATION_EXIT_TREE:
+		if (!is_in_editor)
+		{
+			_remove_from_cinecam3d();
 		}
 		break;
 	}
