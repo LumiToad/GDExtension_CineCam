@@ -8,6 +8,7 @@ extends Resource
 ##
 ## @tutorial(Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki
 ## @tutorial(This page in Wiki on GitHub): https://github.com/LumiToad/GDExtension_CineCam/wiki/BlendData3D-class-reference-%E2%80%90-CineCam-wiki
+## @tutorial(Godot tweening cheat sheet): https://www.reddit.com/r/godot/comments/frqzup/godot_tweening_cheat_sheet/
 #END_OF_DESCRIPTION
 
 

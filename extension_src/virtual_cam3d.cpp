@@ -26,6 +26,7 @@ VirtualCam3D::VirtualCam3D()
 {
 	priority = 0;
 	vcam_id = "";
+	found_cam = nullptr;
 
 	set_perspective(75.0, 0.05, 4000.0);
 	set_notify_transform(true);

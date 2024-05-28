@@ -27,6 +27,7 @@ VirtualCam2D::VirtualCam2D()
 
 	priority = 0;
 	vcam_id = "";
+	found_cam = nullptr;
 
 	additional_description = "This virtual camera contains target information for CineCam2D.\n";
 	initialize_internal();
@@ -225,6 +226,7 @@ void VirtualCam2D::_notification(int p_what)
 		{
 			_register_to_cinecam2d();
 		}
+		break;
 	case NOTIFICATION_EXIT_TREE:
 		if (!is_in_editor)
 		{

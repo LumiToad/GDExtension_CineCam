@@ -261,19 +261,15 @@ void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend)
 		return;
 	}
 	
-	if (is_blend_not_stopped)
-	{
-		blend_position_tween = get_tree()->create_tween();
-		blend_position_tween->stop();
-		blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
-		is_blend_not_stopped = false;
-	}
+	blend_position_tween->pause();
+	blend_position_tween = get_tree()->create_tween();
+	blend_position_tween->stop();
+	blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
+	is_blend_not_stopped = false;
 	
-	if (blend_rotation_tween->is_running() || is_blend_not_stopped)
-	{
-		blend_rotation_tween = get_tree()->create_tween();
-		blend_rotation_tween->stop();
-	}
+	blend_rotation_tween->pause();
+	blend_rotation_tween = get_tree()->create_tween();
+	blend_rotation_tween->stop();
 
 	blend_position_tween->set_trans(blend->get_trans());
 	blend_position_tween->set_ease(blend->get_ease());
@@ -462,10 +458,11 @@ void CineCam3D::shake_offset(const Vector2& p_intensity, const double& p_duratio
 	original_offset.x = get_h_offset();
 	original_offset.y = get_v_offset();
 
+	shake_offset_intensity_tween = get_tree()->create_tween();
+	shake_offset_intensity_tween->stop();
+
 	if (shake_offset_duration > 0.0)
 	{
-		shake_offset_intensity_tween = get_tree()->create_tween();
-		shake_offset_intensity_tween->stop();
 		shake_offset_duration_tween = get_tree()->create_tween();
 		shake_offset_duration_tween->stop();
 	}
@@ -508,10 +505,11 @@ void CineCam3D::shake_fov(const double& p_intensity, const double& p_duration, T
 
 	original_fov = get_fov();
 
+	shake_fov_intensity_tween = get_tree()->create_tween();
+	shake_fov_intensity_tween->stop();
+
 	if (shake_fov_duration > 0.0)
 	{
-		shake_fov_intensity_tween = get_tree()->create_tween();
-		shake_fov_intensity_tween->stop();
 		shake_fov_duration_tween = get_tree()->create_tween();
 		shake_fov_duration_tween->stop();
 	}
@@ -555,10 +553,11 @@ void CineCam3D::shake_rotation(const Vector3& p_intensity, const double& p_durat
 
 	original_rotation = get_global_rotation();
 
+	shake_rotation_intensity_tween = get_tree()->create_tween();
+	shake_rotation_intensity_tween->stop();
+
 	if (shake_rotation_duration > 0.0)
 	{
-		shake_rotation_intensity_tween = get_tree()->create_tween();
-		shake_rotation_intensity_tween->stop();
 		shake_rotation_duration_tween = get_tree()->create_tween();
 		shake_rotation_duration_tween->stop();
 	}
@@ -868,10 +867,8 @@ void CineCam3D::_remove_vcam_internal(VirtualCam3D* p_vcam)
 		}
 
 		vcams.erase(p_vcam);
-		if (_try_set_highest_vcam_internal(nullptr, -1))
-		{
-			_move_by_priority_mode();
-		}
+		_try_set_highest_vcam_internal(nullptr, -1);
+		_move_by_priority_mode();
 	}
 }
 
@@ -883,14 +880,15 @@ bool CineCam3D::_try_set_highest_vcam_internal(VirtualCam3D* p_vcam, int vcam_pr
 
 	if (highest_prio_vcam != nullptr)
 	{
-		if (p_vcam == highest_prio_vcam) return false;
-
-		if (vcam_prio >= highest_prio_vcam->get_priority())
+		if (highest_prio_vcam != p_vcam)
 		{
-			highest_prio_vcam = p_vcam;
-			priority_changed = true;
-			emit_signal(SIGNAL_PRIORITIZED_VCAM3D_CHANGED, p_vcam, vcam_prio);
-			return priority_changed;
+			if (vcam_prio >= highest_prio_vcam->get_priority())
+			{
+				highest_prio_vcam = p_vcam;
+				priority_changed = true;
+				emit_signal(SIGNAL_PRIORITIZED_VCAM3D_CHANGED, p_vcam, vcam_prio);
+				return priority_changed;
+			}
 		}
 
 		prio = highest_prio_vcam->get_priority();
