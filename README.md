@@ -15,41 +15,97 @@
 
   <hr />
   <h2>Engines / Languages</h2>
-  Godot 4.2.2, [GDExtension-API](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/what_is_gdextension.html) -> C++
+  Godot 4.2.2, <a href="https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/what_is_gdextension.html">GDExtension API</a> -> C++
 
   <hr />
-  <h2>Features</h2>
-  - Gameplay programming -<br />
-  - Tool programming -<br />
-  - Game Design -<br />
-  - Technical Lead -
-  
-  <hr />
-  <h2>Responsiblities</h2>
-  - The entire gameplay programming -<br /><br />
-  Including UI, Features, everything.<br />
-  Since I started learning programming only a few month prior, I had some help from teachers.<br />
-  But the implementation was still my responsibility.<br /><br />
-  - Create tools, using Godot features -<br /><br />
-  Created tools for level / game design, such as:<br />
-    <li>Camera Control Zones</li>
-    <li>Audio Control Zones</li>
-    <li>Tutorial Control Zones</li>
-    <li>Dialog Boxes</li>
-    <li>Player Movement</li>
-    <li>Level exit / Checkpoint control</li>
-    <li>Enemy hp, speed, range, etc.</li>
+  <h2>Features in 2D and 3D</h2>
+  <ul>
+  <li>
+    <a href="https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Camera-blending-by-priority-%E2%80%90-CineCam-wiki">Camera blending</a><br />
+    Includes infinite blending and one-time blending.<br />
+    Both can be setup with different speed and interpolation settings.<br />
+  </li>
     <br />
-  - Communication with artists and game designers -<br /><br />
-  As a small Team of seven people, everyone was involved with Game design.<br />
-  Some initial ideas, the chains and some level design guidelines,<br />
-  as well as the documentation of these concepts were part of my work.<br />
-  Game design however was not my main responsibility.<br /><br />
-  Explaining tools, communicate about file formats, implementation of assets and solving other problems was daily business.<br /><br />
-  - Administrative work -<br /><br />
-  Managing version control (back then - Mercurial using TortoiseHG), maintaining website and itch,<br />
-  Google Drive and other software related things, prepared the build for presentations.<br />
-  Besides managing (and learning) version control, this wasn't much workload though, as my team did a good job.
+  <li>
+    <a href="https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Setup-virtual-camera-data-for-later-use">Dummy (Virtual) camera setups for future use, containing data of a future camera setup.</a>
+  </li>
+    <br />
+  <li>
+    <a href="https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Camera-blending-by-priority-%E2%80%90-CineCam-wiki">Priority camera, setup in the virtual cameras.</a><br />
+    Includes moving and blending.<br />
+  </li>  
+    <br />
+  <li>
+    <a href="https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Following-a-target">Following a camera target.</a><br />
+    Includes infinite blending and offset settings, with varying interpolation settings.
+  </li>  
+    <br />
+  <li>
+    Signals and callables<br />
+    Trigger on certain moments like the completion of a blend.
+  </li>  
+    <br />
+  <li>
+    Blends can be paused and resumed.
+  </li>
+    <br />
+  <li>
+    Many setters / getters to retrieve information of the current status of the camera.
+  </li>  
+    <br />
+  <li>
+    Custom warnings and errors<br />
+    Will safely ignore the error and provides information about the problem.
+  </li>
+    <br />
+  <li>
+    Utility features<br />
+    For example: Moving to a given virtual camera setup or checking,<br />
+    which is the next camera in the sequence. For a complete list, see class reference.<br />
+  </li>
+  </ul>
+
+  2D only
+
+   <ul>
+  <li>
+    <a href="https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Easy-camera-shaking-%E2%80%90-CineCam-wiki">2D Camera shaking</a><br />
+    Includes shaking using the camera frame <b>offset</b>, <b>zoom</b> and <b>rotation</b>.</br >
+    All three can be setup with varying intensity, duration and interpolation settings.</br >
+    Can be used while blending.
+  </li>
+     <br />
+  <li>
+    <a href="https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Using-CamSequence-for-a-series-of-blends">Following a sequence of 2D blends</a><br />
+    Includes editor integration, which shows the sequence as debug lines.
+  </li>
+    <br />
+   </ul>
+
+3D only
+
+   <ul>
+  <li>
+    <a href="https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Easy-camera-shaking-%E2%80%90-CineCam-wiki">3D Camera shaking</a><br />
+    Includes shaking using the camera frame <b>offset</b>, <b>FOV</b> and <b>rotation</b>.</br >
+    All three can be setup with varying intensity, duration and interpolation settings.</br >
+    Can be used while blending.
+  </li>
+     <br />
+  <li>
+    <a href="https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Using-CamSequence-for-a-series-of-blends">Following a sequence of 3D blends</a><br />
+  </li>
+     <br />
+  <li>
+    Rotation blending in 3D space   
+  </li>
+    <br />
+  <li>
+    <a href="https://github.com/LumiToad/GDExtension_CineCam/wiki/Feature-%E2%80%90-Following-a-target">Looking at a target</a><br />
+    Includes infinite blending and offset settings, with varying interpolation settings.
+  </li>
+   </ul>
+  
   <hr />
   <h2>Downloads and Website</h2>
 
