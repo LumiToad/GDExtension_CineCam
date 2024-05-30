@@ -10,8 +10,14 @@
     Aimed to reduce the amount of code lines in your project a lot.<br />
     A lot can be configured in the Inspector. <br /> <br />
   </p>
-
-<img src="https://github.com/LumiToad/GDExtension_CineCam/assets/129980440/64f31142-a6fe-4a3f-904a-bee4cbefa347" width="200" height="200"/>
+<img src="https://github.com/LumiToad/GDExtension_CineCam/assets/129980440/64f31142-a6fe-4a3f-904a-bee4cbefa347" width="200" height="200" /><br />
+<details>
+  <summary>Showcase GIFs</summary>
+  <img src="https://github.com/LumiToad/GDExtension_CineCam/assets/129980440/3e3142ef-dd92-4de6-94e2-6ec2e43444b0" width="400" height="300" />
+  <img src="https://github.com/LumiToad/GDExtension_CineCam/assets/129980440/3e5eddd0-e32d-4714-8111-67256ca49d4a" width="400" height="300" />
+  <img src="https://github.com/LumiToad/GDExtension_CineCam/assets/129980440/2a728dc9-9588-42a5-bf3f-fbc30210304e" width="400" height="300" />
+  <img src="https://github.com/LumiToad/GDExtension_CineCam/assets/129980440/0645f7f7-64ff-49d6-bcb4-da0a04c026c4" width="400" height="300" />
+</details>
 
   <hr />
   <h2>Engines / Languages</h2>
