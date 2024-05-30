@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=clean
+Comment=
+Exec=sudo bash clean.sh
+Icon=
+Path=
+Terminal=true
+StartupNotify=false

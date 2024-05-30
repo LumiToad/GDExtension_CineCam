@@ -1,6 +1,6 @@
 [configuration]
 entry_symbol = "cinecam_init"
-compatibility_minimum = "4.1"
+compatibility_minimum = "4.2"
 
 [libraries]
 windows.debug.x86_32 = "res://addons/cinecam/win32/libcinecam.windows.template_debug.x86_32.dll"
