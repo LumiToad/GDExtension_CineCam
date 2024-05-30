@@ -107,20 +107,20 @@ void CineCam2D::_bind_methods()
 	ADD_METHOD_BINDING(_is_follow_prio_paused, CineCam2D);
 	ADD_METHOD_ARGS_BINDING(_set_follow_prio_paused, CineCam2D, "paused");
 
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "follow_mode", PROPERTY_HINT_ENUM, "OFF,PRIO,PRIO_ONESHOT,PRIO_BLEND,TARGET,TARGET_BLEND"), "set_follow_mode", "get_follow_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "follow_mode", PROPERTY_HINT_ENUM, FOLLOW_MODE_HINTS), "set_follow_mode", "get_follow_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "blend_data", PROPERTY_HINT_RESOURCE_TYPE, "BlendData2D"), "_set_blend_data", "_get_blend_data");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "current_sequence", PROPERTY_HINT_NODE_TYPE, "CamSequence2D"), "set_current_sequence", "get_current_sequence");
 	ADD_PROPERTY(PropertyInfo(Variant::Variant::OBJECT, "target", PROPERTY_HINT_NODE_TYPE, "CamTarget2D"), "set_target", "get_target");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_offset_intensity"), "_set_shake_offset_intensity", "_get_shake_offset_intensity");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "shake_offset_duration"), "_set_shake_offset_duration", "_get_shake_offset_duration");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_zoom_intensity"), "_set_shake_zoom_intensity", "_get_shake_zoom_intensity");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_zoom_duration"), "_set_shake_zoom_duration", "_get_shake_zoom_duration");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_rotation_intensity"), "_set_shake_rotation_intensity", "_get_shake_rotation_intensity");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_rotation_duration"), "_set_shake_rotation_duration", "_get_shake_rotation_duration");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "sequence_pause"), "_set_seq_paused", "_is_seq_paused");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "blend_pause"), "_set_blend_paused", "_is_blend_paused");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_target_pause"), "_set_follow_target_paused", "_is_follow_target_paused");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_prio_pause"), "_set_follow_prio_paused", "_is_follow_prio_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_offset_intensity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_shake_offset_intensity", "_get_shake_offset_intensity");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "shake_offset_duration", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_shake_offset_duration", "_get_shake_offset_duration");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_zoom_intensity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_shake_zoom_intensity", "_get_shake_zoom_intensity");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_zoom_duration", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_shake_zoom_duration", "_get_shake_zoom_duration");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_rotation_intensity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_shake_rotation_intensity", "_get_shake_rotation_intensity");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "shake_rotation_duration", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_shake_rotation_duration", "_get_shake_rotation_duration");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "sequence_pause", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_seq_paused", "_is_seq_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "blend_pause", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_blend_paused", "_is_blend_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_target_pause", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_follow_target_paused", "_is_follow_target_paused");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_prio_pause", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "_set_follow_prio_paused", "_is_follow_prio_paused");
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_STARTED));
 	ADD_SIGNAL(MethodInfo(SIGNAL_SHAKE_OFFSET_ENDED));

@@ -184,7 +184,6 @@
     <ClInclude Include="cinecam3d.h" />
     <ClInclude Include="print_utils.h" />
     <ClInclude Include="gdclass_metadata.h" />
-    <ClInclude Include="gdexample.h" />
     <ClInclude Include="register_types.h" />
     <ClInclude Include="template_node.h" />
     <ClInclude Include="template_resource.h" />

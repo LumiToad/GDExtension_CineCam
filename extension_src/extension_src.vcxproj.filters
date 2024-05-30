@@ -68,9 +68,6 @@
     <ClInclude Include="register_types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gdexample.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="cinecam2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
