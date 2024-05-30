@@ -115,7 +115,7 @@
   <hr />
   <h2>Downloads and Website</h2>
 
-  <h3>CineCam in the Godot Asset Library page</h3>
+  <h3>CineCam in the Godot Asset Library</h3>
   <a href="https://godotengine.org/asset-library/asset">
     <img src="https://github.com/LumiToad/GDExtension_CineCam/raw/main/images/asset_library.png" width="230" height="45" alt="cinecam banner" />
   </a>
