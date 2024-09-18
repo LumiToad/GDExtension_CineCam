@@ -928,15 +928,21 @@ void CineCam3D::_move_by_priority_mode()
 {
 	if (!tweens_ready) return;
 
-	if (
-		follow_mode != FollowMode::OFF ||
-		follow_mode != FollowMode::TARGET ||
-		follow_mode != FollowMode::TARGET_BLEND
-		)
+	switch (follow_mode)
 	{
+	default:
+	case FollowMode::OFF:
+	case FollowMode::TARGET:
+	case FollowMode::TARGET_BLEND:
+		return;
+		break;
+	case FollowMode::PRIO:
+	case FollowMode::PRIO_BLEND:
+	case FollowMode::PRIO_ONESHOT:
 		if (highest_prio_vcam == nullptr)
 		{
 			PrintUtils::no_highest_prio_cam3d(__LINE__, __FILE__, vcams.size());
+			return;
 		}
 	}
 
@@ -946,18 +952,14 @@ void CineCam3D::_move_by_priority_mode()
 		active_blend = highest_prio_vcam->_get_blend_data();
 	}
 
-	switch (follow_mode)
+	if (follow_mode == FollowMode::PRIO_ONESHOT)
 	{
-		default:
-			break;
-		case FollowMode::OFF:
-			break;
-		case FollowMode::PRIO_ONESHOT:
-			reposition_to_vcam(highest_prio_vcam);
-			break;
-		case FollowMode::PRIO_BLEND:
-			blend_to(highest_prio_vcam, active_blend);
-			break;
+		reposition_to_vcam(highest_prio_vcam);
+	}
+
+	if (follow_mode == FollowMode::PRIO_BLEND)
+	{
+		blend_to(highest_prio_vcam, active_blend);
 	}
 }
 

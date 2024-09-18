@@ -688,7 +688,6 @@ void CineCam2D::_move_by_follow_mode()
 
 void CineCam2D::init_active_blend()
 {
-	
 	if (blend_data.ptr() != nullptr)
 	{
 		active_blend = blend_data;
@@ -818,34 +817,40 @@ void CineCam2D::_move_by_priority_mode()
 {
 	if (!tweens_ready) return;
 
-	if (
-		follow_mode == FollowMode::PRIO ||
-		follow_mode == FollowMode::PRIO_BLEND ||
-		follow_mode == FollowMode::PRIO_ONESHOT
-		)
+	switch (follow_mode)
 	{
+	default:
+	case FollowMode::OFF:
+	case FollowMode::TARGET:
+	case FollowMode::TARGET_BLEND:
+		return;
+		break;
+	case FollowMode::PRIO:
+	case FollowMode::PRIO_BLEND:
+	case FollowMode::PRIO_ONESHOT:
 		if (highest_prio_vcam == nullptr)
 		{
 			PrintUtils::no_highest_prio_cam2d(__LINE__, __FILE__, vcams.size());
+			return;
 		}
+		break;
 	}
 
 	init_active_blend();
+
 	if (highest_prio_vcam->_get_blend_data().is_valid())
 	{
 		active_blend = highest_prio_vcam->_get_blend_data();
 	}
 
-	switch (follow_mode)
+	if (follow_mode == FollowMode::PRIO_ONESHOT)
 	{
-		case FollowMode::OFF:
-			break;
-		case FollowMode::PRIO_ONESHOT:
-			reposition_to_vcam(highest_prio_vcam);
-			break;
-		case FollowMode::PRIO_BLEND:
-			blend_to(highest_prio_vcam, active_blend);
-			break;
+		reposition_to_vcam(highest_prio_vcam);
+	}
+
+	if (follow_mode == FollowMode::PRIO_BLEND)
+	{
+		blend_to(highest_prio_vcam, active_blend);
 	}
 }
 
@@ -937,6 +942,7 @@ void CineCam2D::_notification(int p_what)
 			break;
 		case NOTIFICATION_PROCESS:
 			_process_internal(is_in_editor);
+			break;
 	}
 }
 
