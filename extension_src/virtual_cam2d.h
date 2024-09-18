@@ -8,6 +8,7 @@
 
 #include "godot_cpp/classes/node2D.hpp"
 #include "godot_cpp/classes/camera2d.hpp"
+#include "godot_cpp/classes/scene_tree.hpp"
 
 #include "gdclass_metadata.h"
 #include "blend_data2d.h"
@@ -59,6 +60,7 @@ namespace godot
 		Vector2 zoom;
 		Camera2D::Camera2DProcessCallback process_callback;
 		Ref<BlendData2D> blend_data;
+		SceneTree* scene_tree;
 
 		int limit[4];
 		bool limit_smoothing_enabled = false;

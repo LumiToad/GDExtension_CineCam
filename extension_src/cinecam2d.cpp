@@ -157,35 +157,41 @@ void CineCam2D::initialize_internal()
 
 void CineCam2D::init_tweens()
 {
-	shake_offset_intensity_tween = get_tree()->create_tween();
+	if (scene_tree == nullptr)
+	{
+		PrintUtils::scene_tree_nullptr(__LINE__, __FILE__);
+		return;
+	}
+
+	shake_offset_intensity_tween = scene_tree->create_tween();
 	shake_offset_intensity_tween->stop();
 	
-	shake_offset_duration_tween = get_tree()->create_tween();
+	shake_offset_duration_tween = scene_tree->create_tween();
 	shake_offset_duration_tween->stop();
 	shake_offset_duration_tween->set_trans(DEFAULT_TRANS);
 
-	shake_zoom_intensity_tween = get_tree()->create_tween();
+	shake_zoom_intensity_tween = scene_tree->create_tween();
 	shake_zoom_intensity_tween->stop();
 	
-	shake_zoom_duration_tween = get_tree()->create_tween();
+	shake_zoom_duration_tween = scene_tree->create_tween();
 	shake_zoom_duration_tween->stop();
 	shake_zoom_duration_tween->set_trans(DEFAULT_TRANS);
 
-	shake_rotation_intensity_tween = get_tree()->create_tween();
+	shake_rotation_intensity_tween = scene_tree->create_tween();
 	shake_rotation_intensity_tween->stop();
 
-	shake_rotation_duration_tween = get_tree()->create_tween();
+	shake_rotation_duration_tween = scene_tree->create_tween();
 	shake_rotation_duration_tween->stop();
 	shake_rotation_duration_tween->set_trans(DEFAULT_TRANS);
 
-	blend_position_tween = get_tree()->create_tween();
+	blend_position_tween = scene_tree->create_tween();
 	blend_position_tween->stop();
 	blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
 
-	blend_rotation_tween = get_tree()->create_tween();
+	blend_rotation_tween = scene_tree->create_tween();
 	blend_rotation_tween->stop();
 
-	follow_tween = get_tree()->create_tween();
+	follow_tween = scene_tree->create_tween();
 	follow_tween->stop();
 
 	tweens_ready = true;
@@ -219,6 +225,12 @@ void CineCam2D::_on_blend_started_internal()
 
 void CineCam2D::_on_blend_completed_internal()
 {
+	if (scene_tree == nullptr)
+	{
+		PrintUtils::scene_tree_nullptr(__LINE__, __FILE__);
+		return;
+	}
+
 	emit_signal(SIGNAL_BLEND_COMPLETED);
 
 	if (active_blend->get_callable_on_complete())
@@ -226,9 +238,9 @@ void CineCam2D::_on_blend_completed_internal()
 		active_blend->get_callable().call();
 	}
 	
-	blend_position_tween = get_tree()->create_tween();
+	blend_position_tween = scene_tree->create_tween();
 	blend_position_tween->stop();
-	blend_rotation_tween = get_tree()->create_tween();
+	blend_rotation_tween = scene_tree->create_tween();
 	blend_rotation_tween->stop();
 
 	is_blend_not_stopped = false;
@@ -248,14 +260,20 @@ void CineCam2D::blend_to(VirtualCam2D* p_vcam, Ref<BlendData2D> blend)
 		return;
 	}
 
+	if (scene_tree == nullptr)
+	{
+		PrintUtils::scene_tree_nullptr(__LINE__, __FILE__);
+		return;
+	}
+
 	blend_position_tween->pause();
-	blend_position_tween = get_tree()->create_tween();
+	blend_position_tween = scene_tree->create_tween();
 	blend_position_tween->stop();
 	blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
 	is_blend_not_stopped = false;
 	
 	blend_rotation_tween->pause();
-	blend_rotation_tween = get_tree()->create_tween();
+	blend_rotation_tween = scene_tree->create_tween();
 	blend_rotation_tween->stop();
 
 	blend_position_tween->set_trans(blend->get_trans());
@@ -431,14 +449,20 @@ void CineCam2D::shake_offset(const Vector2 &p_intensity, const double &p_duratio
 		set_offset(original_offset);
 	}
 
+	if (scene_tree == nullptr)
+	{
+		PrintUtils::scene_tree_nullptr(__LINE__, __FILE__);
+		return;
+	}
+
 	original_offset = get_offset();
 
-	shake_offset_intensity_tween = get_tree()->create_tween();
+	shake_offset_intensity_tween = scene_tree->create_tween();
 	shake_offset_intensity_tween->stop();
 
 	if (shake_offset_duration > 0.0)
 	{
-		shake_offset_duration_tween = get_tree()->create_tween();
+		shake_offset_duration_tween = scene_tree->create_tween();
 		shake_offset_duration_tween->stop();
 	}
 
@@ -476,15 +500,21 @@ void CineCam2D::shake_zoom(const Vector2& p_intensity, const double& p_duration,
 	{
 		set_zoom(original_zoom);
 	}
+	
+	if (scene_tree == nullptr)
+	{
+		PrintUtils::scene_tree_nullptr(__LINE__, __FILE__);
+		return;
+	}
 
 	original_zoom = get_zoom();
 
-	shake_zoom_intensity_tween = get_tree()->create_tween();
+	shake_zoom_intensity_tween = scene_tree->create_tween();
 	shake_zoom_intensity_tween->stop();
 
 	if (shake_zoom_duration > 0.0)
 	{
-		shake_zoom_duration_tween = get_tree()->create_tween();
+		shake_zoom_duration_tween = scene_tree->create_tween();
 		shake_zoom_duration_tween->stop();
 	}
 
@@ -528,14 +558,20 @@ void CineCam2D::shake_rotation(const double& p_intensity, const double& p_durati
 		set_rotation_degrees(original_rotation);
 	}
 
+	if (scene_tree == nullptr)
+	{
+		PrintUtils::scene_tree_nullptr(__LINE__, __FILE__);
+		return;
+	}
+
 	original_rotation = get_rotation_degrees();
 
-	shake_rotation_intensity_tween = get_tree()->create_tween();
+	shake_rotation_intensity_tween = scene_tree->create_tween();
 	shake_rotation_intensity_tween->stop();
 
 	if (shake_rotation_duration > 0.0)
 	{
-		shake_rotation_duration_tween = get_tree()->create_tween();
+		shake_rotation_duration_tween = scene_tree->create_tween();
 		shake_rotation_duration_tween->stop();
 	}
 
@@ -678,7 +714,7 @@ void CineCam2D::_move_by_follow_mode()
 
 	follow_origin = follow_target->get_global_position();
 
-	follow_tween = get_tree()->create_tween();
+	follow_tween = scene_tree->create_tween();
 	follow_tween->stop();
 
 	follow_tween->set_trans(follow_target->get_trans());
@@ -756,8 +792,11 @@ void CineCam2D::_remove_vcam_internal(VirtualCam2D* p_vcam)
 		}
 
 		vcams.erase(p_vcam);
-		_try_set_highest_vcam_internal(nullptr, -1);	
-		_move_by_priority_mode();
+		_try_set_highest_vcam_internal(nullptr, -1);
+		if (vcams.size() > 0)
+		{
+			_move_by_priority_mode();
+		}
 	}
 }
 
@@ -928,6 +967,12 @@ void CineCam2D::_notification(int p_what)
 	switch (p_what)
 	{
 		default:
+			break;
+		case NOTIFICATION_ENTER_TREE:
+			if (!is_in_editor)
+			{
+				scene_tree = get_tree();
+			}
 			break;
 		case NOTIFICATION_READY:
 			if (!is_in_editor)

@@ -163,38 +163,44 @@ void CineCam3D::initialize_internal()
 
 void CineCam3D::init_tweens()
 {
-	shake_offset_intensity_tween = get_tree()->create_tween();
+	if (scene_tree == nullptr)
+	{
+		PrintUtils::scene_tree_nullptr(__LINE__, __FILE__);
+		return;
+	}
+
+	shake_offset_intensity_tween = scene_tree->create_tween();
 	shake_offset_intensity_tween->stop();
 
-	shake_offset_duration_tween = get_tree()->create_tween();
+	shake_offset_duration_tween = scene_tree->create_tween();
 	shake_offset_duration_tween->stop();
 	shake_offset_duration_tween->set_trans(DEFAULT_TRANS);
 
-	shake_fov_intensity_tween = get_tree()->create_tween();
+	shake_fov_intensity_tween = scene_tree->create_tween();
 	shake_fov_intensity_tween->stop();
 
-	shake_fov_duration_tween = get_tree()->create_tween();
+	shake_fov_duration_tween = scene_tree->create_tween();
 	shake_fov_duration_tween->stop();
 	shake_fov_duration_tween->set_trans(DEFAULT_TRANS);
 
-	shake_rotation_intensity_tween = get_tree()->create_tween();
+	shake_rotation_intensity_tween = scene_tree->create_tween();
 	shake_rotation_intensity_tween->stop();
 
-	shake_rotation_duration_tween = get_tree()->create_tween();
+	shake_rotation_duration_tween = scene_tree->create_tween();
 	shake_rotation_duration_tween->stop();
 	shake_rotation_duration_tween->set_trans(DEFAULT_TRANS);
 
-	blend_position_tween = get_tree()->create_tween();
+	blend_position_tween = scene_tree->create_tween();
 	blend_position_tween->stop();
 	blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
 
-	blend_rotation_tween = get_tree()->create_tween();
+	blend_rotation_tween = scene_tree->create_tween();
 	blend_rotation_tween->stop();
 
-	follow_tween = get_tree()->create_tween();
+	follow_tween = scene_tree->create_tween();
 	follow_tween->stop();
 
-	look_at_tween = get_tree()->create_tween();
+	look_at_tween = scene_tree->create_tween();
 	look_at_tween->stop();
 
 	tweens_ready = true;
@@ -237,10 +243,16 @@ void CineCam3D::_on_blend_completed_internal()
 
 	origin_for_look_at = get_look_at_direction();
 	
-	blend_position_tween = get_tree()->create_tween();
+	if (scene_tree == nullptr)
+	{
+		PrintUtils::scene_tree_nullptr(__LINE__, __FILE__);
+		return;
+	}
+
+	blend_position_tween = scene_tree->create_tween();
 	blend_position_tween->stop();
 
-	blend_rotation_tween = get_tree()->create_tween();
+	blend_rotation_tween = scene_tree->create_tween();
 	blend_rotation_tween->stop();
 
 	blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
@@ -261,14 +273,20 @@ void CineCam3D::blend_to(VirtualCam3D* p_vcam, Ref<BlendData3D> blend)
 		return;
 	}
 	
+	if (scene_tree == nullptr)
+	{
+		PrintUtils::scene_tree_nullptr(__LINE__, __FILE__);
+		return;
+	}
+
 	blend_position_tween->pause();
-	blend_position_tween = get_tree()->create_tween();
+	blend_position_tween = scene_tree->create_tween();
 	blend_position_tween->stop();
 	blend_position_tween->connect("finished", Callable(this, "_on_blend_completed_internal"));
 	is_blend_not_stopped = false;
 	
 	blend_rotation_tween->pause();
-	blend_rotation_tween = get_tree()->create_tween();
+	blend_rotation_tween = scene_tree->create_tween();
 	blend_rotation_tween->stop();
 
 	blend_position_tween->set_trans(blend->get_trans());
@@ -449,6 +467,12 @@ void CineCam3D::reposition_to_vcam(VirtualCam3D* p_vcam)
 
 void CineCam3D::shake_offset(const Vector2& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
+	if (scene_tree == nullptr)
+	{
+		PrintUtils::scene_tree_nullptr(__LINE__, __FILE__);
+		return;
+	}
+
 	if (shake_offset_duration > 0.0)
 	{
 		set_h_offset(original_offset.x);
@@ -458,12 +482,12 @@ void CineCam3D::shake_offset(const Vector2& p_intensity, const double& p_duratio
 	original_offset.x = get_h_offset();
 	original_offset.y = get_v_offset();
 
-	shake_offset_intensity_tween = get_tree()->create_tween();
+	shake_offset_intensity_tween = scene_tree->create_tween();
 	shake_offset_intensity_tween->stop();
 
 	if (shake_offset_duration > 0.0)
 	{
-		shake_offset_duration_tween = get_tree()->create_tween();
+		shake_offset_duration_tween = scene_tree->create_tween();
 		shake_offset_duration_tween->stop();
 	}
 
@@ -498,6 +522,12 @@ void CineCam3D::shake_offset(const Vector2& p_intensity, const double& p_duratio
 
 void CineCam3D::shake_fov(const double& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
+	if (scene_tree == nullptr)
+	{
+		PrintUtils::scene_tree_nullptr(__LINE__, __FILE__);
+		return;
+	}
+
 	if (shake_fov_duration > 0.0)
 	{
 		set_fov(original_fov);
@@ -505,12 +535,12 @@ void CineCam3D::shake_fov(const double& p_intensity, const double& p_duration, T
 
 	original_fov = get_fov();
 
-	shake_fov_intensity_tween = get_tree()->create_tween();
+	shake_fov_intensity_tween = scene_tree->create_tween();
 	shake_fov_intensity_tween->stop();
 
 	if (shake_fov_duration > 0.0)
 	{
-		shake_fov_duration_tween = get_tree()->create_tween();
+		shake_fov_duration_tween = scene_tree->create_tween();
 		shake_fov_duration_tween->stop();
 	}
 
@@ -544,6 +574,12 @@ void CineCam3D::shake_fov(const double& p_intensity, const double& p_duration, T
 
 void CineCam3D::shake_rotation(const Vector3& p_intensity, const double& p_duration, Tween::EaseType p_ease, Tween::TransitionType p_trans)
 {
+	if (scene_tree == nullptr)
+	{
+		PrintUtils::scene_tree_nullptr(__LINE__, __FILE__);
+		return;
+	}
+
 	if (is_blend_not_stopped && active_blend->is_blend_rotation()) return;
 
 	if (shake_rotation_duration > 0.0 && look_at_target == nullptr)
@@ -553,12 +589,12 @@ void CineCam3D::shake_rotation(const Vector3& p_intensity, const double& p_durat
 
 	original_rotation = get_global_rotation();
 
-	shake_rotation_intensity_tween = get_tree()->create_tween();
+	shake_rotation_intensity_tween = scene_tree->create_tween();
 	shake_rotation_intensity_tween->stop();
 
 	if (shake_rotation_duration > 0.0)
 	{
-		shake_rotation_duration_tween = get_tree()->create_tween();
+		shake_rotation_duration_tween = scene_tree->create_tween();
 		shake_rotation_duration_tween->stop();
 	}
 
@@ -739,6 +775,13 @@ double CineCam3D::_calc_blend_duration_by_speed(Vector3 current_pos, Vector3 tar
 void CineCam3D::_move_by_follow_mode()
 {
 	if (!tweens_ready) return;
+	
+	if (scene_tree == nullptr)
+	{
+		PrintUtils::scene_tree_nullptr(__LINE__, __FILE__);
+		return;
+	}
+
 	if (follow_mode != FollowMode::TARGET_BLEND) return;
 
 	if (follow_target == nullptr)
@@ -750,7 +793,7 @@ void CineCam3D::_move_by_follow_mode()
 
 	follow_origin = follow_target->get_global_position();
 
-	follow_tween = get_tree()->create_tween();
+	follow_tween = scene_tree->create_tween();
 	follow_tween->stop();
 
 	follow_tween->set_trans(follow_target->get_trans());
@@ -868,7 +911,10 @@ void CineCam3D::_remove_vcam_internal(VirtualCam3D* p_vcam)
 
 		vcams.erase(p_vcam);
 		_try_set_highest_vcam_internal(nullptr, -1);
-		_move_by_priority_mode();
+		if (vcams.size() > 0)
+		{
+			_move_by_priority_mode();
+		}
 	}
 }
 
@@ -1044,6 +1090,12 @@ void CineCam3D::_notification(int p_what)
 	switch (p_what)
 	{
 		default:
+			break;
+		case NOTIFICATION_ENTER_TREE:
+			if (!is_in_editor)
+			{
+			scene_tree = get_tree();
+			}
 			break;
 		case NOTIFICATION_READY:
 			if (!is_in_editor)

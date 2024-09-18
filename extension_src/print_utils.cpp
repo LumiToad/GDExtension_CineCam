@@ -103,6 +103,13 @@ void PrintUtils::blend_running_command_ignored(int l, String f, String command)
 #endif
 }
 
+void godot::PrintUtils::scene_tree_nullptr(int l, String f)
+{
+#ifdef DEBUG_ENABLED
+	ERROR("The SceneTree was null!");
+#endif
+}
+
 
 void PrintUtils::test_warns()
 {

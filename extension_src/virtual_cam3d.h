@@ -61,6 +61,7 @@ namespace godot
 		godot::String vcam_id;
 		int priority;
 		Ref<BlendData3D> blend_data;
+		SceneTree* scene_tree;
 
 		// from Camera3D
 		bool force_change = false;

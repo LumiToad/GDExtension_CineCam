@@ -10,6 +10,7 @@
 
 #include "cinecam2d.h"
 #include "bind_utils.h"
+#include "print_utils.h"
 
 using namespace godot;
 
@@ -209,7 +210,10 @@ void VirtualCam2D::_register_to_cinecam2d()
 void VirtualCam2D::_remove_from_cinecam2d()
 {
 	if (found_cam == nullptr) return;
-	((CineCam2D*)found_cam)->_remove_vcam_internal(this);
+	if (scene_tree == nullptr) return;
+	CineCam2D* cine_cam = cast_to<CineCam2D>(found_cam);
+	if (cine_cam == nullptr) return;
+	cine_cam->_remove_vcam_internal(this);
 }
 
 
@@ -219,21 +223,28 @@ void VirtualCam2D::_notification(int p_what)
 
 	switch (p_what)
 	{
-	default:
-		break;
-	case NOTIFICATION_READY:
-		if (!is_in_editor)
-		{
-			_register_to_cinecam2d();
+		default:
+			break;
+		case NOTIFICATION_ENTER_TREE:
+			if (!is_in_editor)
+			{
+				scene_tree = get_tree();
+			}
+			break;
+		case NOTIFICATION_READY:
+			if (!is_in_editor)
+			{
+				_register_to_cinecam2d();
+			}
+			break;
+		case NOTIFICATION_PREDELETE:
+		case NOTIFICATION_EXIT_TREE:
+			if (!is_in_editor)
+			{
+				_remove_from_cinecam2d();
+			}
+			break;
 		}
-		break;
-	case NOTIFICATION_EXIT_TREE:
-		if (!is_in_editor)
-		{
-			_remove_from_cinecam2d();
-		}
-		break;
-	}
 }
 
 

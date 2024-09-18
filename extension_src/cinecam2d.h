@@ -84,6 +84,7 @@ namespace godot
 		bool tweens_ready;
 		VirtualCam2D* highest_prio_vcam;
 		TypedArray<VirtualCam2D> vcams;
+		SceneTree* scene_tree;
 
 		bool sequence_backwards;
 		bool sequence_playmode = false;

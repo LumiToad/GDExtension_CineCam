@@ -28,6 +28,7 @@ namespace godot
 		static void no_target3d_found(int l, String f, String set_to, String follow_mode);
 		static void ignoring_rotation(int l, String f);
 		static void blend_running_command_ignored(int l, String f, String command);
+		static void scene_tree_nullptr(int l, String f);
 
 		static void test_warns();
 	};

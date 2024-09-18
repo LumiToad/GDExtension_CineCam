@@ -167,7 +167,10 @@ void VirtualCam3D::_register_to_cinecam3d()
 void VirtualCam3D::_remove_from_cinecam3d()
 {
 	if (found_cam == nullptr) return;
-	((CineCam3D*)found_cam)->_remove_vcam_internal(this);
+	if (scene_tree == nullptr) return;
+	CineCam3D* cine_cam = cast_to<CineCam3D>(found_cam);
+	if (cine_cam == nullptr) return;
+	cine_cam->_remove_vcam_internal(this);
 }
 
 
@@ -177,38 +180,44 @@ void VirtualCam3D::_notification(int p_what)
 
 	switch (p_what)
 	{
-	default:
-		break;
-	case NOTIFICATION_ENTER_WORLD:
-		viewport = get_viewport();
-		ERR_FAIL_NULL(viewport);
-#ifdef TOOLS_ENABLED
-		if (is_in_editor)
-		{
-			viewport->connect(StringName("size_changed"), callable_mp((Node3D*)this, &VirtualCam3D::update_gizmos));
-		}
-#endif
-		break;
-	case NOTIFICATION_EXIT_WORLD:
-#ifdef TOOLS_ENABLED
-				if (viewport && is_in_editor)
-				{
-					viewport->disconnect(StringName("size_changed"), callable_mp((Node3D*)this, &VirtualCam3D::update_gizmos));
-				}
-#endif
+		default:
 			break;
-	case NOTIFICATION_READY:
-		if (!is_in_editor)
-		{
-			_register_to_cinecam3d();
-		}
-		break;
-	case NOTIFICATION_EXIT_TREE:
-		if (!is_in_editor)
-		{
-			_remove_from_cinecam3d();
-		}
-		break;
+		case NOTIFICATION_ENTER_TREE:
+			if (!is_in_editor)
+			{
+				scene_tree = get_tree();
+			}
+			break;
+		case NOTIFICATION_ENTER_WORLD:
+			viewport = get_viewport();
+			ERR_FAIL_NULL(viewport);
+	#ifdef TOOLS_ENABLED
+			if (is_in_editor)
+			{
+				viewport->connect(StringName("size_changed"), callable_mp((Node3D*)this, &VirtualCam3D::update_gizmos));
+			}
+	#endif
+			break;
+		case NOTIFICATION_EXIT_WORLD:
+	#ifdef TOOLS_ENABLED
+					if (viewport && is_in_editor)
+					{
+						viewport->disconnect(StringName("size_changed"), callable_mp((Node3D*)this, &VirtualCam3D::update_gizmos));
+					}
+	#endif
+				break;
+		case NOTIFICATION_READY:
+			if (!is_in_editor)
+			{
+				_register_to_cinecam3d();
+			}
+			break;
+		case NOTIFICATION_EXIT_TREE:
+			if (!is_in_editor)
+			{
+				_remove_from_cinecam3d();
+			}
+			break;
 	}
 }
 
