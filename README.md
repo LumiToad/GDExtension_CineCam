@@ -21,7 +21,7 @@
 
   <hr />
   <h2>Engines / Languages</h2>
-  Godot 4.2.2, <a href="https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/what_is_gdextension.html">GDExtension API</a> -> C++
+  Godot 4.2.2, <a href="https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/what_is_gdextension.html">GDExtension API</a> -> C++, SCons -> Python
 
   <hr />
   <h2>Features in 2D and 3D</h2>
